@@ -1,0 +1,180 @@
+<div class="fade-in">
+
+  <!-- Header -->
+  <div class="section-header">
+    <div>
+      <div class="section-title">🏆 Placement Result</div>
+      <div class="section-subtitle">Your placement journey and outcomes</div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="center-pad">
+    <div class="spinner"></div>
+    <p style="color:#8891b0;margin-top:12px">Loading your placement data...</p>
+  </div>
+
+  <div *ngIf="!loading">
+
+    <!-- ═══ PLACED: Celebration View ════════════════════════════ -->
+    <div *ngIf="placementResult.isPlaced">
+
+      <!-- Confetti Hero -->
+      <div class="congrats-hero">
+        <div class="confetti-strip">🎉 🎊 🏆 🎊 🎉</div>
+        <h1 class="congrats-h1">Congratulations!</h1>
+        <p class="congrats-p">
+          You've been successfully placed at <strong>{{ placementResult.company }}</strong>.
+          Your hard work has paid off!
+        </p>
+      </div>
+
+      <!-- Offer Card -->
+      <div class="offer-card">
+        <div class="offer-glow"></div>
+
+        <div class="offer-header">
+          <div class="offer-logo" [style.background]="placementResult.color">
+            {{ placementResult.logo }}
+          </div>
+          <div class="offer-titles">
+            <div class="offer-company">{{ placementResult.company }}</div>
+            <div class="offer-role">{{ placementResult.role }}</div>
+          </div>
+          <div class="placed-badge">✅ Placed</div>
+        </div>
+
+        <div class="offer-details">
+          <div class="detail-item">
+            <div class="detail-icon">💰</div>
+            <div class="detail-label">Package</div>
+            <div class="detail-value pkg-green">{{ placementResult.package }}</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-icon">📅</div>
+            <div class="detail-label">Joining Date</div>
+            <div class="detail-value">{{ placementResult.joiningDate }}</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-icon">📋</div>
+            <div class="detail-label">Offer Letter</div>
+            <div class="detail-value">
+              <button class="download-btn">📥 Download</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Placed message -->
+        <div class="offer-note">
+          🎓 A confirmation email has been sent to your registered email address.
+          Please contact the placement cell for offer letter collection.
+        </div>
+      </div>
+
+    </div>
+    <!-- / isPlaced -->
+
+    <!-- ═══ NOT PLACED YET ══════════════════════════════════════ -->
+    <div *ngIf="!placementResult.isPlaced && history.length === 0" class="not-placed-empty">
+      <div class="npe-icon">🎯</div>
+      <h3>Your Placement Journey Starts Here</h3>
+      <p>Apply to eligible jobs to begin your placement process. Your results will appear here.</p>
+    </div>
+
+    <!-- Not placed but has applications -->
+    <div *ngIf="!placementResult.isPlaced && history.length > 0" class="in-progress-hero">
+      <div class="iph-icon">📊</div>
+      <div class="iph-content">
+        <div class="iph-title">Placement In Progress</div>
+        <div class="iph-sub">Keep going — you're {{ stats.interviews }} interview{{ stats.interviews !== 1 ? 's' : '' }} in!</div>
+      </div>
+      <div class="iph-tip">
+        💡 Tip: Upload a tailored resume for each job to improve your chances.
+      </div>
+    </div>
+
+    <!-- ═══ Stats Row (always visible if has apps) ═══════════════ -->
+    <div class="stats-row" *ngIf="history.length > 0">
+      <div class="stat-card">
+        <div class="stat-num blue">{{ stats.total }}</div>
+        <div class="stat-label">Total Applied</div>
+        <div class="stat-bar">
+          <div class="stat-fill blue-fill" [style.width.%]="100"></div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num orange">{{ stats.interviews }}</div>
+        <div class="stat-label">Interviews</div>
+        <div class="stat-bar">
+          <div class="stat-fill orange-fill"
+               [style.width.%]="stats.total ? (stats.interviews / stats.total) * 100 : 0">
+          </div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" [class.green]="placementResult.isPlaced" [class.gray]="!placementResult.isPlaced">
+          {{ placementResult.isPlaced ? '1' : '0' }}
+        </div>
+        <div class="stat-label">Placed</div>
+        <div class="stat-bar">
+          <div class="stat-fill green-fill"
+               [style.width.%]="placementResult.isPlaced ? 100 : 0">
+          </div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num red">{{ stats.rejected }}</div>
+        <div class="stat-label">Not Selected</div>
+        <div class="stat-bar">
+          <div class="stat-fill red-fill"
+               [style.width.%]="stats.total ? (stats.rejected / stats.total) * 100 : 0">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ Application History Table ════════════════════════════ -->
+    <div class="history-card" *ngIf="history.length > 0">
+      <div class="history-title">📋 Application History</div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <table class="hist-table">
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>Role</th>
+              <th>Package</th>
+              <th>Applied Date</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let h of history" [class.placed-row]="h.status === 'Selected'">
+              <td>
+                <div class="tc-company">
+                  <span class="tc-logo">{{ h.logo }}</span>
+                  <span class="tc-name">{{ h.company }}</span>
+                </div>
+              </td>
+              <td class="tc-role">{{ h.role }}</td>
+              <td class="tc-pkg">{{ h.pkg }}</td>
+              <td class="tc-date">{{ h.date }}</td>
+              <td>
+                <span class="result-badge" [ngClass]="h.resultClass">
+                  {{ statusLabel(h.status) }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- / table-wrap -->
+
+    </div>
+    <!-- / history-card -->
+
+  </div>
+  <!-- / !loading -->
+
+</div>

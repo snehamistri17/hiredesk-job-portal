@@ -1,0 +1,324 @@
+<!-- manage-jobs.component.html -->
+<div class="manage-jobs fade-in">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Manage Jobs</h1>
+      <p class="page-subtitle">{{ all.length }} total job postings</p>
+    </div>
+    <button class="btn-primary" routerLink="/company/post-job">
+      <span class="material-icons">add</span> Post New Job
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="search-bar">
+    <div class="search-input-wrap">
+      <span class="material-icons icon" style="font-size:18px">search</span>
+      <input class="form-input" type="text" placeholder="Search jobs by title, department..."
+             [(ngModel)]="searchQuery" (input)="filterJobs()">
+    </div>
+    <select class="form-input" style="width:160px" [(ngModel)]="filterStatus" (change)="filterJobs()">
+      <option value="">All Status</option>
+      <option value="Active">Active</option>
+      <option value="Closed">Closed</option>
+      <option value="Draft">Draft</option>
+    </select>
+    <select class="form-input" style="width:160px" [(ngModel)]="filterType" (change)="filterJobs()">
+      <option value="">All Types</option>
+      <option value="Full-Time">Full-Time</option>
+      <option value="Part-Time">Part-Time</option>
+      <option value="Internship">Internship</option>
+      <option value="Contract">Contract</option>
+    </select>
+  </div>
+
+  <!-- Tab pills -->
+  <div class="tab-pills">
+    <button class="tab-pill" [class.active]="activeTab==='all'" (click)="setTab('all')">
+      All <span class="count">{{ all.length }}</span>
+    </button>
+    <button class="tab-pill" [class.active]="activeTab==='active'" (click)="setTab('active')">
+      Active <span class="count active-count">{{ countByStatus('Active') }}</span>
+    </button>
+    <button class="tab-pill" [class.active]="activeTab==='closed'" (click)="setTab('closed')">
+      Closed <span class="count">{{ countByStatus('Closed') }}</span>
+    </button>
+    <button class="tab-pill" [class.active]="activeTab==='draft'" (click)="setTab('draft')">
+      Draft <span class="count">{{ countByStatus('Draft') }}</span>
+    </button>
+  </div>
+
+  <!-- Jobs List (attractive card style) -->
+  <div class="jobs-list" *ngIf="filteredJobs.length > 0">
+    <div class="job-card-pro" *ngFor="let job of filteredJobs; let i = index">
+
+      <!-- Top row: icon + title + badges -->
+      <div class="jcp-top">
+        <div class="jcp-icon-wrap">
+          <div class="jcp-icon-box">
+            <span class="material-icons">{{ getDeptIcon(job.department) }}</span>
+          </div>
+        </div>
+
+        <div class="jcp-title-block">
+          <div class="jcp-title">{{ job.title || job.jobtitle }}</div>
+          <div class="jcp-dept">
+            <span class="material-icons" style="font-size:13px">folder</span>
+            {{ job.department }}
+          </div>
+        </div>
+
+        <div class="jcp-badges">
+          <span class="badge" [ngClass]="getStatusBadge(job.status)">{{ job.status }}</span>
+          <span class="badge" [ngClass]="getTypeBadge(job.type)">{{ job.type }}</span>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div class="jcp-divider"></div>
+
+      <!-- Meta row -->
+      <div class="jcp-meta">
+        <div class="jcp-meta-item">
+          <span class="material-icons jcp-meta-icon">location_on</span>
+          <span>{{ job.location }}</span>
+        </div>
+        <div class="jcp-meta-sep"></div>
+        <div class="jcp-meta-item">
+          <span class="material-icons jcp-meta-icon">attach_money</span>
+          <span>{{ job.salary }}</span>
+        </div>
+        <div class="jcp-meta-sep"></div>
+        <div class="jcp-meta-item">
+          <span class="material-icons jcp-meta-icon">people</span>
+          <span>{{ job.positions }} position{{ job.positions !== 1 ? 's' : '' }}</span>
+        </div>
+        <div class="jcp-meta-sep"></div>
+        <div class="jcp-meta-item">
+          <span class="material-icons jcp-meta-icon">event</span>
+          <span>Closes {{ job.deadline | date:'MMM d, y' }}</span>
+        </div>
+      </div>
+
+      <!-- Skills row -->
+      <div class="jcp-skills" *ngIf="job.skills?.length">
+        <span class="skill-tag" *ngFor="let s of job.skills.slice(0,5)">{{ s }}</span>
+        <span class="skill-tag skill-more" *ngIf="job.skills.length > 5">+{{ job.skills.length - 5 }}</span>
+      </div>
+
+      <!-- Divider -->
+      <div class="jcp-divider"></div>
+
+      <!-- Bottom row: applicants + actions -->
+      <div class="jcp-footer">
+        <!-- <div class="jcp-applicants">
+          <span class="material-icons" style="font-size:16px;color:var(--brand-primary)">inbox</span>
+          <span class="jcp-app-count">{{ job.applicants }}</span>
+          <span class="jcp-app-label">applicant{{ job.applicants !== 1 ? 's' : '' }}</span>
+        </div> -->
+
+        <div class="jcp-actions">
+          <button class="jcp-btn jcp-btn-ghost" (click)="openViewModal(job)" title="View Details">
+            <span class="material-icons">visibility</span>
+          </button>
+          <button class="jcp-btn jcp-btn-outline" (click)="viewApplications(job.id)" title="Applications">
+            <span class="material-icons">people</span>
+            <span>Applications</span>
+          </button>
+          <button class="jcp-btn jcp-btn-primary" (click)="openEditModal(job)" title="Edit">
+            <span class="material-icons">edit</span>
+            <span>Edit</span>
+          </button>
+          <button class="jcp-btn jcp-btn-danger" (click)="deleteJob(job.id)" title="Delete">
+            <span class="material-icons">delete_outline</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="filteredJobs.length === 0 && !loading">
+    <div class="icon">💼</div>
+    <h3>No jobs found</h3>
+    <p>Try adjusting your filters or post a new job.</p>
+    <button class="btn-primary" style="margin-top:16px" routerLink="/company/post-job">
+      <span class="material-icons">add</span> Post a Job
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     VIEW JOB MODAL
+═══════════════════════════════════════════ -->
+<div class="mj-overlay" *ngIf="showViewModal && viewJob" (click)="closeViewModal()">
+  <div class="mj-modal mj-modal-lg" (click)="$event.stopPropagation()">
+    <div class="mj-header mj-header-blue">
+      <div class="mj-header-icon"><span class="material-icons" style="font-size:28px">work</span></div>
+      <div class="mj-header-text">
+        <h2>{{ viewJob.title || viewJob.jobtitle }}</h2>
+        <p>{{ viewJob.department }} &nbsp;·&nbsp; {{ viewJob.company }}</p>
+      </div>
+      <button class="mj-close" (click)="closeViewModal()">✕</button>
+    </div>
+
+    <div class="mj-body">
+      <div class="mj-badges">
+        <span class="badge" [ngClass]="getStatusBadge(viewJob.status)">{{ viewJob.status }}</span>
+        <span class="badge" [ngClass]="getTypeBadge(viewJob.type)">{{ viewJob.type }}</span>
+      </div>
+
+      <div class="mj-info-grid">
+        <div class="mj-info-item">
+          <span class="material-icons mj-info-icon">location_on</span>
+          <div><div class="mj-info-label">Location</div><div class="mj-info-val">{{ viewJob.location }}</div></div>
+        </div>
+        <div class="mj-info-item">
+          <span class="material-icons mj-info-icon">attach_money</span>
+          <div><div class="mj-info-label">Salary</div><div class="mj-info-val">{{ viewJob.salary || '—' }}</div></div>
+        </div>
+        <div class="mj-info-item">
+          <span class="material-icons mj-info-icon">people</span>
+          <div><div class="mj-info-label">Positions</div><div class="mj-info-val">{{ viewJob.positions }}</div></div>
+        </div>
+        <div class="mj-info-item">
+          <span class="material-icons mj-info-icon">event</span>
+          <div><div class="mj-info-label">Deadline</div><div class="mj-info-val">{{ viewJob.deadline | date:'MMM d, y' }}</div></div>
+        </div>
+        <div class="mj-info-item">
+          <span class="material-icons mj-info-icon">inbox</span>
+          <div><div class="mj-info-label">Applicants</div><div class="mj-info-val">{{ viewJob.applicants }}</div></div>
+        </div>
+        <div class="mj-info-item">
+          <span class="material-icons mj-info-icon">calendar_today</span>
+          <div><div class="mj-info-label">Posted</div><div class="mj-info-val">{{ viewJob.postedDate | date:'MMM d, y' }}</div></div>
+        </div>
+      </div>
+
+      <div class="mj-section" *ngIf="viewJob.description">
+        <div class="mj-section-title">📋 Description</div>
+        <p class="mj-description">{{ viewJob.description }}</p>
+      </div>
+
+      <div class="mj-section" *ngIf="viewJob.skills?.length">
+        <div class="mj-section-title">🛠 Required Skills</div>
+        <div class="mj-skills">
+          <span class="skill-tag" *ngFor="let s of viewJob.skills">{{ s }}</span>
+        </div>
+      </div>
+
+      <div class="mj-section" *ngIf="viewJob.requirements?.length">
+        <div class="mj-section-title">✅ Requirements</div>
+        <ul class="mj-req-list">
+          <li *ngFor="let r of viewJob.requirements">{{ r }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mj-footer">
+      <button class="btn-outline" (click)="closeViewModal()">Close</button>
+      <button class="btn-primary" (click)="closeViewModal(); openEditModal(viewJob)">
+        <span class="material-icons">edit</span> Edit Job
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     EDIT JOB MODAL
+═══════════════════════════════════════════ -->
+<div class="mj-overlay" *ngIf="showEditModal && editJob" (click)="closeEditModal()">
+  <div class="mj-modal mj-modal-lg" (click)="$event.stopPropagation()">
+    <div class="mj-header mj-header-orange">
+      <div class="mj-header-icon"><span class="material-icons" style="font-size:28px">edit</span></div>
+      <div class="mj-header-text">
+        <h2>Edit Job</h2>
+        <p>Updating: {{ editJob.title }}</p>
+      </div>
+      <button class="mj-close" (click)="closeEditModal()">✕</button>
+    </div>
+
+    <div class="mj-body">
+      <div class="mj-form-grid">
+
+        <div class="mj-form-group mj-full">
+          <label>Job Title <span class="req">*</span></label>
+          <input type="text" class="mj-input" [(ngModel)]="editJob.title" placeholder="e.g. Senior Frontend Developer" />
+        </div>
+
+        <div class="mj-form-group">
+          <label>Department</label>
+          <select class="mj-input" [(ngModel)]="editJob.department">
+            <option>Engineering</option><option>Analytics</option><option>Design</option>
+            <option>Marketing</option><option>Finance</option><option>Product</option>
+            <option>Infrastructure</option><option>Sales</option><option>HR</option>
+          </select>
+        </div>
+
+        <div class="mj-form-group">
+          <label>Job Type</label>
+          <select class="mj-input" [(ngModel)]="editJob.type">
+            <option>Full-Time</option><option>Part-Time</option>
+            <option>Internship</option><option>Contract</option>
+          </select>
+        </div>
+
+        <div class="mj-form-group">
+          <label>Location</label>
+          <input type="text" class="mj-input" [(ngModel)]="editJob.location" placeholder="e.g. Mumbai, Remote" />
+        </div>
+
+        <div class="mj-form-group">
+          <label>Salary Range</label>
+          <input type="text" class="mj-input" [(ngModel)]="editJob.salary" placeholder="e.g. ₹8-12 LPA" />
+        </div>
+
+        <div class="mj-form-group">
+          <label>Positions</label>
+          <input type="number" class="mj-input" [(ngModel)]="editJob.positions" min="1" />
+        </div>
+
+        <div class="mj-form-group">
+          <label>Application Deadline</label>
+          <input type="date" class="mj-input" [(ngModel)]="editJob.deadline" />
+        </div>
+
+        <div class="mj-form-group">
+          <label>Status</label>
+          <select class="mj-input" [(ngModel)]="editJob.status">
+            <option>Active</option><option>Closed</option><option>Draft</option>
+          </select>
+        </div>
+
+        <div class="mj-form-group mj-full">
+          <label>Description</label>
+          <textarea class="mj-input" rows="4" [(ngModel)]="editJob.description"
+                    placeholder="Describe the role, responsibilities, team..."></textarea>
+        </div>
+
+        <div class="mj-form-group mj-full">
+          <label>Skills</label>
+          <div class="mj-skills-wrap">
+            <span class="skill-tag skill-removable" *ngFor="let s of editJob.skills; let i = index">
+              {{ s }} <button type="button" class="skill-rm" (click)="removeEditSkill(i)">×</button>
+            </span>
+          </div>
+          <div class="mj-skill-add">
+            <input type="text" class="mj-input" style="flex:1" [(ngModel)]="newEditSkill"
+                   placeholder="Add skill..." (keyup.enter)="addEditSkill()" />
+            <button type="button" class="btn-outline btn-sm" (click)="addEditSkill()">Add</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="mj-footer">
+      <button class="btn-outline" (click)="closeEditModal()" [disabled]="editSaving">Cancel</button>
+      <button class="btn-primary" (click)="saveEditJob()" [disabled]="editSaving">
+        <span *ngIf="!editSaving"><span class="material-icons" style="font-size:16px;vertical-align:middle">save</span> Save Changes</span>
+        <span *ngIf="editSaving" class="spinner-sm"></span>
+      </button>
+    </div>
+  </div>
+</div>

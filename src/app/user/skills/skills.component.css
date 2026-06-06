@@ -1,0 +1,31 @@
+.add-skill-card { background: linear-gradient(135deg, #eef2ff, #f5f7fe); }
+.add-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.tab-row { display: flex; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
+.tab-btn { padding: 9px 20px; border-radius: 8px; border: 2px solid #dde3f5; background: white; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: #4a5080; cursor: pointer; transition: all 0.25s; }
+.tab-btn.active { background: #2d4de0; color: white; border-color: #2d4de0; }
+.tab-btn:hover:not(.active) { background: #eef2ff; border-color: #2d4de0; color: #2d4de0; }
+
+.skill-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+.skill-item-card { background: white; border: 1px solid #dde3f5; border-radius: 12px; padding: 18px; box-shadow: 0 2px 12px rgba(45,77,224,0.06); transition: all 0.25s; }
+.skill-item-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(45,77,224,0.1); }
+.si-header { display: flex; justify-content: space-between; align-items: flex-start; }
+.si-name { font-size: 15px; font-weight: 700; color: #1a1e3a; font-family: 'Outfit', sans-serif; margin-bottom: 6px; }
+.remove-btn { background: none; border: none; font-size: 16px; color: #ccc; cursor: pointer; margin-top: 4px; display: block; }
+.remove-btn:hover { color: #ff4d6d; }
+
+.soft-row { display: flex; align-items: center; gap: 16px; padding: 14px 0; border-bottom: 1px solid #dde3f5; }
+.soft-row:last-child { border-bottom: none; }
+
+.cert-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+.cert-card { border-radius: 14px; padding: 24px; text-align: center; border: 1px solid #dde3f5; display: flex; flex-direction: column; align-items: center; }
+.cert-name { font-size: 15px; font-weight: 700; font-family: 'Outfit', sans-serif; color: #1a1e3a; }
+.cert-issuer { font-size: 13px; color: #8891b0; margin-top: 4px; }
+.cert-add-card { border-radius: 14px; padding: 24px; text-align: center; border: 2px dashed #dde3f5; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.25s; min-height: 150px; }
+.cert-add-card:hover { border-color: #2d4de0; background: #eef2ff; }
+
+/* Skill type toggle */
+.type-toggle { display: flex; border: 2px solid #dde3f5; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+.type-btn    { padding: 9px 16px; border: none; background: white; font-size: 13px; font-weight: 600; color: #4a5080; cursor: pointer; transition: all 0.2s; font-family: 'Outfit', sans-serif; }
+.type-btn:first-child { border-right: 1px solid #dde3f5; }
+.type-btn.active { background: #2d4de0; color: white; }
+.add-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }

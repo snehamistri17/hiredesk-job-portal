@@ -1,0 +1,101 @@
+<div class="fade-in">
+  <div class="toast toast-success" *ngIf="saved">✅ Skills saved!</div>
+
+  <div class="section-header">
+    <div class="section-title">⚡ Skills Management</div>
+    <div class="section-subtitle">Showcase your technical and soft skills to recruiters</div>
+  </div>
+
+  <!-- Add Skill -->
+  <div class="card add-skill-card fade-in-1">
+    <div class="card-title" style="margin-bottom:16px">➕ Add New Skill</div>
+    <div class="add-row">
+      <input class="form-control"
+             [(ngModel)]="newSkill"
+             placeholder="e.g. React, Spring Boot, MongoDB..."
+             style="flex:1"
+             (keyup.enter)="addSkill()" />
+      <select class="form-control" [(ngModel)]="newLevel" style="width:150px">
+        <option *ngFor="let l of levels" [value]="l">{{ l }}</option>
+      </select>
+      <!-- Skill Type Toggle -->
+      <div class="type-toggle">
+        <button class="type-btn" [class.active]="newType==='technical'" (click)="newType='technical'">
+          💻 Technical
+        </button>
+        <button class="type-btn" [class.active]="newType==='soft'" (click)="newType='soft'">
+          🤝 Soft Skill
+        </button>
+      </div>
+      <button class="btn btn-primary" (click)="addSkill()">➕ Add Skill</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-row fade-in-2">
+    <button class="tab-btn" [class.active]="activeTab==='technical'" (click)="activeTab='technical'">
+      💻 Technical Skills ({{ technicalSkills.length }})
+    </button>
+    <button class="tab-btn" [class.active]="activeTab==='soft'" (click)="activeTab='soft'">
+      🤝 Soft Skills ({{ softSkills.length }})
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" style="text-align:center;padding:40px;color:#8891b0">Loading skills...</div>
+
+  <!-- Technical Skills -->
+  <div *ngIf="!loading && activeTab==='technical'" class="fade-in">
+    <div *ngIf="technicalSkills.length === 0" style="text-align:center;padding:50px;color:#8891b0">
+      <div style="font-size:48px;margin-bottom:12px">⚡</div>
+      <div style="font-size:16px;font-weight:700;color:#4a5080">No technical skills added yet</div>
+      <div style="font-size:14px;margin-top:6px">Select <strong>💻 Technical</strong> above then click Add Skill</div>
+    </div>
+    <div class="skill-cards-grid">
+      <div class="skill-item-card" *ngFor="let sk of technicalSkills; let i = index">
+        <div class="si-header">
+          <div>
+            <div class="si-name">{{ sk.name }}</div>
+            <span class="badge"
+                  [class.badge-success]="sk.level==='Expert'"
+                  [class.badge-primary]="sk.level==='Advanced'"
+                  [class.badge-warning]="sk.level==='Intermediate'"
+                  [class.badge-info]="sk.level==='Beginner'">
+              {{ sk.level }}
+            </span>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:22px;font-weight:800;font-family:'Outfit',sans-serif;color:#1a1e3a">{{ sk.pct }}%</div>
+            <button class="remove-btn" (click)="removeSkill(i)" title="Remove">✕</button>
+          </div>
+        </div>
+        <div class="progress-bar" style="margin-top:12px">
+          <div class="progress-fill" [class]="sk.color" [style.width]="sk.pct + '%'"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Soft Skills -->
+  <div *ngIf="!loading && activeTab==='soft'" class="fade-in">
+    <div *ngIf="softSkills.length === 0" style="text-align:center;padding:50px;color:#8891b0">
+      <div style="font-size:48px;margin-bottom:12px">🤝</div>
+      <div style="font-size:16px;font-weight:700;color:#4a5080">No soft skills added yet</div>
+      <div style="font-size:14px;margin-top:6px">Select <strong>🤝 Soft Skill</strong> above then click Add Skill</div>
+    </div>
+    <div class="card" *ngIf="softSkills.length > 0">
+      <div *ngFor="let sk of softSkills; let i = index" class="soft-row">
+        <div style="width:160px;flex-shrink:0">
+          <div style="font-size:14px;font-weight:600;color:#1a1e3a">{{ sk.name }}</div>
+          <span class="badge badge-accent" style="margin-top:4px">{{ sk.level }}</span>
+        </div>
+        <div class="progress-bar" style="flex:1">
+          <div class="progress-fill pf-teal" [style.width]="sk.pct + '%'"></div>
+        </div>
+        <div style="width:40px;text-align:right;font-size:13px;font-weight:700;color:#4a5080">{{ sk.pct }}%</div>
+        <button class="remove-btn" (click)="removeSoft(i)">✕</button>
+      </div>
+    </div>
+  </div>
+
+</div>

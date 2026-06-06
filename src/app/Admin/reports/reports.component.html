@@ -1,0 +1,121 @@
+<!-- reports.component.html -->
+<div class="pg">
+
+  <!-- Loading -->
+  <div *ngIf="loading" style="text-align:center;padding:60px;color:#64748b">
+    <div style="font-size:32px;margin-bottom:12px">⏳</div>
+    <p>Loading report data from database...</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <div class="report-grid">
+
+      <!-- ── Monthly Registrations Chart ── -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:4px">📈 Monthly Placement Trend</div>
+        <p style="font-size:12px;color:#94a3b8;margin:0 0 16px">Student registrations per month</p>
+
+        <!-- ✅ Empty state only when truly no students at all -->
+        <div *ngIf="noChartData" class="empty-chart">
+          <div class="empty-icon">📊</div>
+          <p>No student data in database yet.<br>Data will appear here once students are registered.</p>
+        </div>
+
+        <!-- ✅ Chart always renders when any data exists -->
+        <div class="bar-chart" *ngIf="hasChartData">
+          <div class="bar-col" *ngFor="let m of monthly">
+            <div class="bar-num">{{ m.total > 0 ? m.total : '' }}</div>
+            <div class="bar"
+                 [style.height.px]="m.total > 0 ? (m.total / maxMonthly) * 140 : 4"
+                 [class.bar-empty]="m.total === 0"
+                 [title]="m.month + ': ' + m.total + ' students, ' + m.placed + ' placed'">
+            </div>
+            <div class="bar-lbl">{{ m.month }}</div>
+          </div>
+        </div>
+
+        <!-- Legend -->
+        <div *ngIf="hasChartData" style="display:flex;gap:16px;margin-top:12px;font-size:12px;color:#64748b">
+          <span style="display:flex;align-items:center;gap:6px">
+            <span style="width:12px;height:12px;border-radius:3px;background:linear-gradient(180deg,#f59e0b,#fbbf24);display:inline-block"></span>
+            Total Registered
+          </span>
+        </div>
+      </div>
+
+      <!-- ── Approved Companies ── -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px">🏢 Approved Companies</div>
+        <div *ngIf="topCompanies.length === 0" class="empty-chart">
+          <div class="empty-icon">🏢</div>
+          <p>No approved companies yet.<br>Approve companies from Manage Companies.</p>
+        </div>
+        <div class="co-list" *ngIf="topCompanies.length > 0">
+          <div class="co-row" *ngFor="let c of topCompanies; let i = index">
+            <div class="co-rank">#{{ i+1 }}</div>
+            <div class="co-av-sm" [ngClass]="'av'+i">{{ c.name.substring(0,2).toUpperCase() }}</div>
+            <div class="co-info">
+              <div class="co-name">{{ c.name }}</div>
+              <div class="co-avg">Package: {{ c.avg }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Branch-wise Placement Report ── -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom:4px">📚 Branch-wise Placement Report</div>
+      <p style="font-size:12px;color:#94a3b8;margin:0 0 16px">Based on student branch and status data in database</p>
+
+      <div *ngIf="branchWise.length === 0" class="empty-chart" style="padding:40px">
+        <div class="empty-icon">📚</div>
+        <p>No student data found in database.<br>
+           Add students and update their branch/status to see placement stats here.</p>
+      </div>
+
+      <!-- ✅ Table renders as long as any branch data exists -->
+      <div class="table-wrap" *ngIf="branchWise.length > 0">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Branch</th>
+              <th>Total Students</th>
+              <th>Placed</th>
+              <th>Not Placed</th>
+              <th>Placement %</th>
+              <th>Progress</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let b of branchWise">
+              <td class="branch-txt">{{ b.branch }}</td>
+              <td class="muted">{{ b.students }}</td>
+              <td class="placed-txt">{{ b.placed }}</td>
+              <td class="muted">{{ b.students - b.placed }}</td>
+              <td>
+                <span class="pct-badge" [ngClass]="pctClass(b.pct)">{{ b.pct }}%</span>
+              </td>
+              <td>
+                <div class="prog-track">
+                  <div class="prog-fill"
+                       [style.width.%]="b.pct"
+                       [ngClass]="pctClass(b.pct)">
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Data source note
+    <div class="db-note">
+      <span>🗄️</span>
+      <span>All data sourced live from MongoDB. Charts update as students are registered and placed.</span>
+    </div> -->
+
+  </ng-container>
+</div>

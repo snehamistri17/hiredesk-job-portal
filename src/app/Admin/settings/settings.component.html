@@ -1,0 +1,105 @@
+
+<!-- settings.component.html -->
+<div class="pg">
+
+  <div class="settings-grid">
+
+    <div class="card">
+      <div class="card-title sec-title">🏫 Placement Cell Info</div>
+      <div class="form-list">
+        <div class="form-grp">
+          <label>Institute Name</label>
+          <input type="text" [(ngModel)]="s.institute" />
+        </div>
+        <div class="form-grp">
+          <label>Coordinator Name</label>
+          <input type="text" [(ngModel)]="s.coordinator" />
+        </div>
+        <div class="form-grp">
+          <label>Coordinator Email</label>
+          <input type="email" [(ngModel)]="s.email" />
+        </div>
+        <div class="form-grp">
+          <label>Coordinator Phone</label>
+          <input type="text" [(ngModel)]="s.phone" />
+        </div>
+        <div class="form-row">
+          <div class="form-grp">
+            <label>Academic Year</label>
+            <input type="text" [(ngModel)]="s.year" />
+          </div>
+          <div class="form-grp">
+            <label>Season Status</label>
+            <select [(ngModel)]="s.season">
+              <option>Active</option><option>Inactive</option><option>Upcoming</option>
+            </select>
+          </div>
+        </div>
+        <button class="save-btn" (click)="save('Placement Cell')">💾 Save</button>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <div class="card">
+        <div class="card-title sec-title">🎓 Eligibility Criteria</div>
+        <div class="form-list">
+          <div class="form-row">
+            <div class="form-grp">
+              <label>Min CGPA</label>
+              <input type="number" step="0.5" min="0" max="10" [(ngModel)]="s.minCgpa" />
+            </div>
+            <div class="form-grp">
+              <label>Max Backlogs</label>
+              <input type="number" min="0" [(ngModel)]="s.maxBacklogs" />
+            </div>
+          </div>
+          <div class="form-grp">
+            <label>Min Attendance (%)</label>
+            <input type="number" min="0" max="100" [(ngModel)]="s.attendance" />
+          </div>
+          <button class="save-btn" (click)="save('Eligibility')">💾 Save</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title sec-title">🔔 Notification Settings</div>
+        <div class="toggle-list">
+          <div class="toggle-row">
+            <div class="tgl-info"><div class="tgl-lbl">Email on Application</div><div class="tgl-sub">Notify students when they apply</div></div>
+            <div class="toggle" [class.on]="s.emailApply" (click)="s.emailApply = !s.emailApply"><div class="thumb"></div></div>
+          </div>
+          <div class="toggle-row">
+            <div class="tgl-info"><div class="tgl-lbl">Email on Hire</div><div class="tgl-sub">Notify on offer letter</div></div>
+            <div class="toggle" [class.on]="s.emailHire" (click)="s.emailHire = !s.emailHire"><div class="thumb"></div></div>
+          </div>
+          <div class="toggle-row">
+            <div class="tgl-info"><div class="tgl-lbl">SMS Alerts</div><div class="tgl-sub">SMS notifications (extra charges)</div></div>
+            <div class="toggle" [class.on]="s.sms" (click)="s.sms = !s.sms"><div class="thumb"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title sec-title">⚙️ Portal Settings</div>
+        <div class="toggle-list">
+          <div class="toggle-row">
+            <div class="tgl-info"><div class="tgl-lbl">Registration Open</div><div class="tgl-sub">Allow new student registrations</div></div>
+            <div class="toggle" [class.on]="s.regOpen" (click)="s.regOpen = !s.regOpen"><div class="thumb"></div></div>
+          </div>
+          <div class="toggle-row">
+            <div class="tgl-info"><div class="tgl-lbl">Resume Upload Open</div><div class="tgl-sub">Allow resume uploads</div></div>
+            <div class="toggle" [class.on]="s.resumeOpen" (click)="s.resumeOpen = !s.resumeOpen"><div class="thumb"></div></div>
+          </div>
+          <div class="toggle-row danger-row">
+            <div class="tgl-info"><div class="tgl-lbl">Maintenance Mode</div><div class="tgl-sub">Portal will be offline</div></div>
+            <div class="toggle danger" [class.on]="s.maintenance" (click)="s.maintenance = !s.maintenance"><div class="thumb"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" *ngIf="toast" [class.show]="toast">✅ {{ toastMsg }}</div>
+
+</div>

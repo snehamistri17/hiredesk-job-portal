@@ -1,0 +1,78 @@
+<!-- publish-results.component.html -->
+<div class="pg">
+
+  <div class="res-stats">
+    <div class="rstat">
+      <div class="rstat-icon" style="background:#dcfce7">🏆</div>
+      <div class="rstat-val">{{ results.length }}</div>
+      <div class="rstat-lbl">Total Placements</div>
+    </div>
+    <div class="rstat">
+      <div class="rstat-icon" style="background:#dbeafe">✅</div>
+      <div class="rstat-val">{{ published.length }}</div>
+      <div class="rstat-lbl">Published</div>
+    </div>
+    <div class="rstat">
+      <div class="rstat-icon" style="background:#fef9c3">⏳</div>
+      <div class="rstat-val">{{ unpublished.length }}</div>
+      <div class="rstat-lbl">Pending Publish</div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="unpublished.length > 0">
+    <div class="card-hdr">
+      <div class="card-title">⏳ Pending Publication</div>
+      <button class="publish-all-btn" (click)="publishAll()">📢 Publish All</button>
+    </div>
+    <div class="results-list">
+      <div class="result-row" *ngFor="let r of unpublished; let i = index">
+        <div class="res-av" [ngClass]="'av'+(i%6)">{{ r.avatar }}</div>
+        <div class="res-info">
+          <div class="res-name">{{ r.student }}</div>
+          <div class="res-branch">{{ r.branch }}</div>
+        </div>
+        <div class="res-company">
+          <div class="res-co-name">{{ r.company }}</div>
+          <div class="res-role">{{ r.role }}</div>
+        </div>
+        <div class="res-package">₹{{ formatPkg(r.package) }}</div>
+        <div class="res-actions">
+          <button class="pub-btn" (click)="publish(r)">📢 Publish</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-title">✅ Published Results ({{ published.length }})</div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Student</th><th>Branch</th><th>Company</th>
+            <th>Role</th><th>Package</th><th>Offer Date</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of published; let i = index">
+            <td>
+              <div class="nc">
+                <div class="avatar" [ngClass]="'av'+(i%6)">{{ r.avatar }}</div>
+                <span class="sname">{{ r.student }}</span>
+              </div>
+            </td>
+            <td class="muted">{{ r.branch }}</td>
+            <td class="co-name-txt">{{ r.company }}</td>
+            <td class="muted">{{ r.role }}</td>
+            <td class="pkg-txt">₹{{ formatPkg(r.package) }}/yr</td>
+            <td class="muted">{{ r.offerDate }}</td>
+            <td><span class="pub-badge">Published ✅</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

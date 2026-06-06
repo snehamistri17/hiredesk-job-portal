@@ -1,0 +1,81 @@
+/* ============================================================
+   GLOBAL RESET
+   ============================================================ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ✅ CRITICAL: NO overflow:hidden on html/body
+   position:fixed modals need the viewport as their containing block.
+   overflow:hidden on a parent clips fixed children in some browsers. */
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+  font-family: 'DM Sans', sans-serif;
+  background: #f4f7fb;
+}
+
+/* ============================================================
+   ADMIN SHELL
+   ============================================================ */
+.admin-wrapper {
+  height: 100vh;
+  /* ✅ overflow:hidden here is OK — modals use position:fixed
+     which escapes to the viewport, not this container */
+  overflow: hidden;
+}
+
+.admin-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── SIDEBAR ── */
+.admin-sidebar {
+  flex: 0 0 auto;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  /* z-index kept BELOW modal z-index (9999) */
+  z-index: 100;
+  transition: width 0.3s ease;
+}
+
+/* ── RIGHT COLUMN ── */
+.admin-right {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── NAVBAR ── */
+.admin-navbar {
+  flex: 0 0 64px;
+  height: 64px;
+  width: 100%;
+  /* navbar z-index kept BELOW modal (9999) */
+  z-index: 200;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* ── MAIN CONTENT ── */
+.admin-main-content {
+  flex: 1 1 0;
+  min-height: 0;         /* ✅ Required for flex scroll */
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #f4f7fb;
+  /* ✅ NO overflow:hidden — let fixed modals escape to viewport */
+}
+
+/* Scrollbar */
+.admin-main-content::-webkit-scrollbar       { width: 5px; }
+.admin-main-content::-webkit-scrollbar-track { background: #f1f5f9; }
+.admin-main-content::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+.admin-main-content::-webkit-scrollbar-thumb:hover { background: #94a3b8; }

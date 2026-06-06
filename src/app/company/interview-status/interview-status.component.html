@@ -1,0 +1,106 @@
+<div class="fade-in">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Interview Status</h1>
+      <p class="page-subtitle">Track all scheduled interviews</p>
+    </div>
+  </div>
+
+  <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
+    <div class="stat-card stat-orange">
+      <div class="stat-icon" style="background:var(--brand-light)">
+        <span class="material-icons" style="color:var(--brand-primary)">event</span>
+      </div>
+      <div class="stat-value">{{scheduled.length}}</div>
+      <div class="stat-label">Interviews Scheduled</div>
+    </div>
+    <div class="stat-card stat-blue">
+      <div class="stat-icon" style="background:var(--blue-light)">
+        <span class="material-icons" style="color:var(--blue)">videocam</span>
+      </div>
+      <div class="stat-value">{{onlineCount}}</div>
+      <div class="stat-label">Online Interviews</div>
+    </div>
+    <div class="stat-card stat-green">
+      <div class="stat-icon" style="background:var(--green-light)">
+        <span class="material-icons" style="color:var(--green)">person</span>
+      </div>
+      <div class="stat-value">{{inPersonCount}}</div>
+      <div class="stat-label">In-Person Interviews</div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden" *ngIf="scheduled.length > 0">
+    <div class="table-header">
+      <h3 class="table-title">
+        <span class="material-icons">calendar_today</span> Upcoming Interviews
+      </h3>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Candidate</th>
+          <th>Applied For</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Mode</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of scheduled">
+          <td>
+            <div class="candidate-cell">
+              <div class="avatar">{{c.avatar}}</div>
+              <div>
+                <div class="cand-name">{{c.name}}</div>
+                <div class="cand-college">{{c.college}}</div>
+              </div>
+            </div>
+          </td>
+          <td class="job-title-cell">{{c.jobTitle}}</td>
+          <td>
+            <div class="date-chip">
+              <span class="material-icons" style="font-size:14px;color:var(--brand-primary)">event</span>
+              {{c.interviewDate | date:'EEE, MMM d'}}
+            </div>
+          </td>
+          <td>
+            <div class="date-chip">
+              <span class="material-icons" style="font-size:14px;color:var(--blue)">schedule</span>
+              {{c.interviewTime}}
+            </div>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="c.interviewMode === 'Online' ? 'badge-applied' : 'badge-shortlisted'">
+              <span class="material-icons" style="font-size:10px">{{c.interviewMode === 'Online' ? 'videocam' : 'person'}}</span>
+              {{c.interviewMode}}
+            </span>
+          </td>
+          <td>
+            <div class="action-btns">
+              <button class="btn-outline btn-sm" (click)="router.navigate(['/company/candidate', c._id])">
+                <span class="material-icons" style="font-size:13px">visibility</span> Profile
+              </button>
+              <button class="btn-success btn-sm" (click)="markSelected(c)">
+                <span class="material-icons" style="font-size:13px">check</span> Select
+              </button>
+              <button class="btn-danger btn-sm" (click)="markRejected(c)">
+                <span class="material-icons" style="font-size:13px">close</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="empty-state card" *ngIf="scheduled.length === 0">
+    <div class="icon">📅</div>
+    <h3>No interviews scheduled</h3>
+    <p>Shortlist candidates and schedule interviews from the Applications page.</p>
+    <button class="btn-primary" routerLink="/company/applications">
+      <span class="material-icons">arrow_forward</span> Go to Applications
+    </button>
+  </div>
+</div>

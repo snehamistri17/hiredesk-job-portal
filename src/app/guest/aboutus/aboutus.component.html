@@ -1,0 +1,151 @@
+<app-header></app-header>
+
+<!-- ── HERO ── -->
+<section class="about-hero">
+  <div class="hero-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Our Story
+    </div>
+    <h1 class="hero-title">
+      We're on a Mission to<br>
+      <span class="gradient-text">Redefine Hiring</span>
+    </h1>
+    <p class="hero-sub">
+      HireDesk was founded in 2020 with one simple belief — finding your dream job
+      shouldn't feel like a second job. We connect ambitious talent with forward-thinking
+      companies through a platform built on transparency, trust, and technology.
+    </p>
+    <div class="hero-cta">
+      <a routerLink="/jobs" class="btn-primary">Explore Jobs</a>
+      <a routerLink="/contactus" class="btn-outline">Get in Touch</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<section class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-card" *ngFor="let s of stats">
+      <div class="stat-icon">{{ s.icon }}</div>
+      <div class="stat-value">{{ s.value }}</div>
+      <div class="stat-label">{{ s.label }}</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STORY ── -->
+<section class="story-section">
+  <div class="story-inner">
+    <div class="story-text">
+      <span class="section-badge">Our Journey</span>
+      <h2 class="section-title">From a Dorm Room to<br><span class="gradient-text">India's #1 Job Platform</span></h2>
+      <p>It started in 2020 when two engineers, frustrated by outdated recruitment processes, decided to build something better. HireDesk began as a small campus placement portal serving 3 colleges in Ahmedabad.</p>
+      <p>Within a year, over 200 companies were using HireDesk to post jobs and discover talent. Today, we serve millions of job seekers across India, with headquarters in Ahmedabad and offices in Bangalore, Mumbai, and Delhi.</p>
+      <p>We've helped place over 500,000 professionals in roles they love — and we're just getting started.</p>
+    </div>
+    <div class="story-visual">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">2020</div>
+            <div class="timeline-title">Founded in Ahmedabad</div>
+            <div class="timeline-desc">Started with 3 colleges and 50 companies</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">2021</div>
+            <div class="timeline-title">Reached 10,000 Users</div>
+            <div class="timeline-desc">Expanded to 5 major Indian cities</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">2022</div>
+            <div class="timeline-title">Series A Funding</div>
+            <div class="timeline-desc">Raised ₹50 Cr to scale the platform</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">2024</div>
+            <div class="timeline-title">1 Million Job Seekers</div>
+            <div class="timeline-desc">India's fastest-growing placement platform</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot active"></div>
+          <div class="timeline-content">
+            <div class="timeline-year">2025</div>
+            <div class="timeline-title">Series C & Global Expansion</div>
+            <div class="timeline-desc">Expanding beyond India to Southeast Asia</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── VALUES ── -->
+<section class="values-section">
+  <div class="values-inner">
+    <div class="section-header">
+      <span class="section-badge">What Drives Us</span>
+      <h2 class="section-title">Our Core <span class="gradient-text">Values</span></h2>
+      <p class="section-sub">The principles that guide every decision we make at HireDesk</p>
+    </div>
+    <div class="values-grid">
+      <div class="value-card" *ngFor="let v of values">
+        <div class="value-icon">{{ v.icon }}</div>
+        <h3 class="value-title">{{ v.title }}</h3>
+        <p class="value-desc">{{ v.desc }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TEAM ── -->
+<section class="team-section">
+  <div class="team-inner">
+    <div class="section-header">
+      <span class="section-badge">The People</span>
+      <h2 class="section-title">Meet the <span class="gradient-text"> Team</span></h2>
+      <!-- <p class="section-sub">Passionate builders who wake up every day to make hiring better</p> -->
+    </div>
+    <div class="team-grid">
+      <div class="team-card" *ngFor="let m of team">
+        <div class="team-avatar" [style.background]="m.color">{{ m.initials }}</div>
+        <div class="team-name">{{ m.name }}</div>
+        <!-- <div class="team-socials">
+          <a href="#" class="social-dot">in</a>
+          <a href="#" class="social-dot">X</a>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── JOIN CTA ── -->
+<section class="join-section">
+  <div class="join-inner">
+    <div class="join-icon">🚀</div>
+    <h2 class="join-title">Ready to Find Your <span class="gradient-text">Perfect Role?</span></h2>
+    <p class="join-sub">Join over 1 million professionals who've already found their dream jobs through HireDesk.</p>
+    <div class="join-cta">
+      <a routerLink="/registration" class="btn-primary">Create Free Account</a>
+      <a routerLink="/jobs" class="btn-outline">Browse Jobs</a>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>

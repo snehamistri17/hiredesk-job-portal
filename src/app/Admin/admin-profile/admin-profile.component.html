@@ -1,0 +1,135 @@
+<div class="page-wrapper">
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Edit Profile</h1>
+      <nav class="breadcrumb">
+        <span>Admin</span>
+        <span class="sep">›</span>
+        <span class="active">Edit Profile</span>
+      </nav>
+    </div>
+  </div>
+
+  <div *ngIf="loading" style="display:flex;align-items:center;justify-content:center;padding:60px;gap:12px">
+    <span style="font-size:24px">⏳</span>
+    <p style="color:#64748b;font-size:15px">Loading profile...</p>
+  </div>
+
+  <div class="profile-layout" *ngIf="!loading">
+
+    <!-- Left: Avatar Card -->
+    <div class="avatar-card card">
+      <div class="avatar-wrapper">
+        <div class="avatar-circle" [style.background]="avatarColor">
+          <span *ngIf="!profileImageUrl">{{ getInitials() }}</span>
+          <img *ngIf="profileImageUrl" [src]="profileImageUrl" alt="Profile" />
+        </div>
+        <label class="avatar-upload-btn" for="avatarInput">
+          <i class="icon-camera">📷</i>
+        </label>
+        <input id="avatarInput" type="file" accept="image/*" hidden (change)="onImageChange($event)" />
+      </div>
+
+      <!-- ✅ uses form.value.name (correct DB field) -->
+      <h3 class="admin-name">{{ form.value.name || 'Admin' }}</h3>
+      <span class="role-badge">Administrator</span>
+
+      <div class="profile-meta">
+        <div class="meta-item">
+          <span class="meta-icon">✉</span> {{ form.value.email || '—' }}
+        </div>
+        <div class="meta-item">
+          <span class="meta-icon">📞</span> {{ form.value.phone || '—' }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Form Card -->
+    <div class="form-card card">
+      <div class="card-header-section">
+        <h2>Personal Information</h2>
+        <p>Update your admin account details — changes are saved to the database</p>
+      </div>
+
+      <div class="success-alert" *ngIf="successMsg">
+        <span>✅ {{ successMsg }}</span>
+      </div>
+      <div class="success-alert" *ngIf="errorMsg"
+           style="background:#fef2f2;border-color:rgba(239,68,68,0.3);color:#dc2626">
+        <span>❌ {{ errorMsg }}</span>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+
+          <!-- Full Name -->
+          <div class="form-group" [class.has-error]="isInvalid('name')">
+            <label>Full Name <span class="req">*</span></label>
+            <input formControlName="name" type="text" placeholder="Your full name" />
+            <span class="error-msg" *ngIf="isInvalid('name')">Name is required (min 2 characters)</span>
+          </div>
+
+          <!-- Email — ✅ NOW EDITABLE, saved to users table -->
+          <div class="form-group" [class.has-error]="isInvalid('email')">
+            <label>Email Address <span class="req">*</span></label>
+            <input formControlName="email" type="email" placeholder="admin@college.edu" />
+            <span class="error-msg" *ngIf="isInvalid('email') && form.get('email')?.errors?.['required']">
+              Email is required
+            </span>
+            <span class="error-msg" *ngIf="isInvalid('email') && form.get('email')?.errors?.['email']">
+              Enter a valid email address
+            </span>
+          </div>
+
+          <!-- Phone -->
+          <div class="form-group" [class.has-error]="isInvalid('phone')">
+            <label>Mobile Number</label>
+            <input formControlName="phone" type="tel" placeholder="+91-9876543210" />
+            <span class="error-msg" *ngIf="isInvalid('phone') && form.get('phone')?.errors?.['pattern']">
+              Invalid phone number
+            </span>
+          </div>
+
+          <!-- Branch -->
+          <div class="form-group">
+            <label>Branch / Department</label>
+            <select formControlName="branch">
+              <option value="">Select Branch</option>
+              <option value="Placement Cell">Placement Cell</option>
+              <option value="Administration">Administration</option>
+              <option value="Computer Science">Computer Science</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Mechanical">Mechanical</option>
+              <option value="Civil">Civil</option>
+            </select>
+          </div>
+
+          <!-- Designation -->
+          <div class="form-group">
+            <label>Designation</label>
+            <select formControlName="currentSem">
+              <option value="">Select</option>
+              <option value="Coordinator">Coordinator</option>
+              <option value="Administrator">Administrator</option>
+              <option value="HOD">HOD</option>
+              <option value="Professor">Professor</option>
+              <option value="Assistant Professor">Assistant Professor</option>
+              <option value="Admin Staff">Admin Staff</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="onCancel()">Cancel</button>
+          <button type="submit" class="btn-save" [disabled]="saving">
+            <span *ngIf="!saving">Save Changes</span>
+            <span *ngIf="saving" class="spinner"></span>
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

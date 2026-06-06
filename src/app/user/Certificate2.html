@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Certificate</title>
+
+<style>
+
+@page{
+  size:A4;
+  margin:0;
+}
+
+body{
+  margin:0;
+  background:#ccc;
+  font-family:"Times New Roman", serif;
+}
+
+/* MAIN CERTIFICATE */
+.certificate{
+  width:210mm;
+  height:297mm;
+  background:white;
+  margin:auto;
+  padding:25mm 22mm 70mm 22mm; /* bottom padding keeps footer safe */
+  box-sizing:border-box;
+  position:relative;
+}
+
+/* ================= HEADER ================= */
+.header{
+  display:flex;
+  align-items:center;
+}
+
+.green-box{
+  width:14mm;
+  height:42mm;
+  background:#1f5e3b;
+}
+
+.gap-1{
+  width:6mm;
+}
+
+.green-line{
+  width:2mm;
+  height:42mm;
+  background:#1f5e3b;
+  margin-right:10mm;
+}
+
+.logo img{
+  width:250px;
+  margin-right:25px;
+}
+
+.firm-text h3{
+  margin:0;
+  font-size:35px;
+}
+
+.firm-text h2{
+  margin:0;
+  font-size:20px;
+  color:#2f7a4a;
+  font-weight:normal;
+}
+
+.hr-line{
+  width:100%;
+  height:1.5mm;
+  background:#2f7a4a;
+  margin:10mm 0;
+}
+
+/* ================= CONTENT ================= */
+.content{
+  font-size:13pt;
+  line-height:1.7;
+}
+
+.center{
+  text-align:center;
+  margin:10mm 0;
+}
+
+/* ================= FOOTER ================= */
+.footer-text{
+  position:absolute;
+  bottom:30mm;
+  left:22mm;
+  right:22mm;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+}
+
+/* stamp */
+.stamp img{
+  width:300px;
+}
+
+/* signature vertical */
+.sign-block{
+  text-align:center;
+}
+
+.sign-block img{
+  width:160px;
+  display:block;
+  margin:auto;
+}
+
+.sign-block strong{
+  display:block;
+  margin-top:5px;
+}
+
+/* footer green bar */
+.footer-bar{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:18mm;
+  background:#1c4f6b;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.footer-bar span{
+  color:white;
+  font-size:10pt;
+}
+.footer-line {
+    position: absolute;
+    bottom: 20mm;   /* adjust if needed */
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #1f5e3b;  /* same as your footer bar */
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="certificate">
+
+<!-- HEADER -->
+<div class="header">
+
+<div class="green-box"></div>
+<div class="gap-1"></div>
+<div class="green-line"></div>
+
+<div class="logo">
+<img src="C:\ANGULAR\HireDesk\logo.jpg">
+</div>
+
+<div class="firm-text">
+<h3>R N K & CO.</h3>
+<h2>Chartered Accountants</h2>
+</div>
+
+</div>
+
+<div class="hr-line"></div>
+
+<!-- TITLE -->
+<div class="center">
+<h4>Internship Certificate</h4>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+<p><strong>Issued on:</strong> 02/12/2025</p>
+
+<p>To, Ms. Tisha Alpeshbhai Patel</p>
+
+<p><strong>Sub: Internship Completion Certificate</strong></p>
+
+<p>
+This is to certify that Ms. Patel Tisha Alpeshbhai (Enrollment No:E23110203000910147), a
+student of Smt. Tanuben & Dr. Manubhai Trivedi College of Information, has
+successfully completed her internship at our organization from 10 November
+2025 to 2 December 2025, a duration of 120 Hours, on the internship training
+course with grade A+ and marks 55 out of 60 for Data Entry And Accounting.
+</p>
+
+<p>
+During this internship, Tisha worked diligently and demonstrated a strong
+understanding of the domain. She exhibited excellent Communication Skills
+and demonstrated Good Analytical. We appreciate her contribution and wish
+her great success in all future endeavours.
+</p>
+
+</div>
+
+<!-- FOOTER TEXT -->
+<div class="footer-text">
+
+<div>
+Place: Surat<br>
+Date: 02/12/2025
+</div>
+
+<div class="stamp">
+<img src="C:\Logbook\stamp.png">
+</div>
+
+<div class="sign-block">
+ RNK & CO.
+<img src="C:\ANGULAR\HireDesk\SIGN.png">
+<strong>CA. Mayur Patel</strong>
+</div>
+
+</div>
+<div class="footer-line"></div>
+<!-- FOOTER BAR -->
+<div class="footer-bar">
+<span>HEAD OFFICE : B-409, RJD Business Hub, Katargam, Surat – 395004</span>
+</div>
+
+</div>
+
+</body>
+</html>

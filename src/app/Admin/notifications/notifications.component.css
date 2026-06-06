@@ -1,0 +1,197 @@
+:host {
+  display: block;
+  background: #f0f2f8;
+  min-height: 100vh;
+  padding: 24px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.page-wrapper { max-width: 860px; margin: 0 auto; animation: fadeIn 0.4s ease; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.page-title { font-size: 28px; font-weight: 700; color: #1a1a2e; margin: 0 0 4px; }
+.breadcrumb { font-size: 13px; color: #888; }
+.breadcrumb .sep { margin: 0 6px; }
+.breadcrumb .active { color: #f59e0b; font-weight: 600; }
+
+.header-actions { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+
+.btn-mark-all {
+  padding: 7px 16px;
+  border: 1.5px solid #f59e0b;
+  background: #fff8e1;
+  color: #f59e0b;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-mark-all:hover { background: #f59e0b; color: #fff; }
+
+.unread-badge {
+  background: linear-gradient(135deg, #f59e0b, #e08000);
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Tabs */
+.filter-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 8px 16px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tab-btn.active {
+  background: #1a1a2e;
+  color: #f59e0b;
+  border-color: #1a1a2e;
+}
+
+.tab-btn:hover:not(.active) { border-color: #f59e0b; color: #f59e0b; }
+
+.tab-count {
+  background: #f59e0b;
+  color: #fff;
+  border-radius: 10px;
+  padding: 1px 7px;
+  font-size: 11px;
+}
+
+/* Card */
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #bbb;
+}
+.empty-icon { font-size: 48px; display: block; margin-bottom: 12px; }
+.empty-state p { font-size: 15px; }
+
+/* Notification Item */
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #f0f2f8;
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+  animation: fadeIn 0.3s ease;
+}
+
+.notif-item:last-child { border-bottom: none; }
+.notif-item:hover { background: #fafafa; }
+
+.notif-item.unread {
+  background: #fffbeb;
+  border-left: 3px solid #f59e0b;
+}
+
+.notif-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.notif-icon-wrapper.company { background: #e0f2fe; }
+.notif-icon-wrapper.student { background: #f0fdf4; }
+.notif-icon-wrapper.application { background: #fef3c7; }
+.notif-icon-wrapper.system { background: #f3e8ff; }
+.notif-icon-wrapper.alert { background: #fef2f2; }
+
+.notif-content { flex: 1; }
+
+.notif-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.notif-title { font-size: 14px; font-weight: 700; color: #1a1a2e; }
+.notif-time { font-size: 12px; color: #aaa; }
+
+.notif-body { font-size: 13px; color: #555; margin: 0 0 8px; line-height: 1.5; }
+
+.notif-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.notif-tag.company { background: #e0f2fe; color: #0369a1; }
+.notif-tag.student { background: #f0fdf4; color: #16a34a; }
+.notif-tag.application { background: #fef3c7; color: #d97706; }
+.notif-tag.system { background: #f3e8ff; color: #7c3aed; }
+.notif-tag.alert { background: #fef2f2; color: #dc2626; }
+
+.notif-actions { margin-left: 8px; }
+
+.btn-delete {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  color: #999;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-delete:hover { background: #fef2f2; border-color: #ef4444; color: #ef4444; }
+
+@media (max-width: 600px) {
+  .notif-top { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .filter-tabs { gap: 6px; }
+}

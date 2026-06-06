@@ -1,0 +1,134 @@
+<app-header></app-header>
+<!-- ── SEARCH HERO ── -->
+<div class="search-hero">
+  <div class="search-hero-inner">
+    <h1>Find Your <span>Perfect Job</span></h1>
+    <p>Discover thousands of opportunities from top companies</p>
+    <div class="search-bar-top">
+      <div class="search-field">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Job title, skill, or company"
+               [(ngModel)]="searchQuery" (keyup.enter)="onSearch()">
+      </div>
+      <div class="search-divider"></div>
+      <div class="search-field">
+        <i class="bi bi-geo-alt"></i>
+        <input type="text" placeholder="City, state, or remote"
+               [(ngModel)]="searchLocation" (keyup.enter)="onSearch()">
+      </div>
+      <button class="search-btn" (click)="onSearch()">Search Jobs →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="joblist-wrapper">
+
+  <!-- Results bar -->
+  <div class="results-bar" *ngIf="!loading">
+    <span class="results-count">
+      <!-- <strong>{{ jobs.length }}</strong> jobs found -->
+      <!-- <span *ngIf="searchQuery"> for "<em>{{ searchQuery }}</em>"</span>
+      <span *ngIf="searchLocation"> in <em>{{ searchLocation }}</em></span> -->
+    </span>
+  </div>
+
+  <!-- Skeleton Loading -->
+  <div *ngIf="loading">
+    <div class="job-card skeleton-card" *ngFor="let i of [1,2,3,4]" style="display:flex;gap:14px;padding:22px 24px;background:#fff;border-radius:20px;margin-bottom:14px;">
+      <div class="skeleton-logo"></div>
+      <div style="flex:1;">
+        <div class="skeleton-line w80"></div>
+        <div class="skeleton-line w50"></div>
+        <div class="skeleton-line w30"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="error-box" *ngIf="!loading && error">
+    <i class="bi bi-exclamation-triangle"></i> {{ error }}
+  </div>
+
+  <!-- Empty -->
+  <div class="empty-box" *ngIf="!loading && !error && jobs.length === 0">
+    <i class="bi bi-briefcase" style="font-size:2.5rem;"></i>
+    <p>No jobs found. Try a different search.</p>
+  </div>
+
+  <!-- ── JOB CARDS ── -->
+  <div class="job-card"
+       *ngFor="let job of jobs; let i = index"
+      >
+
+    <!-- Top Row -->
+    <div class="card-top">
+      <div class="card-left">
+
+        <!-- Company Logo -->
+        <!-- <div class="company-logo-box" [ngClass]="'logo-' + (i % 8)">
+          <img *ngIf="getLogoUrl(job.company)"
+               [src]="getLogoUrl(job.company)"
+               [alt]="job.company"
+               (error)="onImgError($event, i)">
+          <span *ngIf="!getLogoUrl(job.company)">{{ job.company[0] }}</span>
+        </div> -->
+
+        <div class="card-info">
+          <div class="job-title">{{ job.title }}</div>
+          <div class="company-name">{{ job.company }}</div>
+        </div>
+      </div>
+
+      <!-- Badges -->
+      <div class="card-badges">
+        <span class="badge-hot" *ngIf="job.isHot">🔥 Hot</span>
+        <span class="badge-type"
+              [ngClass]="getBadgeClass(job.type)">
+          {{ job.type }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Meta -->
+    <div class="card-meta">
+      <span class="meta-item" *ngIf="job.experience">
+        <i class="bi bi-briefcase"></i> {{ job.experience }}
+      </span>
+      <span class="meta-item">
+        <i class="bi bi-geo-alt"></i> {{ job.location }}
+      </span>
+      <span class="meta-item" *ngIf="job.openings">
+        <i class="bi bi-people"></i> {{ job.openings }} Opening{{ job.openings > 1 ? 's' : '' }}
+      </span>
+    </div>
+
+    <!-- Description -->
+    <div class="card-desc" *ngIf="job.description">
+      {{ job.description }}
+    </div>
+
+    <!-- Skills -->
+    <div class="skills-row" *ngIf="job.skills && job.skills.length > 0">
+      <span class="skill-chip" *ngFor="let skill of job.skills.slice(0,5)">
+        {{ skill }}
+      </span>
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer">
+      <span class="salary-tag" *ngIf="job.salary">{{ job.salary }}</span>
+      <span class="salary-tag" style="color:#94a3b8;font-size:0.85rem;font-weight:500;" *ngIf="!job.salary">Salary not disclosed</span>
+      <div class="card-footer-right">
+        <span class="posted-time">
+          <i class="bi bi-clock"></i> {{ getPostedAgo(job.createdAt) }}
+        </span>
+        <button class="btn btn-outline-primary" style="width: 70%;"><a routerLink="/login" style="text-decoration: none;">Apply Job</a>
+          
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<app-footer></app-footer>

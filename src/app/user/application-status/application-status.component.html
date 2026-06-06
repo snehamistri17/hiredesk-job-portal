@@ -1,0 +1,164 @@
+<div class="fade-in">
+
+  <!-- Header -->
+  <div class="section-header">
+    <div>
+      <div class="section-title">🔍 Application Status</div>
+      <div class="section-subtitle">Stage-wise tracking of your job applications</div>
+    </div>
+    <!-- <button class="refresh-btn" (click)="load()">🔄 Refresh</button> -->
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="center-pad">
+    <div class="spinner"></div>
+    <p style="color:#8891b0;margin-top:12px">Loading applications...</p>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error" class="alert-error-box">⚠️ {{ error }}</div>
+
+  <!-- Empty -->
+  <div *ngIf="!loading && applications.length === 0" class="empty-box">
+    <div class="empty-icon">📋</div>
+    <div class="empty-title">No Applications Yet</div>
+    <div class="empty-sub">Apply to jobs from the Eligible Jobs page to see your status here.</div>
+  </div>
+
+  <!-- Main Layout -->
+  <div class="status-layout fade-in-1" *ngIf="!loading && applications.length > 0">
+
+    <!-- LEFT: Application List -->
+    <div class="app-list-panel">
+      <div class="panel-title">Your Applications ({{ applications.length }})</div>
+      <div class="app-list">
+        <div class="app-item"
+             *ngFor="let app of applications; let i = index"
+             [class.active]="selectedApp === i"
+             (click)="selectedApp = i">
+          <div class="ai-logo" [style.background]="app.color">{{ app.logo }}</div>
+          <div class="ai-info">
+            <div class="ai-company">{{ app.company }}</div>
+            <div class="ai-role">{{ app.role }}</div>
+          </div>
+          <div class="ai-status">
+            <div class="status-dot"
+                 [class.dot-green]="app.overallStatus === 'Selected'"
+                 [class.dot-blue]="app.overallStatus === 'Interview Scheduled' || app.overallStatus === 'Shortlisted'"
+                 [class.dot-red]="app.overallStatus === 'Rejected'"
+                 [class.dot-gray]="app.overallStatus === 'Applied'">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Detail Panel -->
+    <div class="detail-panel" *ngIf="selected">
+
+      <!-- 🎉 Selected Banner -->
+      <div *ngIf="isSelected" class="congrats-banner">
+        <div class="confetti-row">🎉 🎊 🎉</div>
+        <div class="congrats-title">Congratulations! You're Selected!</div>
+        <div class="congrats-sub">
+          You have been selected for <strong>{{ selected.role }}</strong> at <strong>{{ selected.company }}</strong>
+          with a package of <strong>{{ selected.pkg }}</strong>.
+        </div>
+        <div class="congrats-meta">A confirmation email has been sent to your registered email.</div>
+      </div>
+
+      <!-- 😔 Rejected Banner -->
+      <div *ngIf="isRejected" class="rejected-banner">
+        <div class="rejected-icon">📬</div>
+        <div>
+          <div class="rejected-title">Application Not Selected</div>
+          <div class="rejected-sub">Keep going — every application is a learning experience. Apply to more jobs!</div>
+        </div>
+      </div>
+
+      <!-- Interview Scheduled Alert -->
+      <div *ngIf="isInterviewScheduled" class="interview-banner">
+        <div style="font-size:28px">🎤</div>
+        <div>
+          <div style="font-weight:700;font-size:15px;color:#1e40af">Interview Scheduled!</div>
+          <div style="font-size:13px;color:#3b82f6;margin-top:3px">
+            {{ selected.interviewDate }} {{ selected.interviewTime ? '· ' + selected.interviewTime : '' }}
+            {{ selected.interviewMode ? '· ' + selected.interviewMode : '' }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Job Header -->
+      <div class="job-header">
+        <div class="job-logo" [style.background]="selected.color">{{ selected.logo }}</div>
+        <div class="job-meta">
+          <div class="job-title">{{ selected.role }}</div>
+          <div class="job-company">{{ selected.company }} · {{ selected.pkg }}</div>
+        </div>
+        <span class="status-badge"
+              [class.badge-selected]="selected.overallStatus === 'Selected'"
+              [class.badge-interview]="selected.overallStatus === 'Interview Scheduled'"
+              [class.badge-shortlisted]="selected.overallStatus === 'Shortlisted'"
+              [class.badge-rejected]="selected.overallStatus === 'Rejected'"
+              [class.badge-applied]="selected.overallStatus === 'Applied'">
+          {{ statusLabel(selected.overallStatus) }}
+        </span>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-section">
+        <div class="progress-label">
+          <span>Application Progress</span>
+          <span class="progress-pct">{{ progressPercent }}%</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill"
+               [style.width.%]="progressPercent"
+               [class.fill-green]="isSelected"
+               [class.fill-red]="isRejected">
+          </div>
+        </div>
+      </div>
+
+      <!-- 3-Stage Timeline -->
+      <div class="timeline-section">
+        <div class="tl-heading">Application Journey</div>
+        <div class="timeline">
+          <div class="tl-item" *ngFor="let t of selected.timeline; let last = last">
+
+            <!-- Connector line -->
+            <div class="tl-connector">
+              <div class="tl-dot-wrap">
+                <div class="tl-dot"
+                     [class.tl-done]="t.status === 'done'"
+                     [class.tl-active]="t.status === 'active'"
+                     [class.tl-pending]="t.status === 'pending'">
+                  <span *ngIf="t.status === 'done'">✓</span>
+                  <span *ngIf="t.status === 'active'" class="pulse-dot"></span>
+                  <span *ngIf="t.status === 'pending'">○</span>
+                </div>
+              </div>
+              <div *ngIf="!last" class="tl-line"
+                   [class.line-filled]="t.status === 'done'"></div>
+            </div>
+
+            <!-- Content -->
+            <div class="tl-content" [class.tl-active-card]="t.status === 'active'">
+              <div class="tl-top">
+                <span class="tl-icon">{{ t.icon }}</span>
+                <span class="tl-stage" [class.tl-stage-active]="t.status === 'active'">{{ t.stage }}</span>
+                <span *ngIf="t.mode" class="tl-mode-badge">{{ t.mode }}</span>
+                <span class="tl-date">{{ t.date }}</span>
+              </div>
+              <div class="tl-desc">{{ t.desc }}</div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /detail-panel -->
+
+  </div>
+</div>

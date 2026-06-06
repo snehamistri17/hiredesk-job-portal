@@ -1,0 +1,93 @@
+<nav class="navbar">
+  <div class="navbar-brand">
+    <!-- <span class="brand-work">work</span>
+    <span class="brand-hire">HireDesk</span> -->
+  </div>
+
+  <div class="navbar-right">
+    <!-- Notifications -->
+    <div class="nav-icon-btn" (click)="toggleNotifications()">
+      <!-- <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg> -->
+      <span class="notif-badge" *ngIf="unreadCount > 0">{{ unreadCount }}</span>
+      <span class="notif-pulse"  *ngIf="unreadCount > 0"></span>
+    </div>
+
+    <!-- Notification Dropdown -->
+    <!-- <div class="notif-dropdown" *ngIf="showNotifications">
+      <div class="notif-header">
+        <h4>Notifications</h4>
+        <span class="mark-all" (click)="markAllRead()">Mark all read</span>
+      </div>
+      <div class="notif-list">
+        <div *ngIf="notifications.length === 0" style="padding:20px;text-align:center;color:#8891b0;font-size:13px;">
+          No notifications yet.
+        </div>
+        <div class="notif-item" *ngFor="let n of notifications" [class.unread]="!n.read">
+          <div class="notif-dot" [style.background]="n.color"></div>
+          <div class="notif-body">
+            <p>{{ n.message }}</p>
+            <span>{{ n.time }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="notif-footer">
+        <a routerLink="/student/notifications" (click)="closeAll()">View all notifications</a>
+      </div>
+    </div> -->
+
+    <!-- Profile Button — shows real user name -->
+    <div class="profile-btn" (click)="toggleProfile()">
+      <!-- <div class="profile-avatar">
+        <span>{{ userInitials }}</span>
+      </div>
+      <div class="profile-info">
+        <span class="profile-name">{{ userName }}</span>
+        <span class="profile-role">Student</span>
+      </div> -->
+      <!-- <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"> -->
+        <!-- <polyline points="6 9 12 15 18 9"/>
+      </svg> -->
+    </div>
+
+    <!-- Profile Dropdown — shows real user name and email -->
+    <div class="profile-dropdown" *ngIf="showProfile">
+      <div class="dropdown-header">
+        <div class="dropdown-avatar">{{ userInitials }}</div>
+        <div>
+          <div class="dropdown-name">{{ userName }}</div>
+          <div class="dropdown-email">{{ userEmail }}</div>
+        </div>
+      </div>
+      <div class="dropdown-divider"></div>
+      <a routerLink="/student/profile" class="dropdown-item" (click)="closeAll()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        My Profile
+      </a>
+      <a routerLink="/student/change-password" class="dropdown-item" (click)="closeAll()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        Change Password
+      </a>
+      <div class="dropdown-divider"></div>
+      <div class="dropdown-item logout" (click)="logout()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        Logout
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- Overlay for closing dropdowns -->
+<div class="overlay" *ngIf="showNotifications || showProfile" (click)="closeAll()"></div>

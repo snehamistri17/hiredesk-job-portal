@@ -1,0 +1,204 @@
+<app-header></app-header>
+<div class="reg-page">
+  <div class="reg-card">
+
+    <div class="reg-header">
+      <div class="reg-logo">work<span>HireDesk</span></div>
+      <p class="reg-tagline">Student Placement Portal</p>
+    </div>
+
+    <div class="reg-body">
+      <h2 class="step-title">Create Account 🎓</h2>
+      <p class="step-sub">Fill in your details to register</p>
+
+      <!-- Error -->
+      <div class="alert alert-error" *ngIf="error">⚠️ {{ error }}</div>
+
+      <!-- Success -->
+      <div class="alert alert-success" *ngIf="successMsg">✅ {{ successMsg }}</div>
+
+      <!-- ── Role Selector ─────────────────────────────────── -->
+      <div class="role-toggle">
+        <button
+          type="button"
+          class="role-btn"
+          [class.active]="role === 'user'"
+          (click)="role = 'user'">
+          🎓 Student / User
+        </button>
+        <button
+          type="button"
+          class="role-btn"
+          [class.active]="role === 'company'"
+          (click)="role = 'company'">
+          🏢 Company
+        </button>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════ -->
+      <!--  USER (STUDENT) FIELDS                                -->
+      <!-- ══════════════════════════════════════════════════════ -->
+      <ng-container *ngIf="role === 'user'">
+
+        <!-- Full Name -->
+        <div class="field">
+          <label>Full Name</label>
+          <div class="input-box">
+            <span class="icon">👤</span>
+            <input type="text" [(ngModel)]="name" placeholder="Rahul Sharma" />
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="field">
+          <label>Email Address</label>
+          <div class="input-box">
+            <span class="icon">📧</span>
+            <input type="email" [(ngModel)]="email" placeholder="rahul@college.edu" />
+          </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="field">
+          <label>Mobile Number</label>
+          <div class="input-box">
+            <span class="icon">📱</span>
+            <input type="tel" [(ngModel)]="phone" placeholder="9876543210" maxlength="10" />
+          </div>
+        </div>
+
+        <!-- Roll No + Branch -->
+        <div class="field-row">
+          <div class="field">
+            <label>Roll Number</label>
+            <div class="input-box">
+              <span class="icon">🎫</span>
+              <input type="text" [(ngModel)]="rollNo" placeholder="CS2021001" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Degree</label>
+            <div class="input-box">
+              <span class="icon">📚</span>
+              <select [(ngModel)]="branch">
+                <option value="">Select</option>
+                <option *ngFor="let b of branches" [value]="b">{{ b }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Department -->
+        <div class="field">
+          <label>Department</label>
+          <div class="input-box">
+            <span class="icon">🏛️</span>
+            <select [(ngModel)]="department">
+              <option value="">Select Department</option>
+              <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+            </select>
+          </div>
+        </div>
+
+      </ng-container>
+
+      <!-- ══════════════════════════════════════════════════════ -->
+      <!--  COMPANY FIELDS                                       -->
+      <!-- ══════════════════════════════════════════════════════ -->
+      <ng-container *ngIf="role === 'company'">
+
+        <!-- Company Name -->
+        <div class="field">
+          <label>Company Name</label>
+          <div class="input-box">
+            <span class="icon">🏢</span>
+            <input type="text" [(ngModel)]="companyName" placeholder="Acme Pvt. Ltd." />
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="field">
+          <label>Official Email</label>
+          <div class="input-box">
+            <span class="icon">📧</span>
+            <input type="email" [(ngModel)]="email" placeholder="hr@company.com" />
+          </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="field">
+          <label>Contact Number</label>
+          <div class="input-box">
+            <span class="icon">📱</span>
+            <input type="tel" [(ngModel)]="phone" placeholder="9876543210" maxlength="10" />
+          </div>
+        </div>
+
+        <!-- Industry -->
+        <div class="field">
+          <label>Industry</label>
+          <div class="input-box">
+            <span class="icon">🏭</span>
+            <select [(ngModel)]="industry">
+              <option value="">Select Industry</option>
+              <option *ngFor="let i of industries" [value]="i">{{ i }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Website -->
+        <div class="field">
+          <label>Website <span class="optional">(optional)</span></label>
+          <div class="input-box">
+            <span class="icon">🌐</span>
+            <input type="url" [(ngModel)]="website" placeholder="https://company.com" />
+          </div>
+        </div>
+
+        <!-- Note about approval -->
+        <div class="info-note">
+          ℹ️ Company accounts require <strong>admin approval</strong> before you can log in.
+        </div>
+
+      </ng-container>
+
+      <!-- ── Common: Password ──────────────────────────────────── -->
+      <div class="field">
+        <label>Password</label>
+        <div class="input-box">
+          <span class="icon">🔒</span>
+          <input [type]="showPass ? 'text' : 'password'"
+                 [(ngModel)]="password" placeholder="Min 8 characters" />
+          <button class="eye-btn" type="button" (click)="showPass = !showPass">
+            <span *ngIf="!showPass">👁️</span>
+            <span *ngIf="showPass">🙈</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="field">
+        <label>Confirm Password</label>
+        <div class="input-box">
+          <span class="icon">🔐</span>
+          <input [type]="showConfirm ? 'text' : 'password'"
+                 [(ngModel)]="confirmPassword" placeholder="Repeat password" />
+          <button class="eye-btn" type="button" (click)="showConfirm = !showConfirm">
+            <span *ngIf="!showConfirm">👁️</span>
+            <span *ngIf="showConfirm">🙈</span>
+          </button>
+        </div>
+      </div>
+
+      <button class="btn-primary" (click)="register()" [disabled]="loading">
+        <span *ngIf="loading">⏳ Creating Account...</span>
+        <span *ngIf="!loading && role === 'user'">✅ Create Student Account</span>
+        <span *ngIf="!loading && role === 'company'">✅ Register Company</span>
+      </button>
+
+      <p class="bottom-link">Already registered? <a routerLink="/login">Sign In</a></p>
+    </div>
+
+  </div>
+</div>
+<app-footer></app-footer>

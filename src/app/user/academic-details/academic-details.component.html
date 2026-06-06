@@ -1,0 +1,229 @@
+<div class="fade-in">
+  <div class="toast toast-success" *ngIf="saved">✅ Academic details saved!</div>
+
+  <!-- Header -->
+  <div class="section-header" style="display:flex;justify-content:space-between;align-items:center">
+    <div>
+      <div class="section-title">🎓 Academic Details</div>
+      <div class="section-subtitle">Your educational background and performance records</div>
+    </div>
+    <button class="btn btn-primary" (click)="editing ? save() : editing = true">
+      {{ editing ? '💾 Save Changes' : '✏️ Edit Details' }}
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-row fade-in-1" style="margin-bottom:24px">
+    <div class="card acad-stat blue">
+      <div class="as-num">{{ academic.cgpa || '—' }}</div>
+      <div class="as-label">Current CGPA</div>
+    </div>
+    <div class="card acad-stat green">
+      <div class="as-num">{{ academic.currentSem || '—' }}</div>
+      <div class="as-label">Current Semester</div>
+    </div>
+    <div class="card acad-stat orange">
+      <div class="as-num">{{ academic.backlogs || '0' }}</div>
+      <div class="as-label">Active Backlogs</div>
+    </div>
+    <div class="card acad-stat teal">
+      <div class="as-num">{{ academic.passoutYear || '—' }}</div>
+      <div class="as-label">Graduation Year</div>
+    </div>
+  </div>
+
+  <div class="acad-grid fade-in-2">
+    <div style="display:flex;flex-direction:column;gap:20px">
+
+      <!-- College & Course -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">🏛️ College &amp; Course</div></div>
+
+        <!-- VIEW MODE -->
+        <ng-container *ngIf="!editing">
+          <div class="info-field"><span class="if-label">College</span>
+            <span class="if-val">{{ academic.college || '—' }}</span></div>
+          <div class="info-field"><span class="if-label">University</span>
+            <span class="if-val">{{ academic.university || '—' }}</span></div>
+          <div class="info-field"><span class="if-label">Degree</span>
+            <span class="if-val">{{ academic.degree || '—' }}</span></div>
+          <div class="info-field"><span class="if-label">Department</span>
+            <span class="if-val">{{ academic.branch || '—' }}</span></div>
+          <div class="info-field"><span class="if-label">Roll Number</span>
+            <span class="if-val">{{ academic.rollNo || '—' }}</span></div>
+          <div class="info-field"><span class="if-label">Admission Year</span>
+            <span class="if-val">{{ academic.admissionYear || '—' }}</span></div>
+          <div class="info-field" style="border:none"><span class="if-label">Passing Year</span>
+            <span class="if-val">{{ academic.passoutYear || '—' }}</span></div>
+        </ng-container>
+
+        <!-- EDIT MODE — all fields editable -->
+        <ng-container *ngIf="editing">
+          <div class="form-group" style="margin-top:10px">
+            <label>College Name</label>
+            <input class="form-control" [(ngModel)]="academic.college"
+                   placeholder="e.g. ABC Engineering College" />
+          </div>
+          <div class="form-group">
+            <label>University</label>
+            <input class="form-control" [(ngModel)]="academic.university"
+                   placeholder="e.g. Gujarat University" />
+          </div>
+          <div class="form-group">
+            <label>Degree</label>
+            <select class="form-control" [(ngModel)]="academic.degree">
+              <option value="">Select Degree</option>
+              <option>B.Tech</option><option>B.E</option><option>BCA</option>
+              <option>MCA</option><option>M.Tech</option><option>B.Sc</option>
+              <option>M.Sc</option><option>MBA</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Department / Branch</label>
+            <input class="form-control" [(ngModel)]="academic.branch"
+                   placeholder="e.g. Computer Science & Engineering" />
+          </div>
+          <div class="form-group">
+            <label>Roll Number</label>
+            <input class="form-control" [(ngModel)]="academic.rollNo"
+                   placeholder="e.g. CS2021001" />
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="form-group">
+              <label>Admission Year</label>
+              <input class="form-control" [(ngModel)]="academic.admissionYear"
+                     placeholder="e.g. 2021" maxlength="4" />
+            </div>
+            <div class="form-group">
+              <label>Passing Year</label>
+              <input class="form-control" [(ngModel)]="academic.passoutYear"
+                     placeholder="e.g. 2025" maxlength="4" />
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <div class="form-group">
+              <label>Current Semester</label>
+              <select class="form-control" [(ngModel)]="academic.currentSem">
+                <option value="">Select</option>
+                <option *ngFor="let s of [1,2,3,4,5,6,7,8]" [value]="s">Sem {{ s }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Current CGPA</label>
+              <input class="form-control" [(ngModel)]="academic.cgpa"
+                     placeholder="e.g. 8.40" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Active Backlogs</label>
+            <input class="form-control" [(ngModel)]="academic.backlogs"
+                   placeholder="0" />
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- School Education -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">📋 School Education</div></div>
+        <div class="school-cards-row">
+
+          <!-- 10th -->
+          <div class="school-card s-blue">
+            <div class="sc-label">10TH GRADE</div>
+            <div class="sc-pct">{{ academic.tenth || '—' }}{{ academic.tenth ? '%' : '' }}</div>
+            <div class="sc-info">{{ academic.tenthBoard || '' }}{{ academic.tenthYear ? ' • ' + academic.tenthYear : '' }}</div>
+            <ng-container *ngIf="editing">
+              <input class="form-control" [(ngModel)]="academic.tenth"
+                     placeholder="Percentage e.g. 85.00" style="font-size:13px;margin-top:8px" />
+              <input class="form-control" [(ngModel)]="academic.tenthBoard"
+                     placeholder="Board e.g. CBSE" style="font-size:13px;margin-top:6px" />
+              <input class="form-control" [(ngModel)]="academic.tenthYear"
+                     placeholder="Year e.g. 2019" style="font-size:13px;margin-top:6px" maxlength="4" />
+            </ng-container>
+          </div>
+
+          <!-- 12th -->
+          <div class="school-card s-green">
+            <div class="sc-label">12TH GRADE</div>
+            <div class="sc-pct">{{ academic.twelfth || '—' }}{{ academic.twelfth ? '%' : '' }}</div>
+            <div class="sc-info">{{ academic.twelfthBoard || '' }}{{ academic.twelfthYear ? ' • ' + academic.twelfthYear : '' }}</div>
+            <ng-container *ngIf="editing">
+              <input class="form-control" [(ngModel)]="academic.twelfth"
+                     placeholder="Percentage e.g. 78.00" style="font-size:13px;margin-top:8px" />
+              <input class="form-control" [(ngModel)]="academic.twelfthBoard"
+                     placeholder="Board e.g. GSEB" style="font-size:13px;margin-top:6px" />
+              <input class="form-control" [(ngModel)]="academic.twelfthYear"
+                     placeholder="Year e.g. 2021" style="font-size:13px;margin-top:6px" maxlength="4" />
+            </ng-container>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Semester Table -->
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-title">📊 Semester Performance</div></div>
+        <span class="badge badge-success">Active</span>
+      </div>
+      <div class="sem-table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Semester</th>
+              <th>SGPA</th>
+              <th>Backlogs</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let s of semesters">
+              <td><strong>{{ s.sem }}</strong></td>
+              <td>
+                <span *ngIf="!editing">{{ s.sgpa }}</span>
+                <input *ngIf="editing" class="form-control"
+                       [(ngModel)]="s.sgpa"
+                       style="width:80px;padding:5px 8px;font-size:13px"
+                       placeholder="—" />
+              </td>
+              <td>
+                <span *ngIf="!editing">{{ s.backlog }}</span>
+                <input *ngIf="editing" class="form-control"
+                       [(ngModel)]="s.backlog"
+                       style="width:60px;padding:5px 8px;font-size:13px"
+                       placeholder="0" type="number" min="0" />
+              </td>
+              <td>
+                <span *ngIf="!editing" class="badge"
+                      [class.badge-success]="s.status==='Passed'"
+                      [class.badge-info]="s.status==='Ongoing'"
+                      [class.badge-warning]="s.status==='Pending'">
+                  {{ s.status }}
+                </span>
+                <select *ngIf="editing" class="form-control"
+                        [(ngModel)]="s.status"
+                        style="padding:5px 8px;font-size:13px">
+                  <option>Passed</option>
+                  <option>Ongoing</option>
+                  <option>Pending</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Save button inside card when editing -->
+      <div *ngIf="editing" class="cgpa-edit">
+        <button class="btn btn-primary" style="width:100%" (click)="save()">
+          💾 Save All Academic Details
+        </button>
+        <button class="btn btn-secondary" style="width:100%;margin-top:8px"
+                (click)="editing = false">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

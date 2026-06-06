@@ -1,0 +1,60 @@
+<aside class="sidebar" [class.collapsed]="collapsed">
+
+  <div class="logo" (click)="toggle()">
+    <img *ngIf="!collapsed" src="assets/hiredesklogo.png" alt="HireDesk"
+       style="height:36px;width:auto;cursor:pointer;" />
+  <!-- Collapsed: icon-only badge -->
+  <div *ngIf="collapsed"
+       style="width:36px;height:36px;background:linear-gradient(135deg,#3B82F6,#1D4ED8);
+              border-radius:10px;display:flex;align-items:center;justify-content:center;
+              font-family:Georgia,serif;font-size:15px;color:white;font-weight:900;cursor:pointer;">
+    
+  </div>
+    
+      <span class="lo2" style="color: white;">HireDesk</span>
+   
+  </div>
+
+  <!-- ✅ Dynamic admin name and initials -->
+  <div class="admin-card" *ngIf="!collapsed">
+    <div class="admin-av">{{ loggedInInitials }}</div>
+    <div class="admin-card-info">
+      <div class="admin-name">{{ loggedInName }}</div>
+      <div class="admin-role"><span class="dot"></span> Administrator</div>
+    </div>
+  </div>
+  <div class="admin-av-sm" *ngIf="collapsed">{{ loggedInInitials }}</div>
+
+  <nav class="nav">
+
+    <div class="nav-label">MAIN MENU</div>
+
+    <!-- Dashboard -->
+    <a class="nav-item" [class.active]="active === 'admin-dashboard'" (click)="go('admin-dashboard')"
+      [title]="collapsed ? 'Dashboard' : ''">
+      <span class="nav-icon">⊞</span>
+      <span class="nav-text">Dashboard</span>
+    </a>
+
+    <!-- Other menu items -->
+    <a class="nav-item" *ngFor="let item of navItems | slice:1" [class.active]="active === item.id"
+      (click)="go(item.id)" [title]="collapsed ? item.label : ''">
+      <span class="nav-icon">{{ item.icon }}</span>
+      <span class="nav-text">{{ item.label }}</span>
+      <span class="nav-badge" *ngIf="item.badge">{{ item.badge }}</span>
+    </a>
+
+  </nav>
+
+  <div class="sidebar-footer">
+    <a class="nav-item logout" (click)="go('login')">
+      <span class="nav-icon">🚪</span>
+      <span class="nav-text">Logout</span>
+    </a>
+  </div>
+
+  <button class="toggle-btn" (click)="toggle()">
+    {{ collapsed ? '▶' : '◀' }}
+  </button>
+
+</aside>

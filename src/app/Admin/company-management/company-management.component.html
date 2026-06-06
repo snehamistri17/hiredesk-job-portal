@@ -1,0 +1,161 @@
+<!-- manage-companies.component.html -->
+<div class="pg">
+
+  <!-- FILTER BAR — no Add button -->
+  <div class="card filter-bar">
+    <div class="filter-left">
+      <div class="fg">
+        <label>Status</label>
+        <select [(ngModel)]="fStatus" (change)="filter()">
+          <option value="">All</option>
+          <option>Approved</option><option>Pending</option><option>Rejected</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Industry</label>
+        <select [(ngModel)]="fInd" (change)="filter()">
+          <option value="">All Industries</option>
+          <option *ngFor="let ind of industries" [value]="ind">{{ ind }}</option>
+        </select>
+      </div>
+      <div class="search-wrap">
+        <span>🔍</span>
+        <input type="text" placeholder="Search company..." [(ngModel)]="q" (input)="filter()" />
+      </div>
+    </div>
+    <div class="filter-right">
+      <span class="count-chip">{{ filtered.length }} companies</span>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="filtered.length === 0 && !loading" class="empty-state-card">
+    <div style="font-size:40px;margin-bottom:12px">🏢</div>
+    <h3>No companies found</h3>
+    <p>Companies register themselves. They appear here once registered.</p>
+  </div>
+
+  <!-- COMPANIES GRID -->
+  <div class="companies-grid" *ngIf="filtered.length > 0">
+    <div class="co-card" *ngFor="let c of filtered; let i = index">
+      <div class="co-top">
+        <div class="co-av" [ngClass]="'av'+(i%6)">
+          {{ (c.avatar || c.name?.substring(0,2) || 'CO').toUpperCase().substring(0,2) }}
+        </div>
+        <span class="sbadge" [ngClass]="c.status?.toLowerCase()">{{ c.status }}</span>
+      </div>
+      <div class="co-name">{{ c.name }}</div>
+      <div class="co-ind">{{ c.industry }}</div>
+
+      <!-- Real DB fields — shown only if present -->
+      <div class="co-meta">
+        <span *ngIf="c.headquarters || c.location">📍 {{ c.headquarters || c.location }}</span>
+        <span *ngIf="c.phone">📞 {{ c.phone }}</span>
+        <span *ngIf="c.website">🌐 {{ c.website }}</span>
+        <span *ngIf="c.size">👥 {{ c.size }}</span>
+        <span *ngIf="c.founded">🗓 Est. {{ c.founded }}</span>
+        <span *ngIf="!c.headquarters && !c.location && !c.phone && !c.size" class="muted-meta">
+          No details added yet
+        </span>
+      </div>
+
+      <!-- Pending approve/reject actions -->
+      <div class="co-approve-row" *ngIf="c.status === 'Pending'">
+        <button class="co-btn approve" (click)="approve(c)">✓ Approve</button>
+        <button class="co-btn reject-btn"  (click)="reject(c)">✕ Reject</button>
+      </div>
+
+      <!-- View + Delete only (no Add/Edit for admin) -->
+      <div class="co-btns">
+        <button class="co-btn view" (click)="openViewModal(c)">👁 View</button>
+        <button class="co-btn del"  (click)="del(c._id)">🗑 Remove</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     VIEW COMPANY MODAL
+══════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showViewModal && viewCompany" (click)="closeViewModal()">
+  <div class="modal-box modal-box-lg" (click)="$event.stopPropagation()">
+    <div class="modal-header modal-header-teal">
+      <div class="modal-header-icon">🏛️</div>
+      <div class="modal-header-text">
+        <h2 class="modal-title">Company Profile</h2>
+        <p class="modal-subtitle">{{ viewCompany!.name }}</p>
+      </div>
+      <button class="modal-x" (click)="closeViewModal()">✕</button>
+    </div>
+
+    <div class="modal-form">
+      <div class="view-profile-card">
+        <div class="view-avatar-big av2">
+          {{ (viewCompany!.avatar || viewCompany!.name?.substring(0,2) || 'CO').toUpperCase().substring(0,2) }}
+        </div>
+        <div class="view-profile-info">
+          <div class="view-full-name">{{ viewCompany!.name }}</div>
+          <div class="view-full-email">{{ viewCompany!.industry }}
+            <span *ngIf="viewCompany!.headquarters || viewCompany!.location">
+              · {{ viewCompany!.headquarters || viewCompany!.location }}
+            </span>
+          </div>
+          <span class="sbadge" [ngClass]="viewCompany!.status?.toLowerCase()">{{ viewCompany!.status }}</span>
+        </div>
+      </div>
+
+      <div class="view-info-grid">
+        <div class="view-info-card">
+          <div class="vic-label">📧 Email</div>
+          <div class="vic-value">{{ viewCompany!.email || '—' }}</div>
+        </div>
+        <div class="view-info-card">
+          <div class="vic-label">📞 Phone</div>
+          <div class="vic-value">{{ viewCompany!.phone || '—' }}</div>
+        </div>
+        <div class="view-info-card">
+          <div class="vic-label">📍 Headquarters</div>
+          <div class="vic-value">{{ viewCompany!.headquarters || viewCompany!.location || '—' }}</div>
+        </div>
+        <div class="view-info-card">
+          <div class="vic-label">👥 Company Size</div>
+          <div class="vic-value">{{ viewCompany!.size || '—' }}</div>
+        </div>
+        <div class="view-info-card">
+          <div class="vic-label">🗓 Founded</div>
+          <div class="vic-value">{{ viewCompany!.founded || '—' }}</div>
+        </div>
+        <div class="view-info-card">
+          <div class="vic-label">🌐 Website</div>
+          <div class="vic-value">{{ viewCompany!.website || '—' }}</div>
+        </div>
+        <div class="view-info-card view-info-full" *ngIf="viewCompany!.description">
+          <div class="vic-label">📝 About</div>
+          <div class="vic-value">{{ viewCompany!.description }}</div>
+        </div>
+      </div>
+
+      <!-- Approve/Reject inside view modal if pending -->
+      <div class="co-approve-row" *ngIf="viewCompany!.status === 'Pending'" style="margin-bottom:12px">
+        <button class="co-btn approve" (click)="approve(viewCompany!); closeViewModal()">✓ Approve</button>
+        <button class="co-btn reject-btn"  (click)="reject(viewCompany!);  closeViewModal()">✕ Reject</button>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" (click)="closeViewModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .co-approve-row { display:flex; gap:8px; margin-top:10px; }
+  .co-btn.approve { background:#dcfce7;color:#16a34a;border:1.5px solid #86efac;font-weight:600;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:13px; }
+  .co-btn.approve:hover { background:#bbf7d0; }
+  .co-btn.reject-btn { background:#fef2f2;color:#dc2626;border:1.5px solid #fca5a5;font-weight:600;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:13px; }
+  .co-btn.reject-btn:hover { background:#fee2e2; }
+  .muted-meta { font-size:12px;color:#94a3b8;font-style:italic; }
+  .empty-state-card { text-align:center;padding:60px 20px;background:#f8fafc;border-radius:16px;border:2px dashed #e2e8f0;margin-top:8px; }
+  .empty-state-card h3 { margin:0 0 8px;color:#334155; }
+  .empty-state-card p { color:#64748b;font-size:14px;margin:0; }
+</style>

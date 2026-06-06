@@ -1,0 +1,124 @@
+.job-page {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background: #f5f6fa;
+  font-family: Arial, sans-serif;
+}
+
+.job-main {
+  flex: 3;
+}
+
+.job-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.company {
+  color: #555;
+  margin: 6px 0;
+}
+
+.rating {
+  margin-left: 8px;
+  color: #f39c12;
+}
+
+.reviews {
+  color: #0073e6;
+  margin-left: 6px;
+}
+
+.meta span {
+  margin-right: 15px;
+  color: #444;
+  font-size: 14px;
+}
+
+.actions button {
+  padding: 8px 18px;
+   border-radius: 20px; 
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+  border-bottom: 30px;
+}
+
+.save {
+  background: #fff;
+  border: 1px solid #0073e6;
+  color: #0073e6;
+}
+
+.apply {
+  background: #0073e6;
+  color: #fff;
+}
+
+.footer {
+  margin-top: 12px;
+  color: #666;
+  font-size: 14px;
+}
+
+.box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.box ul {
+  padding-left: 18px;
+}
+
+.chips span {
+  display: inline-block;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  border-radius: 20px;
+  margin: 5px;
+  font-size: 13px;
+}
+
+.job-sidebar {
+  flex: 1;
+  background: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  height: fit-content;
+}
+
+.similar-job {
+  border-bottom: 1px solid #eee;
+  padding: 10px 0;
+}
+
+.similar-job h4 {
+  font-size: 14px;
+  margin: 0;
+}
+
+.similar-job p {
+  font-size: 13px;
+  color: #666;
+}
+
+.posted {
+  display: block;
+  font-size: 12px;
+  color: #999;
+}
+
+.company-logo {
+  width: 48px;
+  height: auto;
+}

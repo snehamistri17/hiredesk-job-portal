@@ -1,0 +1,125 @@
+<!-- sidebar.component.html -->
+<aside class="hd-sidebar" [class.open]="isOpen">
+<!-- ── Logo ─────────────────────────────────── -->
+  
+  <!-- ── Profile Section ──────────────────────── -->
+  <div class="sb-profile">
+    <div class="sp-cover"></div>
+    <div class="sp-body">
+      <div class="sp-avatar-wrap">
+        <div class="sp-avatar">{{ initials }}</div>
+        <div class="sp-dot placed"></div>
+      </div>
+      <div class="sp-info">
+        <h5>{{ profile.name }}</h5>
+        <p class="sp-dept">{{ profile.department }}</p>
+        <p class="sp-college">{{ profile.college }}</p>
+        <div class="sp-tags">
+          <span>{{ profile.enrollmentNo }}</span>
+          <span class="teal">CGPA {{ profile.cgpa }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="placed-pill">
+      <i class="bi bi-trophy-fill"></i> Placed at {{ profile.placedAt }}
+    </div>
+  </div>
+
+  <!-- ── Score + Completion ───────────────────── -->
+  <div class="sb-scores">
+    <!-- Donut -->
+    <div class="score-wrap">
+      <svg viewBox="0 0 80 80" class="score-svg">
+        <circle class="s-track" cx="40" cy="40" r="34"></circle>
+        <circle
+          class="s-fill"
+          cx="40" cy="40" r="34"
+          [attr.stroke-dasharray]="(profile.readyScore / 100 * 213.6) + ' 213.6'"
+          transform="rotate(-90 40 40)"
+        ></circle>
+      </svg>
+      <div class="score-inner">
+        <span class="s-num">{{ profile.readyScore }}</span>
+        <span class="s-lbl">Score</span>
+      </div>
+    </div>
+
+    <!-- Completion -->
+    <div class="comp-wrap">
+      <div class="cw-row">
+        <span>Profile Strength</span>
+        <strong>{{ profile.profileCompletion }}%</strong>
+      </div>
+      <div class="cw-track"><div class="cw-fill" [style.width.%]="profile.profileCompletion"></div></div>
+      <p class="cw-sub">{{ doneCount }}/{{ checklist.length }} sections complete</p>
+      <div class="cw-list">
+        <div class="cw-item" *ngFor="let c of checklist" [class.done]="c.done">
+          <i class="bi" [ngClass]="c.done ? 'bi-check-circle-fill' : 'bi-circle'"></i>
+          <span>{{ c.label }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Quick Stats ───────────────────────────── -->
+  <div class="sb-stats">
+    <div class="stat-item" *ngFor="let s of quickStats" (click)="navigate('/applied-jobs')">
+      <div class="stat-icon" [style.background]="s.color + '20'" [style.color]="s.color">
+        <i class="bi" [ngClass]="s.icon"></i>
+      </div>
+      <span class="stat-val" [style.color]="s.color">{{ s.value }}</span>
+      <span class="stat-label">{{ s.label }}</span>
+    </div>
+  </div>
+
+  <!-- ── Navigation ───────────────────────────── -->
+  <nav class="sb-nav">
+    <div *ngFor="let section of navSections" class="nav-section">
+      <span class="ns-label">{{ section.label }}</span>
+      <ul>
+        <li *ngFor="let item of section.items">
+          <button
+            class="nav-item"
+            [class.active]="isActive(item.route)"
+            (click)="navigate(item.route)"
+          >
+            <div class="ni-bar"></div>
+            <div class="ni-icon" [class.active-icon]="isActive(item.route)">
+              <i class="bi" [ngClass]="item.icon"></i>
+            </div>
+            <span class="ni-label">{{ item.label }}</span>
+            <span *ngIf="item.badge" class="ni-badge" [ngClass]="item.badgeType">{{ item.badge }}</span>
+            <i *ngIf="!item.badge" class="bi bi-chevron-right ni-arrow"></i>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ── Logout ────────────────────────────────── -->
+  <div class="sb-bottom">
+
+    <!-- Confirm dialog -->
+    <div class="logout-confirm" *ngIf="showLogoutConfirm">
+      <p><i class="bi bi-exclamation-triangle-fill"></i> Sign out of HireDesk?</p>
+      <div class="lc-btns">
+        <button class="lc-yes" (click)="doLogout()"><i class="bi bi-box-arrow-right"></i> Yes, Sign Out</button>
+        <button class="lc-no"  (click)="cancelLogout()">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Logout button -->
+    <button class="logout-btn" *ngIf="!showLogoutConfirm" (click)="confirmLogout()">
+      <div class="lb-icon"><i class="bi bi-box-arrow-right"></i></div>
+      <span>Sign Out</span>
+    </button>
+
+    <div class="sb-footer">
+      <i class="bi bi-patch-check-fill"></i> HireDesk Student Portal v2.0
+    </div>
+  </div>
+
+</aside>
+
+<!-- Mobile overlay -->
+<div class="sb-overlay" [class.show]="isOpen" (click)="closed.emit()"></div>

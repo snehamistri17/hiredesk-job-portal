@@ -1,0 +1,190 @@
+<!-- post-job.component.html -->
+<div class="post-job fade-in">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Post a New Job</h1>
+      <p class="page-subtitle">Fill in the details to attract the right candidates</p>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn-outline" (click)="saveDraft()">
+        <span class="material-icons">save</span> Save Draft
+      </button>
+      <button class="btn-primary" (click)="publishJob()">
+        <span class="material-icons">publish</span> Publish Job
+      </button>
+    </div>
+  </div>
+
+  <!-- Validation Alert -->
+  <div *ngIf="validationErrors.length > 0" style="background:#fef2f2;border:1.5px solid rgba(239,68,68,0.3);border-radius:14px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:flex-start;gap:12px">
+    <span class="material-icons" style="color:#ef4444;flex-shrink:0;font-size:20px;margin-top:2px">error_outline</span>
+    <div>
+      <p style="font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:14px;color:#dc2626;margin-bottom:6px">Please fix these errors before publishing:</p>
+      <ul style="list-style:none;display:flex;flex-wrap:wrap;gap:6px">
+        <li *ngFor="let e of validationErrors" style="font-size:12px;color:#dc2626;background:rgba(239,68,68,0.08);padding:3px 10px;border-radius:20px;border:1px solid rgba(239,68,68,0.2)">• {{e}}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="form-layout">
+    <!-- Left: Main form -->
+    <div class="form-main">
+
+      <div class="card">
+        <div class="card-section-title">
+          <span class="material-icons">info</span> Basic Information
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label required">Job Title</label>
+            <input class="form-input" [class.error]="errors.title" type="text" placeholder="e.g. Senior Frontend Developer" [(ngModel)]="jobForm.title">
+            <span class="form-error" *ngIf="errors.title">Job title is required</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label required">Department</label>
+            <select class="form-input" [class.error]="errors.department" [(ngModel)]="jobForm.department">
+              <option value="">Select Department</option>
+              <option>Engineering</option>
+              <option>Analytics</option>
+              <option>Design</option>
+              <option>Marketing</option>
+              <option>Finance</option>
+              <option>Product</option>
+              <option>Infrastructure</option>
+            </select>
+            <span class="form-error" *ngIf="errors.department">Department is required</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label required">Job Type</label>
+            <select class="form-input" [class.error]="errors.type" [(ngModel)]="jobForm.type">
+              <option value="">Select Type</option>
+              <option>Full-Time</option>
+              <option>Part-Time</option>
+              <option>Internship</option>
+              <option>Contract</option>
+            </select>
+            <span class="form-error" *ngIf="errors.type">Job type is required</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label required">Number of Positions</label>
+            <input class="form-input" [class.error]="errors.positions" type="number" placeholder="e.g. 3" [(ngModel)]="jobForm.positions" min="1">
+            <span class="form-error" *ngIf="errors.positions">Must be at least 1</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-section-title">
+          <span class="material-icons">location_on</span> Location & Compensation
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label required">Location</label>
+            <input class="form-input" [class.error]="errors.location" type="text" placeholder="e.g. New York, NY or Remote" [(ngModel)]="jobForm.location">
+            <span class="form-error" *ngIf="errors.location">Location is required</span>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Salary Range</label>
+            <input class="form-input" type="text" placeholder="e.g. $80k - $120k" [(ngModel)]="jobForm.salary">
+          </div>
+          <div class="form-group">
+            <label class="form-label required">Application Deadline</label>
+            <input class="form-input" [class.error]="errors.deadline" type="date" [min]="today" [(ngModel)]="jobForm.deadline">
+            <span class="form-error" *ngIf="errors.deadline">Deadline is required</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-section-title">
+          <span class="material-icons">description</span> Job Description
+        </div>
+        <div class="form-group">
+          <label class="form-label required">Description</label>
+          <textarea class="form-input" [class.error]="errors.description" rows="6" placeholder="Describe the role, responsibilities, team culture..." [(ngModel)]="jobForm.description"></textarea>
+          <span class="form-error" *ngIf="errors.description">Job description is required</span>
+        </div>
+        <div class="form-group" style="margin-top:12px">
+          <label class="form-label">Requirements</label>
+          <div class="tag-input-wrap">
+            <div class="tag-list">
+              <span class="tag-item" *ngFor="let r of jobForm.requirements; let i=index">
+                {{ r }} <button class="tag-remove" (click)="removeReq(i)">×</button>
+              </span>
+            </div>
+            <div class="tag-add-row">
+              <input class="form-input" type="text" placeholder="Add a requirement and press Enter"
+                     [(ngModel)]="newReq" (keyup.enter)="addReq()" style="flex:1">
+              <button class="btn-outline btn-sm" (click)="addReq()">Add</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Skills & Preview -->
+    <div class="form-sidebar">
+      <div class="card">
+        <div class="card-section-title">
+          <span class="material-icons">psychology</span> Required Skills
+        </div>
+        <div class="quick-skills">
+          <span class="quick-skill" *ngFor="let s of suggestedSkills" (click)="toggleSkill(s)"
+                [class.selected]="jobForm.skills.includes(s)">
+            {{ s }}
+          </span>
+        </div>
+        <div class="form-group" style="margin-top:12px">
+          <div class="tag-add-row">
+            <input class="form-input" type="text" placeholder="Custom skill..." [(ngModel)]="newSkill" (keyup.enter)="addSkill()" style="flex:1">
+            <button class="btn-outline btn-sm" (click)="addSkill()">Add</button>
+          </div>
+        </div>
+        <div class="selected-skills" *ngIf="jobForm.skills.length > 0">
+          <span class="skill-tag" *ngFor="let s of jobForm.skills; let i=index">
+            {{ s }} <button style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:12px;padding:0 2px" (click)="removeSkill(i)">×</button>
+          </span>
+        </div>
+      </div>
+
+      <div class="card preview-card">
+        <div class="card-section-title">
+          <span class="material-icons">preview</span> Live Preview
+        </div>
+        <div class="preview-job-card">
+          <div class="preview-header">
+            <div class="preview-icon">
+              <span class="material-icons">work</span>
+            </div>
+            <div>
+              <div class="preview-title">{{ jobForm.title || 'Job Title' }}</div>
+              <div class="preview-company">{{ auth.getCompany()?.name || 'My Company' }}</div>
+            </div>
+          </div>
+          <div class="preview-badges">
+            <span class="badge badge-active" *ngIf="jobForm.type">{{ jobForm.type }}</span>
+            <span class="badge badge-applied" *ngIf="jobForm.location">{{ jobForm.location }}</span>
+          </div>
+          <div class="preview-salary" *ngIf="jobForm.salary">{{ jobForm.salary }}</div>
+          <div class="preview-skills">
+            <span class="skill-tag" *ngFor="let s of jobForm.skills.slice(0,4)">{{ s }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="background:linear-gradient(135deg,rgba(249,115,22,0.05),rgba(245,158,11,0.03));border-color:var(--brand-border)">
+        <div class="card-section-title" style="color:var(--brand-primary);border-color:var(--brand-border)">
+          <span class="material-icons">lightbulb</span> Posting Tips
+        </div>
+        <ul class="tips-list">
+          <li>Use a clear, specific job title</li>
+          <li>Include salary range to attract more applicants</li>
+          <li>List 5-8 key required skills</li>
+          <li>Be specific about remote/hybrid policies</li>
+          <li>Add growth opportunities in the description</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

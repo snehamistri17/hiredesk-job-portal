@@ -1,0 +1,169 @@
+<!-- header.component.html -->
+<header class="hd-nav">
+
+  <!-- LEFT -->
+  <div class="nav-left">
+    <button class="hamburger" (click)="toggleSidebar()">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="brand" (click)="navigate('/dashboard')">
+      <div class="brand-icon"><i class="bi bi-briefcase-fill"></i></div>
+      <div class="brand-text">
+        <span class="bword">work</span><span class="bname">HireDesk</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER -->
+  <nav class="nav-links">
+    <a
+      *ngFor="let link of navLinks"
+      class="nav-link"
+      [routerLink]="link.route"
+      routerLinkActive="active"
+      (click)="navigate(link.route)"
+    >
+      <i class="bi" [ngClass]="link.icon"></i>
+      <span>{{ link.label }}</span>
+      <div class="nav-bar"></div>
+    </a>
+  </nav>
+
+  <!-- RIGHT -->
+  <div class="nav-right">
+
+    <!-- Search -->
+    <div class="nav-search">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search jobs, companies…" />
+    </div>
+
+    <!-- Bell -->
+    <div class="dropdown-wrap" (click)="toggleNotif($event)">
+      <button class="icon-btn" [class.active]="showNotifDropdown">
+        <i class="bi bi-bell-fill"></i>
+        <span class="badge" *ngIf="unread > 0">{{ unread }}</span>
+      </button>
+
+      <!-- Notification Dropdown -->
+      <div class="drop-panel notif-panel" *ngIf="showNotifDropdown" (click)="$event.stopPropagation()">
+        <div class="dp-head">
+          <div class="dp-head-left">
+            <span class="dp-title">Notifications</span>
+            <span class="new-pill" *ngIf="unread > 0">{{ unread }} new</span>
+          </div>
+          <button class="mark-btn" (click)="markAllRead()">Mark all read</button>
+        </div>
+
+        <div class="notif-list">
+          <div
+            class="notif-item"
+            *ngFor="let n of notifications"
+            [class.unread]="!n.read"
+            (click)="markRead(n.id)"
+          >
+            <div class="ni-icon" [style.background]="notifColor(n.type) + '20'">
+              <i class="bi" [ngClass]="notifIcon(n.type)" [style.color]="notifColor(n.type)"></i>
+            </div>
+            <div class="ni-body">
+              <p class="ni-title">{{ n.title }}</p>
+              <p class="ni-msg">{{ n.message }}</p>
+              <span class="ni-time">{{ n.time }}</span>
+            </div>
+            <span class="unread-dot" *ngIf="!n.read"></span>
+          </div>
+        </div>
+
+        <div class="dp-foot">
+          <button class="view-all-btn" (click)="navigate('/notifications')">
+            View all <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile Avatar -->
+    <div class="dropdown-wrap profile-wrap" (click)="toggleProfile($event)">
+      <div class="profile-btn" [class.open]="showProfileDropdown">
+        <div class="avatar">{{ initials }}</div>
+        <span class="pname">{{ profile.name.split(' ')[0] }}</span>
+        <i class="bi bi-chevron-down pchev" [class.rotated]="showProfileDropdown"></i>
+        <div class="online-dot"></div>
+      </div>
+
+      <!-- Profile Dropdown -->
+      <div class="drop-panel profile-panel" *ngIf="showProfileDropdown" (click)="$event.stopPropagation()">
+
+        <!-- Cover + Avatar + Info -->
+        <div class="pp-hero">
+          <div class="pp-cover"></div>
+          <div class="pp-body">
+            <div class="pp-avatar">{{ initials }}</div>
+            <div class="pp-info">
+              <h4>{{ profile.name }}</h4>
+              <p>{{ profile.department }} · {{ profile.college }}</p>
+              <div class="pp-tags">
+                <span>{{ profile.enrollmentNo }}</span>
+                <span>CGPA {{ profile.cgpa }}</span>
+                <span>Batch {{ profile.batch }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Completion bar -->
+          <div class="pp-bar-wrap">
+            <div class="pp-bar-labels">
+              <span>Profile Strength</span>
+              <strong>{{ profile.profileCompletion }}%</strong>
+            </div>
+            <div class="pp-bar-track">
+              <div class="pp-bar-fill" [style.width.%]="profile.profileCompletion"></div>
+            </div>
+          </div>
+
+          <!-- Ready score -->
+          <div class="pp-score">
+            <i class="bi bi-patch-check-fill"></i>
+            HireDesk Ready Score &nbsp;<strong>{{ profile.readyScore }}/100</strong>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div class="pp-links">
+          <button class="pp-link" (click)="navigate('/profile')">
+            <div class="ppl-icon"><i class="bi bi-person-fill"></i></div>
+            <div class="ppl-text"><span>My Profile</span><small>View & edit your info</small></div>
+            <i class="bi bi-chevron-right ppl-arr"></i>
+          </button>
+          <button class="pp-link" (click)="navigate('/academic-details')">
+            <div class="ppl-icon"><i class="bi bi-mortarboard-fill"></i></div>
+            <div class="ppl-text"><span>Academic Details</span><small>Education & certifications</small></div>
+            <i class="bi bi-chevron-right ppl-arr"></i>
+          </button>
+          <button class="pp-link" (click)="navigate('/skills')">
+            <div class="ppl-icon"><i class="bi bi-stars"></i></div>
+            <div class="ppl-text"><span>Skills</span><small>Manage your skills</small></div>
+            <i class="bi bi-chevron-right ppl-arr"></i>
+          </button>
+          <button class="pp-link" (click)="navigate('/resume-upload')">
+            <div class="ppl-icon"><i class="bi bi-file-earmark-person-fill"></i></div>
+            <div class="ppl-text"><span>Resume</span><small>Upload & manage resume</small></div>
+            <i class="bi bi-chevron-right ppl-arr"></i>
+          </button>
+          <button class="pp-link" (click)="navigate('/change-password')">
+            <div class="ppl-icon"><i class="bi bi-shield-lock-fill"></i></div>
+            <div class="ppl-text"><span>Change Password</span><small>Update security settings</small></div>
+            <i class="bi bi-chevron-right ppl-arr"></i>
+          </button>
+        </div>
+
+        <div class="pp-divider"></div>
+
+        <button class="pp-signout">
+          <i class="bi bi-box-arrow-right"></i> Sign Out
+        </button>
+      </div>
+    </div>
+
+  </div>
+</header>

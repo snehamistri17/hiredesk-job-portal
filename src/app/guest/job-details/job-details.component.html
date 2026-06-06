@@ -1,0 +1,82 @@
+<div class="job-page">
+  <div class="job-main">
+    <div class="job-card">
+      <div class="job-header">
+        <div>
+          <h2>{{ job.title }}</h2>
+          <div class="company">
+            <span
+              class="company-link"
+              (click)="goToCompanyProfile(job.company)"
+              style="cursor:pointer; color:#1a5cff; text-decoration:underline;">
+              {{ job.company }}
+            </span>
+
+            <span class="rating">⭐ {{ job.rating }}</span>
+            <span class="reviews">{{ job.reviews }} Reviews</span>
+          </div>
+
+          <div class="text-end">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Wipro_Primary_Logo_Color_RGB.svg"
+              alt="company-logo"
+              class="company-logo"/>
+          </div>
+
+          <div class="meta">
+            <span>👜 {{ job.experience }}</span>
+            <span>₹ {{ job.salary }}</span>
+            <span>📍 {{ job.location }}</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="save">Save</button>
+          <button class="apply">Apply</button>
+        </div>
+      </div>
+
+      <div class="footer">
+        Posted: <b>{{ job.posted }}</b> |
+        Openings: <b>{{ job.openings }}</b> |
+        Applicants: <b>{{ job.applicants }}</b>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3>Job highlights</h3>
+      <ul>
+        @for (h of highlights; track h) {
+          <li>{{ h }}</li>
+        }
+      </ul>
+
+      <h3>Job match score</h3>
+      <div class="chips">
+        <span *ngFor="let m of matchScore">{{ m }}</span>
+      </div>
+    </div>
+
+    <div class="box">
+      <h3>Job description</h3>
+      <h4>Role Purpose</h4>
+      <p>
+        The purpose of this role is to be the first point of contact for B2B users
+        who call Wipro Service Desk to troubleshoot end user issues in line with
+        service desk objectives.
+      </p>
+    </div>
+  </div>
+
+  <div class="job-sidebar">
+    <h3>Similar Jobs</h3>
+
+    <div class="similar-job" *ngFor="let i of [1,2,3,4,5]">
+      <h4>Service Desk Executive</h4>
+      <p>Leading Client</p>
+      <span>📍 Chennai</span>
+      <span class="posted">Posted 4 days ago</span>
+    </div>
+  </div>
+
+</div>

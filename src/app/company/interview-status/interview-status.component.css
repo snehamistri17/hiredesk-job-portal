@@ -1,0 +1,49 @@
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.table-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+.table-title .material-icons { color: var(--brand-primary); font-size: 18px; }
+.candidate-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cand-name {
+  font-weight: 600;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+}
+.cand-college {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.job-title-cell {
+  font-size: 13px;
+  font-weight: 500;
+}
+.date-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+.action-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

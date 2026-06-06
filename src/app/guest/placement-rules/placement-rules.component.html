@@ -1,0 +1,242 @@
+<!-- <div class="cover-banner">
+  <div class="cg cg1"></div>
+  <div class="cg cg2"></div>
+  <div class="cg cg3"></div>
+</div> -->
+
+<div class="page-header">
+  <div class="page-header-inner">
+
+    <div class="breadcrumb">
+      <a routerLink="/">Home</a>
+      <span>›</span>
+      <a routerLink="/jobs">Jobs</a>
+      <span>›</span>
+      Placement Rules
+    </div>
+
+    <div class="header-top">
+      <h1 class="page-title">
+        Placement <span class="gradient-text">Rules &amp; Guidelines</span>
+      </h1>
+      <div class="header-badges">
+        <span class="hb hb-blue">📋 6 Sections</span>
+        <span class="hb hb-green">✅ 28 Rules</span>
+        <span class="hb hb-yellow">⚠️ Must Read</span>
+      </div>
+    </div>
+
+    <p class="page-subtitle">
+      Read all placement policies carefully before applying. These rules ensure
+      a fair and transparent hiring process for every candidate on HireDesk.
+    </p>
+
+  </div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-card" *ngFor="let s of stats">
+    <div class="stat-val" [ngClass]="s.colorClass">{{ s.value }}</div>
+    <div class="stat-lbl">{{ s.label }}</div>
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="left-col">
+    <div class="alert-box alert-warn">
+      <span class="alert-icon">⚠️</span>
+      <div class="alert-text">
+        <strong>Important Notice:</strong> Violation of any placement rule may result
+        in permanent disqualification. Please read all guidelines carefully before
+        proceeding with your application.
+      </div>
+    </div>
+
+    <div class="content-card" id="eligibility">
+      <div class="card-hdr">
+        <div class="card-icon cib-blue">📋</div>
+        <div>
+          <h2>1. Eligibility Criteria</h2>
+          <p>Minimum requirements to participate in placement drive</p>
+        </div>
+      </div>
+
+      <ul class="rule-list">
+        <li class="rule-item" *ngFor="let r of eligibilityRules">
+          <div class="rn rn-blue">{{ r.num }}</div>
+          <div class="rule-text">
+            <strong>{{ r.title }}:</strong> {{ r.desc }}
+          </div>
+        </li>
+      </ul>
+
+      <div class="badge-row">
+        <span class="hb" *ngFor="let b of eligibilityBadges"
+              [ngClass]="'hb-' + b.color">{{ b.label }}</span>
+      </div>
+    </div>
+
+    <div class="content-card" id="registration">
+      <div class="card-hdr">
+        <div class="card-icon cib-green">📝</div>
+        <div>
+          <h2>2. Registration Rules</h2>
+          <p>Guidelines for registering on the HireDesk placement portal</p>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <ul class="rule-list">
+          <li class="rule-item" *ngFor="let r of registrationLeft">
+            <div class="rn rn-green">{{ r.num }}</div>
+            <div class="rule-text"><strong>{{ r.title }}:</strong> {{ r.desc }}</div>
+          </li>
+        </ul>
+        <ul class="rule-list">
+          <li class="rule-item" *ngFor="let r of registrationRight">
+            <div class="rn rn-green">{{ r.num }}</div>
+            <div class="rule-text"><strong>{{ r.title }}:</strong> {{ r.desc }}</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="content-card" id="interview">
+      <div class="card-hdr">
+        <div class="card-icon cib-yellow">🎯</div>
+        <div>
+          <h2>3. Interview Process</h2>
+          <p>Standard 4-stage placement process followed by all companies</p>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="tl-item" *ngFor="let step of timelineSteps; let last = last">
+          <div class="tl-dot" [ngClass]="'td-' + step.color">{{ step.num }}</div>
+          <div class="tl-body" [class.no-pb]="last">
+            <div class="tl-title">{{ step.title }}</div>
+            <div class="tl-desc">{{ step.desc }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card" id="conduct">
+      <div class="card-hdr">
+        <div class="card-icon cib-red">🚫</div>
+        <div>
+          <h2>4. Code of Conduct</h2>
+          <p>Expected behaviour throughout the entire placement process</p>
+        </div>
+      </div>
+
+      <div class="alert-box alert-info" style="margin-bottom:16px;">
+        <span class="alert-icon">ℹ️</span>
+        <div class="alert-text">
+          Candidates must maintain professional conduct at all times during
+          online tests, interviews, and after selection.
+        </div>
+      </div>
+
+      <table class="conduct-table">
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Policy</th>
+            <th>Consequence</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of conductRows">
+            <td>{{ row.action }}</td>
+            <td>{{ row.policy }}</td>
+            <td [ngClass]="'td-' + row.type">{{ row.consequence }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="content-card" id="offer">
+      <div class="card-hdr">
+        <div class="card-icon cib-purple">📄</div>
+        <div>
+          <h2>5. Offer &amp; Joining Rules</h2>
+          <p>Rules applicable after receiving your offer letter</p>
+        </div>
+      </div>
+
+      <ul class="rule-list">
+        <li class="rule-item" *ngFor="let r of offerRules">
+          <div class="rn rn-purple">{{ r.num }}</div>
+          <div class="rule-text"><strong>{{ r.title }}:</strong> {{ r.desc }}</div>
+        </li>
+      </ul>
+
+      <div class="badge-row">
+        <span class="hb" *ngFor="let b of offerBadges"
+              [ngClass]="'hb-' + b.color">{{ b.label }}</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="right-col">
+    <div class="sidebar-card" style="padding:0; overflow:hidden;">
+      <div class="cta-card">
+        <div class="cta-icon">🚀</div>
+        <h3 class="cta-title">Start Your Job Search</h3>
+        <p class="cta-sub">Create a free account to apply instantly and track your placement application status.</p>
+        <button class="cta-btn" (click)="goToJobs()">Get Started — It's Free</button>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-title">📌 Quick Navigation</div>
+      <div class="nav-item"
+           *ngFor="let item of navItems"
+           [class.active]="activeSection === item.id"
+           (click)="item.id === 'faq' ? goToFaq() : setActive(item.id)">
+        <span class="nav-icon">{{ item.icon }}</span>
+        {{ item.label }}
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-title">📊 Rule Summary</div>
+      <div class="detail-row" *ngFor="let row of summaryRows">
+        <span class="detail-lbl">{{ row.label }}</span>
+        <span class="detail-val" [ngClass]="row.cls">{{ row.value }}</span>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-title">✅ Compliance Areas</div>
+      <div class="bar-row" *ngFor="let bar of complianceBars">
+        <span class="bar-lbl">{{ bar.label }}</span>
+        <div class="bar-track">
+          <div class="bar-fill"
+               [ngClass]="'bf-' + bar.color"
+               [style.width.%]="bar.percent">
+          </div>
+        </div>
+        <span class="bar-val">{{ bar.value }}</span>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="sidebar-title">⬇️ Downloads</div>
+      <div class="detail-row">
+        <span class="detail-lbl">📄 Rules PDF</span>
+        <span class="detail-val blue">Download</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-lbl">📋 Checklist</span>
+        <span class="detail-val blue">Download</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-lbl">📞 Support</span>
+        <span class="detail-val green">Contact Us</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,182 @@
+<app-header></app-header>
+<div class="cover-and-header">
+  <div class="cover-banner">
+    <div class="cover-glow cover-glow-1"></div>
+    <div class="cover-glow cover-glow-2"></div>
+  </div>
+
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="profile-header-inner">
+      <div class="profile-top-row">
+        <div class="company-logo-wrap">
+          <span class="company-initials">NX</span>
+        </div>
+        <div class="profile-actions">
+          <button class="btn-follow">&#9825; Follow &#x1F512;</button>
+          <button class="btn-view-jobs" (click)="goToJobs()">
+            &#x1F4BC; View Open Jobs ({{ company.openJobs }})
+          </button>
+        </div>
+      </div>
+
+      <!-- Company Info below logo -->
+      <div class="company-name-row">
+        <h1 class="company-name">{{ company.name }}</h1>
+        <span class="verified-badge">&#10003; Verified</span>
+      </div>
+      <p class="company-tagline">{{ company.tagline }}</p>
+      <div class="company-meta">
+        <span class="meta-item">&#x1F310; {{ company.website }}</span>
+        <span class="meta-item">&#x1F4CD; {{ company.location }}</span>
+        <span class="meta-item">&#x1F465; {{ company.employees }}</span>
+        <span class="meta-item">&#x1F3DB; {{ company.industry }}</span>
+        <span class="meta-item">&#x1F4C5; {{ company.founded }}</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== STATS ROW ===== -->
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-value blue">{{ company.openJobs }}</div>
+    <div class="stat-label">Open Positions</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value white">{{ company.rating }} &#9733;</div>
+    <div class="stat-label">Company Rating</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value green">{{ company.recommendPercent }}%</div>
+    <div class="stat-label">Recommend to Friend</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value white">{{ company.funding }}</div>
+    <div class="stat-label">Series C Funding</div>
+  </div>
+</div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<div class="main-content">
+  <div class="left-col">
+    <div class="content-card">
+      <h2 class="card-title">About {{ company.name }}</h2>
+      <p class="about-text" *ngFor="let para of company.about.split('\n\n')">{{ para }}</p>
+      <h3 class="tech-stack-title">Tech Stack</h3>
+      <div class="tech-stack">
+        <span class="tech-chip" *ngFor="let tech of company.techStack">{{ tech }}</span>
+      </div>
+    </div>
+
+    <!-- Open Positions -->
+    <div class="content-card">
+      <div class="positions-header">
+        <h2 class="card-title">Open Positions</h2>
+        <a class="view-all-link" (click)="goToJobs()">View all {{ company.openJobs }} &#8594;</a>
+      </div>
+      <div class="job-row" *ngFor="let job of jobs; let last = last" [class.no-border]="last">
+        <div class="job-row-left">
+          <div class="job-row-title">{{ job.title }}</div>
+          <div class="job-tags">
+            <span class="tag-fulltime">{{ job.type }}</span>
+            <span class="tag-location">{{ job.location }}</span>
+            <span class="tag-salary">{{ job.salary }}</span>
+            <span class="tag-hot" *ngIf="job.isHot">&#x1F525; Hot</span>
+          </div>
+        </div>
+        <div class="job-row-right">
+          <span class="posted-ago">{{ job.postedAgo }}</span>
+          <button class="btn-apply">Apply</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Employee Reviews -->
+    <div class="content-card">
+      <h2 class="card-title">Employee Reviews</h2>
+      <div class="reviews-blurred">
+        <div class="blurred-row">
+          <span class="blur-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          <span class="blur-text">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span>
+        </div>
+        <div class="blurred-row" style="opacity:0.4">
+          <span class="blur-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+          <span class="blur-text">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;</span>
+        </div>
+      </div>
+      <div class="unlock-box">
+        <div class="lock-icon">&#x1F512;</div>
+        <h3 class="unlock-title">Unlock 48 employee reviews</h3>
+        <p class="unlock-sub">Sign up free to read what employees say about working here</p>
+        <button class="btn-signup-free">Sign Up Free</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="right-col">
+
+    <div class="sidebar-card unlock-cta">
+      <div class="rocket-icon">&#x1F680;</div>
+      <h3 class="unlock-cta-title">Unlock Your Job Search</h3>
+      <p class="unlock-cta-sub">Create a free account to apply instantly, save jobs, get salary insights, and track your applications.</p>
+      <button class="btn-get-started">Get Started – It's Free</button>
+      <button class="btn-signin-outline">Sign In</button>
+    </div>
+
+    <div class="sidebar-card">
+      <h3 class="sidebar-title">Company Details</h3>
+      <div class="detail-row"><span class="detail-label">Website</span><span class="detail-value link">{{ company.website }} &#x2197;</span></div>
+      <div class="detail-row"><span class="detail-label">Industry</span><span class="detail-value">AI Infrastructure</span></div>
+      <div class="detail-row"><span class="detail-label">Company size</span><span class="detail-value">{{ company.employees }}</span></div>
+      <div class="detail-row"><span class="detail-label">Founded</span><span class="detail-value">2018</span></div>
+      <div class="detail-row"><span class="detail-label">Headquarters</span><span class="detail-value">{{ company.headquarters }}</span></div>
+      <div class="detail-row"><span class="detail-label">Type</span><span class="detail-value">{{ company.type }}</span></div>
+      <div class="detail-row"><span class="detail-label">Funding</span><span class="detail-value">{{ company.fundingStage }} · {{ company.funding }}</span></div>
+      <!-- Placement Rules Link -->
+      <div class="placement-rules-link" (click)="goToPlacementRules()">
+        <span class="pr-icon">📋</span>
+        <span class="pr-text">View Placement Rules</span>
+        <span class="pr-arrow">→</span>
+      </div>
+
+      <div class="social-links">
+        <a class="social-btn" href="#">in</a>
+        <a class="social-btn" href="#">X</a>
+        <a class="social-btn" href="#">&#x2192;</a>
+        <a class="social-btn" href="#">&#x1F310;</a>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3 class="sidebar-title">Rating &amp; Reviews</h3>
+      <div class="overall-rating">
+        <span class="big-rating">{{ company.rating }}</span>
+        <div class="rating-right">
+          <div class="big-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <div class="based-on">Based on 48 reviews</div>
+        </div>
+      </div>
+      <div class="rating-bars">
+        <div class="rating-bar-row" *ngFor="let cat of ratingCategories">
+          <span class="bar-label">{{ cat.label }}</span>
+          <div class="bar-track"><div class="bar-fill" [style.width.%]="cat.percent"></div></div>
+          <span class="bar-score">{{ cat.score }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <h3 class="sidebar-title">&#x1F4B0; Salary Insights</h3>
+      <div class="salary-locked">
+        <div class="lock-icon">&#x1F512;</div>
+        <p class="salary-locked-text">Sign up free to view salary ranges for all roles at {{ company.name }}</p>
+        <button class="btn-unlock-salary">Unlock Salary Data</button>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

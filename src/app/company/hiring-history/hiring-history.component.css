@@ -1,0 +1,45 @@
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.table-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+.table-title .material-icons { color: var(--brand-primary); font-size: 18px; }
+.row-num { color: var(--text-muted); font-size: 13px; }
+.candidate-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cand-name {
+  font-weight: 600;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+}
+.text-primary-cell { font-size: 13px; font-weight: 500; }
+.text-secondary-cell { font-size: 13px; color: var(--text-secondary); }
+.dept-tag {
+  background: var(--blue-light);
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.salary-value {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  color: var(--brand-primary);
+  font-size: 14px;
+}

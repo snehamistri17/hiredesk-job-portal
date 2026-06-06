@@ -1,0 +1,179 @@
+<!-- company-dashboard.component.html -->
+<div class="dashboard fade-in">
+
+  <!-- Welcome Banner -->
+  <div class="welcome-banner">
+    <div class="welcome-content">
+      <div class="welcome-text">
+        <h1>Welcome back, <span class="gradient-text">{{ companyName }}</span> 👋</h1>
+        <p>Here's what's happening with your recruitment today</p>
+      </div>
+      <div class="welcome-actions">
+        <button class="btn-primary" routerLink="/company/post-job" style="background:linear-gradient(135deg,#f97316,#f59e0b);box-shadow:0 4px 14px rgba(249,115,22,0.4)">
+          <span class="material-icons">add</span> Post a Job
+        </button>
+        <button class="btn-outline" routerLink="/company/applications" style="background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);color:#e2e8f0">
+          <span class="material-icons">inbox</span> View Applications
+        </button>
+      </div>
+    </div>
+    <div class="welcome-graphic">
+      <div class="graphic-circle c1"></div>
+      <div class="graphic-circle c2"></div>
+      <div class="graphic-circle c3"></div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(59,91,219,0.15)">
+        <span class="material-icons" style="color:var(--brand-primary)">work</span>
+      </div>
+      <div class="stat-value">{{ stats.totalJobs }}</div>
+      <div class="stat-label">Active Jobs</div>
+      <div class="stat-change stat-up">↑ 2 new this month</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(0,180,216,0.15)">
+        <span class="material-icons" style="color:var(--blue)">inbox</span>
+      </div>
+      <div class="stat-value">{{ stats.totalApplications }}</div>
+      <div class="stat-label">Total Applications</div>
+      <div class="stat-change stat-up">↑ 12% vs last week</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(245,158,11,0.15)">
+        <span class="material-icons" style="color:#f59e0b">people</span>
+      </div>
+      <div class="stat-value">{{ stats.shortlisted }}</div>
+      <div class="stat-label">Shortlisted</div>
+      <div class="stat-change" style="color:var(--text-muted)">→ Under review</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(16,185,129,0.15)">
+        <span class="material-icons" style="color:var(--green)">check_circle</span>
+      </div>
+      <div class="stat-value">{{ stats.hired }}</div>
+      <div class="stat-label">Selected Candidates</div>
+      <div class="stat-change stat-up">↑ 3 this week</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(239,68,68,0.15)">
+        <span class="material-icons" style="color:var(--red-danger)">pending_actions</span>
+      </div>
+      <div class="stat-value">{{ stats.pendingReview }}</div>
+      <div class="stat-label">Pending Review</div>
+      <div class="stat-change stat-down">↓ Needs attention</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon" style="background:rgba(124,58,237,0.15)">
+        <span class="material-icons" style="color:#a78bfa">event</span>
+      </div>
+      <div class="stat-value">{{ stats.interviewsToday }}</div>
+      <div class="stat-label">Interviews Today</div>
+      <div class="stat-change" style="color:#a78bfa">Scheduled</div>
+    </div>
+  </div>
+
+  <!-- Content Row -->
+  <div class="content-row">
+
+    <!-- Active Jobs -->
+    <div class="card content-card">
+      <div class="section-header">
+        <span class="section-title">Active Job Listings</span>
+        <a routerLink="/company/manage-jobs" class="view-all">View All <span class="material-icons">arrow_forward</span></a>
+      </div>
+      <div class="job-list">
+        <div class="job-item" *ngFor="let job of activeJobs">
+          <div class="job-item-left">
+            <div class="job-dept-icon">
+              <span class="material-icons">{{ getDeptIcon(job.department) }}</span>
+            </div>
+            <div>
+              <div class="job-item-title">{{ job.title }}</div>
+              <div class="job-item-meta">
+                <span class="material-icons tiny">location_on</span> {{ job.location }}
+                &nbsp;·&nbsp;
+                <span class="material-icons tiny">people</span> {{ job.positions }} positions
+              </div>
+            </div>
+          </div>
+          <div class="job-item-right">
+            <div class="applicants-pill">
+              <span class="material-icons tiny">inbox</span>
+              {{ job.applicants }} applicants
+            </div>
+            <div class="deadline-text">Closes {{ job.deadline | date:'MMM d' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Applicants -->
+    <div class="card content-card">
+      <div class="section-header">
+        <span class="section-title">Recent Applicants</span>
+        <a routerLink="/company/applications" class="view-all">View All <span class="material-icons">arrow_forward</span></a>
+      </div>
+      <div class="applicant-list">
+        <div class="applicant-item" *ngFor="let c of recentCandidates">
+          <div class="avatar">{{ c.avatar }}</div>
+          <div class="applicant-info">
+            <div class="applicant-name">{{ c.name }}</div>
+            <div class="applicant-job">{{ c.jobTitle }}</div>
+          </div>
+          <div class="applicant-right">
+            <span class="badge" [ngClass]="getStatusBadge(c.status)">{{ c.status }}</span>
+            <div class="app-date">{{ c.appliedDate | date:'MMM d' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Upcoming Interviews
+  <div class="card" style="margin-top:24px">
+    <div class="section-header">
+      <span class="section-title">Upcoming Interviews</span>
+      <a routerLink="/company/interview-status" class="view-all">View All <span class="material-icons">arrow_forward</span></a>
+    </div>
+    <div class="interview-grid">
+      <div class="interview-card" *ngFor="let i of scheduledInterviews">
+        <div class="interview-header">
+          <div class="avatar">{{ i.avatar }}</div>
+          <div>
+            <div class="int-name">{{ i.name }}</div>
+            <div class="int-job">{{ i.jobTitle }}</div>
+          </div>
+          <span class="badge" [ngClass]="i.interviewMode === 'Online' ? 'badge-applied' : 'badge-shortlisted'">
+            <span class="material-icons" style="font-size:10px">{{ i.interviewMode === 'Online' ? 'videocam' : 'person' }}</span>
+            {{ i.interviewMode }}
+          </span>
+        </div>
+        <div class="int-schedule">
+          <div class="int-time">
+            <span class="material-icons">event</span>
+            {{ i.interviewDate | date:'EEE, MMM d' }}
+          </div>
+          <div class="int-time">
+            <span class="material-icons">schedule</span>
+            {{ i.interviewTime }}
+          </div>
+        </div>
+        <div class="int-actions">
+          FIX: added (click) handler with correct _id
+          <button class="btn-outline btn-sm" (click)="viewCandidate(i._id)">View Profile</button>
+          <button class="btn-success btn-sm">Confirm</button>
+        </div>
+      </div>
+      <div *ngIf="scheduledInterviews.length === 0" class="empty-state" style="padding:30px">
+        <div class="icon">📅</div>
+        <p>No upcoming interviews scheduled</p>
+      </div>
+    </div>
+  </div> -->
+
+</div>

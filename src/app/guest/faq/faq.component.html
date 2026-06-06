@@ -1,0 +1,81 @@
+<!-- HERO -->
+<div class="hero">
+  <h1>Hi, how can we help you?</h1>
+  <div class="search-box">
+    <input type="text" placeholder="Search by keyword">
+    <button>🔍</button>
+  </div>
+</div>
+
+<!-- QUICK SOLUTION -->
+<div class="quick">
+  <h2>QUICK SOLUTION</h2>
+  <p>as per the recent search trend</p>
+
+  <div class="questions">
+    <div 
+      class="question"
+      *ngFor="let q of quickQuestions"
+      (click)="goToDetail(q)">
+      Q. {{ q }}
+    </div>
+  </div>
+</div>
+
+<!-- BROWSE BY TOPIC -->
+<div class="topics">
+  <h2>BROWSE BY TOPIC</h2>
+  <br>
+  <div class="topic-grid">
+    <div 
+      class="topic-card"
+      *ngFor="let t of topics"
+      (click)="goToDetail(t)">
+      <div class="icon">{{ t.icon }}</div>
+      <p>{{ t.title }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- BLOGS -->
+<!-- <div class="blogs">
+  <h2>Our Blogs</h2>
+  <p>Maximizing Your Career Potential</p>
+
+  <div class="blog-grid">
+    <div 
+      class="blog-card"
+      *ngFor="let b of blogs"
+      (click)="goToDetail(b)">
+      <img [src]="b.img">
+      <h3>{{ b.title }}</h3>
+      <p>{{ b.desc }}</p>
+    </div>
+  </div>
+</div> -->
+
+<!-- CONTACT -->
+<div class="contact">
+  <div class="info">
+    <h3>Naukri FastForward Services</h3>
+    <p>📞 1800-102-5557</p>
+    <p>📧 service&#64;naukri.com</p>
+  </div>
+
+  <div class="form">
+    <h3>Report a Problem / Need Assistance</h3>
+    <input placeholder="Enter Your Name">
+    <input placeholder="Enter Your Email">
+    <input placeholder="Enter Your Contact Number">
+    <select>
+      <option>Select Area of Concern</option>
+      <option>Create Naukri Profile</option>
+      <option>Search</option>
+      <option>Apply</option>
+      <option>Setting</option>
+      <option>Security Advice</option>
+      <option>others</option>
+    </select>
+    <textarea placeholder="Enter Your Feedback"></textarea>
+    <button>Submit</button>
+</div>

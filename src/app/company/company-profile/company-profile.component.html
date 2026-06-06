@@ -1,0 +1,256 @@
+<div class="fade-in">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Company Profile</h1>
+      <p class="page-subtitle">Manage your company information and branding</p>
+    </div>
+  </div>
+
+  <!-- Validation Alert -->
+  <div *ngIf="validationErrors.length > 0" class="alert-error">
+    <span class="material-icons alert-icon">error_outline</span>
+    <div>
+      <p class="alert-title">Please fix the following errors:</p>
+      <ul class="alert-list">
+        <li *ngFor="let e of validationErrors">• {{ e }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Success Alert -->
+  <div *ngIf="saveSuccess" class="alert-success">
+    <span class="material-icons">check_circle</span>
+    <span class="alert-success-text">Profile saved successfully!</span>
+  </div>
+
+  <div class="profile-layout">
+
+    <!-- ── LEFT SIDE — always shows snapshot (saved values), never live form values ── -->
+    <div class="card profile-side">
+
+      <!-- Hero -->
+      <div class="profile-hero">
+        <div class="company-logo-big">{{ snapshotInitial }}</div>
+        <div class="cp-name">{{ snapshot.name || 'Your Company' }}</div>
+        <div class="cp-industry" *ngIf="snapshot.industry">
+          <span class="material-icons" style="font-size:13px">business</span>
+          {{ snapshot.industry }}
+        </div>
+        <span class="cp-status-badge"
+              [class.cp-badge-approved]="snapshot.status === 'Approved'"
+              [class.cp-badge-pending]="snapshot.status === 'Pending'"
+              [class.cp-badge-rejected]="snapshot.status === 'Rejected'">
+          <span class="material-icons">
+            {{ snapshot.status === 'Approved' ? 'verified' :
+               snapshot.status === 'Rejected' ? 'cancel' : 'hourglass_empty' }}
+          </span>
+          {{ snapshot.status }}
+        </span>
+      </div>
+
+      <!-- Company Details info rows -->
+      <div class="cp-info-section">
+        <p class="cp-section-label">Company Details</p>
+
+        <div class="cp-info-row" *ngIf="snapshot.email">
+          <div class="cp-info-icon-wrap">
+            <span class="material-icons">email</span>
+          </div>
+          <div class="cp-info-content">
+            <span class="cp-info-label">Email</span>
+            <span class="cp-info-value">{{ snapshot.email }}</span>
+          </div>
+        </div>
+
+        <div class="cp-info-row" *ngIf="snapshot.phone">
+          <div class="cp-info-icon-wrap">
+            <span class="material-icons">phone</span>
+          </div>
+          <div class="cp-info-content">
+            <span class="cp-info-label">Phone</span>
+            <span class="cp-info-value">{{ snapshot.phone }}</span>
+          </div>
+        </div>
+
+        <div class="cp-info-row" *ngIf="snapshot.headquarters">
+          <div class="cp-info-icon-wrap">
+            <span class="material-icons">location_on</span>
+          </div>
+          <div class="cp-info-content">
+            <span class="cp-info-label">Headquarters</span>
+            <span class="cp-info-value">{{ snapshot.headquarters }}</span>
+          </div>
+        </div>
+
+        <div class="cp-info-row" *ngIf="snapshot.size">
+          <div class="cp-info-icon-wrap">
+            <span class="material-icons">people</span>
+          </div>
+          <div class="cp-info-content">
+            <span class="cp-info-label">Company Size</span>
+            <span class="cp-info-value">{{ snapshot.size }}</span>
+          </div>
+        </div>
+
+        <div class="cp-info-row" *ngIf="snapshot.founded">
+          <div class="cp-info-icon-wrap">
+            <span class="material-icons">calendar_today</span>
+          </div>
+          <div class="cp-info-content">
+            <span class="cp-info-label">Founded</span>
+            <span class="cp-info-value">{{ snapshot.founded }}</span>
+          </div>
+        </div>
+
+        <div class="cp-info-row" *ngIf="snapshot.website">
+          <div class="cp-info-icon-wrap">
+            <span class="material-icons">language</span>
+          </div>
+          <div class="cp-info-content">
+            <span class="cp-info-label">Website</span>
+            <a [href]="'https://' + snapshot.website" target="_blank" class="cp-info-link">{{ snapshot.website }}</a>
+          </div>
+        </div>
+
+        <div class="cp-info-row" *ngIf="snapshot.linkedin">
+          <div class="cp-info-icon-wrap">
+            <span class="material-icons">link</span>
+          </div>
+          <div class="cp-info-content">
+            <span class="cp-info-label">LinkedIn</span>
+            <a [href]="'https://' + snapshot.linkedin" target="_blank" class="cp-info-link">LinkedIn Profile</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── RIGHT SIDE FORM ── -->
+    <div class="profile-main">
+      <form (ngSubmit)="saveProfile()" #profileForm="ngForm">
+        <div class="card">
+          <div class="card-section-title">
+            <span class="material-icons">business</span> Basic Information
+          </div>
+
+          <div class="form-grid-2">
+
+            <div class="form-group">
+              <label class="form-label" [class.required]="editing">Company Name</label>
+              <input class="form-input"
+                     [class.error]="errors.name"
+                     [disabled]="!editing"
+                     [(ngModel)]="cs.companyProfile.name"
+                     name="companyName"
+                     (blur)="validateField('name')" />
+              <span class="form-error" *ngIf="errors.name">Company name is required</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" [class.required]="editing">Industry</label>
+              <select class="form-input"
+                      [class.error]="errors.industry"
+                      [disabled]="!editing"
+                      [(ngModel)]="cs.companyProfile.industry"
+                      name="industry"
+                      (blur)="validateField('industry')">
+                <option value="">Select Industry</option>
+                <option value="IT">IT (Information Technology)</option>
+                <option value="Software">Software Development</option>
+                <option value="Finance">Finance &amp; Banking</option>
+                <option value="Healthcare">Healthcare &amp; Pharma</option>
+                <option value="Education">Education</option>
+                <option value="Manufacturing">Manufacturing</option>
+                <option value="Retail">Retail &amp; E-Commerce</option>
+                <option value="Consulting">Consulting</option>
+                <option value="Telecom">Telecom</option>
+                <option value="Media">Media &amp; Entertainment</option>
+                <option value="Logistics">Logistics &amp; Supply Chain</option>
+                <option value="Real Estate">Real Estate</option>
+                <option value="Automotive">Automotive</option>
+                <option value="Energy">Energy &amp; Utilities</option>
+                <option value="Government">Government &amp; Public Sector</option>
+                <option value="Other">Other</option>
+              </select>
+              <span class="form-error" *ngIf="errors.industry">Industry is required</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" [class.required]="editing">Email</label>
+              <input class="form-input"
+                     type="email"
+                     [class.error]="errors.email"
+                     [disabled]="!editing"
+                     [(ngModel)]="cs.companyProfile.email"
+                     name="email"
+                     (blur)="validateField('email')" />
+              <span class="form-error" *ngIf="errors.email">Valid email is required</span>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Phone</label>
+              <input class="form-input" [disabled]="!editing" [(ngModel)]="cs.companyProfile.phone" name="phone" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Website</label>
+              <input class="form-input" [disabled]="!editing" [(ngModel)]="cs.companyProfile.website" name="website" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Headquarters</label>
+              <input class="form-input" [disabled]="!editing" [(ngModel)]="cs.companyProfile.headquarters" name="headquarters" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Company Size</label>
+              <select class="form-input" [disabled]="!editing" [(ngModel)]="cs.companyProfile.size" name="size">
+                <option value="">Select Size</option>
+                <option>1-50 employees</option>
+                <option>51-200 employees</option>
+                <option>201-500 employees</option>
+                <option>501-1000 employees</option>
+                <option>1000+ employees</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Founded Year</label>
+              <input class="form-input"
+                     type="number"
+                     [class.error]="errors.founded"
+                     [disabled]="!editing"
+                     [(ngModel)]="cs.companyProfile.founded"
+                     name="founded"
+                     (blur)="validateField('founded')" />
+              <span class="form-error" *ngIf="errors.founded">Enter a valid year</span>
+            </div>
+
+          </div>
+
+          <div class="form-group" style="margin-top:4px">
+            <label class="form-label">About the Company</label>
+            <textarea class="form-input" rows="5"
+                      [disabled]="!editing"
+                      [(ngModel)]="cs.companyProfile.description"
+                      name="description"></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-outline" *ngIf="editing" (click)="cancelEdit()">
+              <span class="material-icons">close</span> Cancel
+            </button>
+            <button type="submit" class="btn-primary" *ngIf="editing">
+              <span class="material-icons">save</span> Save Changes
+            </button>
+            <button type="button" class="btn-primary" *ngIf="!editing" (click)="startEdit()">
+              <span class="material-icons">edit</span> Edit Profile
+            </button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>

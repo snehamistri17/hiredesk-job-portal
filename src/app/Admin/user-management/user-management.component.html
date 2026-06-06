@@ -1,0 +1,282 @@
+<!-- manage-students.component.html -->
+<div class="pg">
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="qstat" *ngFor="let s of qstats">
+      <span class="qstat-icon">{{ s.icon }}</span>
+      <div>
+        <div class="qstat-val">{{ s.val }}</div>
+        <div class="qstat-lbl">{{ s.label }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="card filter-bar">
+    <div class="filter-left">
+      <div class="fg">
+        <label>Status</label>
+        <select [(ngModel)]="fStatus" (change)="filter()">
+          <option value="">All Status</option>
+          <option>Placed</option><option>Eligible</option>
+          <option>Applied</option><option>Not Eligible</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Branch</label>
+        <select [(ngModel)]="fBranch" (change)="filter()">
+          <option value="">All Branches</option>
+          <option *ngFor="let b of branches" [value]="b">{{ b }}</option>
+        </select>
+      </div>
+      <div class="search-wrap">
+        <span>🔍</span>
+        <input type="text" placeholder="Search student..." [(ngModel)]="q" (input)="filter()" />
+      </div>
+    </div>
+    <div class="filter-right">
+      <span class="count-chip">{{ filtered.length }} students</span>
+      <!-- <button class="add-btn" (click)="openAddModal()">+ Add Student</button> -->
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="card">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Student</th><th>Branch</th><th>Year</th>
+            <th>CGPA</th><th>Skills</th><th>Status</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of filtered; let i = index">
+            <td>
+              <div class="nc">
+                <div class="avatar" [ngClass]="'av'+(i%6)">
+                  {{ (s.name || "S").charAt(0).toUpperCase() }}
+                </div>
+                <div>
+                  <div class="sname">{{ s.name }}</div>
+                  <div class="semail">{{ s.email }}</div>
+                </div>
+              </div>
+            </td>
+            <td class="muted">{{ s.branch || '—' }}</td>
+            <td class="muted">{{ s.currentSem || "—" }}</td>
+            <td><span class="cgpa" [ngClass]="cgpaClass(s.cgpa)">{{ s.cgpa != null ? s.cgpa : '—' }}</span></td>
+            <td>
+              <div class="skills-wrap">
+                <span class="skill-chip" *ngFor="let sk of getSkills(s).slice(0,2)">{{ sk }}</span>
+                <span class="skill-more" *ngIf="getSkills(s).length > 2">+{{ getSkills(s).length - 2 }}</span>
+                <span class="muted" *ngIf="!getSkills(s).length">—</span>
+              </div>
+            </td>
+            <td><span class="sbadge" [ngClass]="statusClass(s.placementStatus)">{{ s.placementStatus }}</span></td>
+            <td>
+              <div class="act-btns">
+                <button class="act-btn view" title="View"   (click)="openViewModal(s)">👁</button>
+                <button class="act-btn edit" title="Edit"   (click)="openEditModal(s)">✏️</button>
+                <button class="act-btn del"  title="Delete" (click)="del(s._id)">🗑</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     ADD STUDENT MODAL
+══════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showAddModal" (click)="closeAddModal()">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <div class="modal-header modal-header-blue">
+      <div class="modal-header-icon">➕</div>
+      <div class="modal-header-text">
+        <h2 class="modal-title">Add New Student</h2>
+        <p class="modal-subtitle">Register a new student for placement</p>
+      </div>
+      <button class="modal-x" (click)="closeAddModal()">✕</button>
+    </div>
+    <form class="modal-form" #addForm="ngForm" (ngSubmit)="add()">
+      <div class="modal-section-title">Personal Information</div>
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label class="field-label">Full Name <span class="req-star">*</span></label>
+          <input class="field-input" type="text" [(ngModel)]="ns.name" name="nsName"
+            placeholder="e.g. Aarav Mehta" required />
+        </div>
+        <div class="form-field">
+          <label class="field-label">Roll No <span class="req-star">*</span></label></div><div class="form-field"><label class="field-label">Full Name</label>
+          <input class="field-input" type="text" [(ngModel)]="ns.name" name="nsDisplayName"
+            placeholder="e.g. Aarav Mehta" />
+        </div>
+        <div class="form-field">
+          <label class="field-label">Email <span class="req-star">*</span></label>
+          <input class="field-input" type="email" [(ngModel)]="ns.email" name="nsEmail"
+            placeholder="student@college.edu" required />
+        </div>
+        <div class="form-field">
+          <label class="field-label">Mobile No <span class="req-star">*</span></label>
+          <input class="field-input" type="text" [(ngModel)]="ns.phone" name="nsPhone"
+            placeholder="+91-XXXXXXXXXX" required />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" (click)="closeAddModal()">Cancel</button>
+        <button type="submit" class="btn-primary-modal">✓ Add Student</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     VIEW STUDENT MODAL
+══════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showViewModal && viewStudent" (click)="closeViewModal()">
+  <div class="modal-box modal-box-lg" (click)="$event.stopPropagation()">
+    <div class="modal-header modal-header-purple">
+      <div class="modal-header-icon">👤</div>
+      <div class="modal-header-text">
+        <h2 class="modal-title">Student Profile</h2>
+        <p class="modal-subtitle">{{ viewStudent!.name }}</p>
+      </div>
+      <button class="modal-x" (click)="closeViewModal()">✕</button>
+    </div>
+    <div class="modal-form">
+      <div class="view-profile-card">
+        <div class="view-avatar-big av0">
+          {{ (viewStudent!.name || 'S').charAt(0).toUpperCase() }}
+        </div>
+        <div class="view-profile-info">
+          <div class="view-full-name">{{ viewStudent!.name }}</div>
+          <div class="view-full-email">{{ viewStudent!.email }}</div>
+          <span class="sbadge" [ngClass]="statusClass(viewStudent!.placementStatus)">{{ viewStudent!.placementStatus }}</span>
+        </div>
+        <div class="view-cgpa-box">
+          <div class="view-cgpa-num" [ngClass]="cgpaClass(viewStudent!.cgpa)">{{ viewStudent!.cgpa ?? '—' }}</div>
+          <div class="view-cgpa-label">CGPA</div>
+        </div>
+      </div>
+      <div class="view-info-grid">
+        <div class="view-info-card">
+          <div class="vic-label">📚 Branch</div>
+          <div class="vic-value">{{ viewStudent!.branch || '—' }}</div>
+        </div>
+        <div class="view-info-card">
+          <div class="vic-label">📅 Year</div>
+          <div class="vic-value">{{ viewStudent!.currentSem || "—" }}</div>
+        </div>
+        <div class="view-info-card">
+          <div class="vic-label">📞 Mobile</div>
+          <div class="vic-value">{{ viewStudent!.mobileNo || '—' }}</div>
+        </div>
+        <div class="view-info-card" *ngIf="viewStudent!.company">
+          <div class="vic-label">🏢 Company</div>
+          <div class="vic-value">{{ viewStudent!.company }}</div>
+        </div>
+        <div class="view-info-card view-info-full">
+          <div class="vic-label">🛠 Skills</div>
+          <div class="skills-wrap" style="margin-top:6px">
+            <span class="skill-chip" *ngFor="let sk of getSkills(viewStudent!)">{{ sk }}</span>
+            <span class="muted" *ngIf="!getSkills(viewStudent!).length">No skills listed</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" (click)="closeViewModal()">Close</button>
+        <button type="button" class="btn-primary-modal"
+          (click)="closeViewModal(); openEditModal(viewStudent!)">✏️ Edit Student</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     EDIT STUDENT MODAL — saves all fields to MongoDB
+══════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showEditModal && editStudent" (click)="closeEditModal()">
+  <div class="modal-box modal-box-lg" (click)="$event.stopPropagation()">
+    <div class="modal-header modal-header-orange">
+      <div class="modal-header-icon">✏️</div>
+      <div class="modal-header-text">
+        <h2 class="modal-title">Edit Student</h2>
+        <p class="modal-subtitle">Updating {{ editStudent!.name }}</p>
+      </div>
+      <button class="modal-x" (click)="closeEditModal()">✕</button>
+    </div>
+
+    <form class="modal-form" #editForm="ngForm" (ngSubmit)="saveEdit()">
+      <div class="modal-section-title">Academic Details</div>
+      <div class="form-grid-2">
+        <div class="form-field">
+          <label class="field-label">Branch</label>
+          <select class="field-input" [(ngModel)]="editStudent!.branch" name="eBranch">
+            <option value="">— Not set —</option>
+            <option *ngFor="let b of branches" [value]="b">{{ b }}</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="field-label">Year</label>
+          <select class="field-input" [(ngModel)]="editStudent!.year" name="eYear">
+            <option value="">— Not set —</option>
+            <option>1st</option><option>2nd</option><option>3rd</option><option>4th</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="field-label">CGPA</label>
+          <input class="field-input" type="number" step="0.1" min="0" max="10"
+            [(ngModel)]="editStudent!.cgpa" name="eCgpa" placeholder="0.0 – 10.0" />
+        </div>
+        <div class="form-field">
+          <label class="field-label">Status</label>
+          <select class="field-input" [(ngModel)]="editStudent!.status" name="eStatus">
+            <option>Placed</option><option>Eligible</option>
+            <option>Applied</option><option>Not Eligible</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="field-label">Company (if placed)</label>
+          <input class="field-input" type="text" [(ngModel)]="editStudent!.company"
+            name="eCompany" placeholder="Company name" />
+        </div>
+        <div class="form-field">
+          <label class="field-label">Mobile No</label>
+          <input class="field-input" type="text" [(ngModel)]="editStudent!.mobileNo"
+            name="eMobile" placeholder="+91-XXXXXXXXXX" />
+        </div>
+      </div>
+
+      <!-- Skills editor -->
+      <div class="modal-section-title" style="margin-top:12px">Skills</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:28px">
+        <span class="skill-chip skill-removable" *ngFor="let sk of editStudent!.skills; let i = index">
+          {{ sk }} <button type="button" class="skill-rm" (click)="removeEditSkill(i)">×</button>
+        </span>
+        <span class="muted" *ngIf="!editStudent!.skills?.length" style="font-size:13px">No skills added yet</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:16px">
+        <input class="field-input" type="text" style="flex:1"
+          [(ngModel)]="editSkillInput" name="eSkillInput"
+          placeholder="Type a skill and press Add..." (keyup.enter)="addEditSkill()" />
+        <button type="button" class="btn-ghost" style="padding:8px 16px" (click)="addEditSkill()">Add</button>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" (click)="closeEditModal()">Cancel</button>
+        <button type="submit" class="btn-primary-modal">💾 Save to MongoDB</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<style>
+  .skill-chip { background:#ede9fe;color:#3b5bdb;font-size:12px;font-weight:600;padding:3px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:4px; }
+  .skill-removable { cursor:default; }
+  .skill-rm { background:none;border:none;color:inherit;cursor:pointer;font-size:14px;padding:0 2px;opacity:.6;line-height:1; }
+  .skill-rm:hover { opacity:1;color:#ef4444; }
+</style>

@@ -1,0 +1,53 @@
+<div class="fade-in">
+  <div class="section-header">
+    <div class="section-title">📨 Applied Jobs</div>
+    <div class="section-subtitle">Track all your job applications in one place</div>
+  </div>
+
+  <div class="stats-row fade-in-1">
+    <div class="stat-card" *ngFor="let s of stats">
+      <div class="stat-icon" [class]="s.cls">{{ s.icon }}</div>
+      <div>
+        <div class="stat-value">{{ s.value }}</div>
+        <div class="stat-label">{{ s.label }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card fade-in-2">
+    <div class="card-header">
+      <div><div class="card-title">📋 Application History</div></div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Package</th>
+            <th>Applied On</th>
+            <th>Stage</th>
+            <th>Status</th>
+            
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let app of applications">
+            <td>
+              <div style="display:flex;align-items:center;gap:10px">
+                <!-- <div class="app-logo" [style.background]="app.color">{{ app.logo }}</div> -->
+                <strong>{{ app.company }}</strong>
+              </div>
+            </td>
+            <td style="font-size: bold;">{{ app.jobTitle }}</td>
+            <td style="font-weight:600;color:#2d4de0">{{ app.pkg }}</td>
+            <td style="color:#8891b0">{{ app.appliedDate }}</td>
+            <td>{{ app.stage }}</td>
+            <td><span class="badge" [class]="app.statusCls">{{ app.status }}</span></td>
+           
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

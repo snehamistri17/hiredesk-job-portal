@@ -1,0 +1,105 @@
+<!-- job-applications.component.html -->
+<div class="applications fade-in">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Job Applications</h1>
+      <p class="page-subtitle">{{ filteredCandidates.length }} applications across all jobs</p>
+    </div>
+    <!-- <button class="btn-outline" (click)="exportCSV()">
+      <span class="material-icons">download</span> Export CSV
+    </button> -->
+  </div>
+
+  <!-- Filters -->
+  <div class="search-bar">
+    <div class="search-input-wrap" style="flex:2">
+      <span class="material-icons icon" style="font-size:18px">search</span>
+      <input class="form-input" type="text" placeholder="Search by name, college, skills..."
+             [(ngModel)]="searchQuery" (input)="filterCandidates()">
+    </div>
+    <select class="form-input" style="width:180px" [(ngModel)]="selectedJob" (change)="filterCandidates()">
+      <option value="">All Jobs</option>
+      <option *ngFor="let j of companyService.jobs" [value]="j.id">{{ j.title }}</option>
+    </select>
+    <select class="form-input" style="width:180px" [(ngModel)]="selectedStatus" (change)="filterCandidates()">
+      <option value="">All Status</option>
+      <option>Applied</option>
+      <option>Shortlisted</option>
+      <option>Interview Scheduled</option>
+      <option>Selected</option>
+      <option>Rejected</option>
+    </select>
+  </div>
+
+  <!-- Status Summary -->
+  <div class="status-summary">
+    <div class="status-pill" *ngFor="let s of statusCounts" (click)="filterByStatus(s.status)">
+      <span class="badge" [ngClass]="s.badgeClass">{{ s.status }}</span>
+      <span class="s-count">{{ s.count }}</span>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="data-table" *ngIf="filteredCandidates.length > 0">
+      <thead>
+        <tr>
+          <th>Candidate</th>
+          <th>College / Degree</th>
+          <th>CGPA</th>
+          <th>Applied For</th>
+          <th>Applied Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of filteredCandidates">
+          <td>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="avatar">{{ c.avatar }}</div>
+              <div>
+                <div style="font-weight:600;font-size:14px;font-family:'Plus Jakarta Sans',sans-serif">{{ c.name }}</div>
+                <div style="font-size:12px;color:var(--text-secondary)">{{ c.email }}</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div style="font-size:13px">{{ c.college }}</div>
+            <div style="font-size:12px;color:var(--text-secondary)">{{ c.degree }}</div>
+          </td>
+          <td>
+            <span class="cgpa-badge" [ngClass]="cgpaClass(c.cgpa)">{{ c.cgpa }}</span>
+          </td>
+          <td>
+            <div style="font-size:13px;font-weight:500">{{ c.jobTitle }}</div>
+          </td>
+          <td style="font-size:13px;color:var(--text-secondary)">
+            {{ c.appliedDate | date:'MMM d, y' }}
+          </td>
+          <td>
+            <span class="badge" [ngClass]="getStatusBadge(c.status)">{{ c.status }}</span>
+          </td>
+          <td>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button class="btn-outline btn-sm" (click)="viewCandidate(c._id)">
+                <span class="material-icons" style="font-size:14px">visibility</span>
+              </button>
+              <button class="btn-success btn-sm" (click)="updateStatus(c, 'Shortlisted')" title="Shortlist">
+                <span class="material-icons" style="font-size:14px">thumb_up</span>
+              </button>
+              <button class="btn-danger btn-sm" (click)="updateStatus(c, 'Rejected')" title="Reject">
+                <span class="material-icons" style="font-size:14px">thumb_down</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="empty-state" *ngIf="filteredCandidates.length === 0">
+      <div class="icon">📋</div>
+      <h3>No applications found</h3>
+      <p>Try adjusting your filters</p>
+    </div>
+  </div>
+</div>

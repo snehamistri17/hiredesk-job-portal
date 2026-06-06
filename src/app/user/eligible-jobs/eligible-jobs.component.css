@@ -1,0 +1,22 @@
+.filters-row { display: flex; gap: 14px; margin-bottom: 20px; align-items: center; flex-wrap: wrap; }
+.search-wrap { position: relative; flex: 1; min-width: 200px; }
+.s-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 16px; }
+.filter-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.filter-tab { padding: 9px 18px; border-radius: 8px; border: 2px solid #dde3f5; background: white; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: #4a5080; cursor: pointer; transition: all 0.25s; }
+.filter-tab.active { background: #2d4de0; color: white; border-color: #2d4de0; }
+
+.jobs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+.job-card { background: white; border-radius: 14px; padding: 20px; border: 1px solid #dde3f5; box-shadow: 0 2px 16px rgba(45,77,224,0.06); transition: all 0.25s; }
+.job-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(45,77,224,0.12); border-color: #5b77f5; }
+.jc-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.jc-logo { width: 48px; height: 48px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.jc-role { font-size: 16px; font-weight: 700; font-family: 'Outfit', sans-serif; color: #1a1e3a; }
+.jc-company { font-size: 13px; color: #8891b0; margin-top: 2px; }
+.match-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; font-family: 'Outfit', sans-serif; }
+.match-badge.high { background: #dcfce7; color: #16a34a; }
+.match-badge.mid { background: #fff8e6; color: #b45309; }
+.jc-meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: 12px; color: #4a5080; margin-bottom: 12px; }
+.jc-skills { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.skill-chip { background: #eef2ff; color: #2d4de0; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 500; }
+.jc-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid #dde3f5; }
+.empty-box { text-align: center; padding: 60px; color: #8891b0; }

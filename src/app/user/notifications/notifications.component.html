@@ -1,0 +1,115 @@
+<div class="fade-in">
+
+  <!-- Header -->
+  <div class="section-header">
+    <div>
+      <div class="section-title">🔔 Notifications</div>
+      <div class="section-subtitle">
+        <span *ngIf="!loading">
+          {{ unreadCount > 0 ? unreadCount + ' unread' : 'All caught up' }}
+          · {{ notifications.length }} total
+        </span>
+        <span *ngIf="loading">Loading...</span>
+      </div>
+    </div>
+    <button class="mark-read-btn" (click)="markAllRead()" *ngIf="unreadCount > 0">
+      ✅ Mark All Read
+    </button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="notif-tabs fade-in-1">
+    <button class="notif-tab" [class.active]="activeTab === 'all'" (click)="activeTab = 'all'">
+      All
+      <span class="tab-count" *ngIf="tabCounts.all > 0">{{ tabCounts.all }}</span>
+    </button>
+    <button class="notif-tab" [class.active]="activeTab === 'unread'" (click)="activeTab = 'unread'">
+      Unread
+      <span class="tab-count unread-count" *ngIf="tabCounts.unread > 0">{{ tabCounts.unread }}</span>
+    </button>
+    <button class="notif-tab" [class.active]="activeTab === 'jobs'" (click)="activeTab = 'jobs'">
+      Applied Jobs
+      <span class="tab-count" *ngIf="tabCounts.jobs > 0">{{ tabCounts.jobs }}</span>
+    </button>
+    <button class="notif-tab" [class.active]="activeTab === 'interview'" (click)="activeTab = 'interview'">
+      Interview
+      <span class="tab-count" *ngIf="tabCounts.interview > 0">{{ tabCounts.interview }}</span>
+    </button>
+    <button class="notif-tab" [class.active]="activeTab === 'result'" (click)="activeTab = 'result'">
+      Result
+      <span class="tab-count" *ngIf="tabCounts.result > 0">{{ tabCounts.result }}</span>
+    </button>
+  </div>
+
+  <!-- Notification List -->
+  <div class="notif-card fade-in-2">
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="center-pad">
+      <div class="spinner"></div>
+      <p style="color:#8891b0;margin-top:12px">Loading notifications...</p>
+    </div>
+
+    <!-- Notification Items -->
+    <ng-container *ngIf="!loading">
+
+      <div class="notif-item"
+           *ngFor="let n of filtered; trackBy: trackById"
+           [class.unread]="n.unread"
+           (click)="markRead(n)">
+
+        <!-- Unread left accent -->
+        <div class="unread-pip" *ngIf="n.unread"></div>
+
+        <!-- Icon -->
+        <div class="ni-icon" [style.background]="n.bg">{{ n.icon }}</div>
+
+        <!-- Content -->
+        <div class="ni-body">
+          <div class="ni-title" [class.unread-title]="n.unread">{{ n.title }}</div>
+          <div class="ni-desc">{{ n.desc || n.message }}</div>
+          <div class="ni-time">🕐 {{ n.time }}</div>
+        </div>
+
+        <!-- Type badge -->
+        <div class="ni-type-badge" [ngClass]="'type-' + n.type">
+          <span *ngIf="n.type === 'job'">Applied</span>
+          <span *ngIf="n.type === 'shortlist'">Shortlisted</span>
+          <span *ngIf="n.type === 'interview'">Interview</span>
+          <span *ngIf="n.type === 'result'">Result</span>
+        </div>
+
+        <!-- Unread blue dot -->
+        <div *ngIf="n.unread" class="unread-dot"></div>
+
+      </div>
+
+      <!-- Empty state for tab -->
+      <div *ngIf="filtered.length === 0" class="empty-notif">
+        <div class="empty-icon">
+          <span *ngIf="activeTab === 'all'">🎉</span>
+          <span *ngIf="activeTab === 'unread'">✅</span>
+          <span *ngIf="activeTab === 'jobs'">💼</span>
+          <span *ngIf="activeTab === 'interview'">🎤</span>
+          <span *ngIf="activeTab === 'result'">🏆</span>
+        </div>
+        <div class="empty-title">
+          <span *ngIf="activeTab === 'all'">No notifications yet</span>
+          <span *ngIf="activeTab === 'unread'">You're all caught up!</span>
+          <span *ngIf="activeTab === 'jobs'">No job applications yet</span>
+          <span *ngIf="activeTab === 'interview'">No interview updates yet</span>
+          <span *ngIf="activeTab === 'result'">No results yet</span>
+        </div>
+        <div class="empty-sub">
+          <span *ngIf="activeTab === 'all'">Activity from your applications will appear here.</span>
+          <span *ngIf="activeTab === 'unread'">No unread notifications.</span>
+          <span *ngIf="activeTab !== 'all' && activeTab !== 'unread'">Check back after applying to jobs.</span>
+        </div>
+      </div>
+
+    </ng-container>
+    <!-- / !loading -->
+
+  </div>
+
+</div>

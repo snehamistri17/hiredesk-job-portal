@@ -1,0 +1,150 @@
+<div class="dash-wrap">
+
+  <!-- ══ WELCOME BANNER ══════════════════════════════ -->
+  <div class="welcome-card">
+    <div class="wc-left">
+      <div class="wc-greeting">{{ greeting }}, <span class="wc-name">{{ userName }}</span>! 👋</div>
+      <p class="wc-sub">Here's what's happening with your placement journey today.</p>
+      <div class="wc-progress-row">
+        <span class="wc-pct-label">Profile Completion</span>
+        <span class="wc-pct-val">{{ profileCompletion }}%</span>
+      </div>
+      <div class="wc-bar">
+        <div class="wc-bar-fill" [style.width]="profileCompletion + '%'"></div>
+      </div>
+      <div class="wc-btns">
+        <a routerLink="/student/eligible-jobs" class="wc-btn-primary">Browse Jobs 💼</a>
+        <a routerLink="/student/profile"       class="wc-btn-ghost">Complete Profile →</a>
+      </div>
+    </div>
+    <div class="wc-emoji">🎓</div>
+  </div>
+
+  <!-- ══ STATS CARDS ══════════════════════════════════ -->
+  <div class="stats-row">
+    <div class="stat-card" *ngFor="let s of stats">
+      <div class="stat-icon-wrap" [style.background]="s.color + '18'">
+        <span class="stat-icon">{{ s.icon }}</span>
+      </div>
+      <div class="stat-body">
+        <div class="stat-value" [style.color]="s.color">{{ s.value }}</div>
+        <div class="stat-label">{{ s.label }}</div>
+        <div class="stat-change">{{ s.change }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MAIN GRID ════════════════════════════════════ -->
+  <div class="dash-grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="dash-col-left">
+
+      <!-- Hot Jobs -->
+      <div class="dash-card">
+        <div class="card-top">
+          <div class="card-heading">🔥 Hot Jobs For You</div>
+          <a routerLink="/student/eligible-jobs" class="card-link">View All →</a>
+        </div>
+
+        <div class="jobs-loading" *ngIf="loadingJobs">Loading jobs...</div>
+
+        <div class="jobs-empty" *ngIf="!loadingJobs && recentJobs.length === 0">
+          No jobs available right now.
+        </div>
+
+        <div class="job-row" *ngFor="let job of recentJobs">
+          <div class="job-logo" [style.background]="job.color">{{ job.logo }}</div>
+          <div class="job-info">
+            <div class="job-role">{{ job.role }}</div>
+            <div class="job-meta">{{ job.company }} · {{ job.location }} · {{ job.pkg }}</div>
+          </div>
+          <div class="job-right">
+            <span class="job-badge">{{ job.type }}</span>
+            <div class="job-deadline">📅 {{ job.deadline }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="dash-card">
+        <div class="card-top">
+          <div class="card-heading">📋 Recent Activity</div>
+        </div>
+        <div class="act-empty" *ngIf="activities.length === 0">
+          No recent activity yet.
+        </div>
+        <div class="act-row" *ngFor="let a of activities">
+          <div class="act-icon" [style.background]="a.bg">{{ a.icon }}</div>
+          <div class="act-info">
+            <div class="act-text">{{ a.text }}</div>
+            <div class="act-time">{{ a.time }}</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="dash-col-right">
+
+      <!-- Quick Actions -->
+      <div class="dash-card">
+        <div class="card-heading" style="margin-bottom:14px">⚡ Quick Actions</div>
+        <div class="qa-grid">
+          <a *ngFor="let q of quickActions" [routerLink]="q.route" class="qa-btn">
+            <span class="qa-icon">{{ q.icon }}</span>
+            <span class="qa-label">{{ q.label }}</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Skill Snapshot -->
+      <div class="dash-card">
+        <div class="card-top">
+          <div class="card-heading">📊 Skill Snapshot</div>
+          <a routerLink="/student/skills" class="card-link">Edit →</a>
+        </div>
+
+        <div class="skills-empty" *ngIf="skills.length === 0">
+          <p>No skills added yet.</p>
+          <a routerLink="/student/skills" class="card-link">Add Skills →</a>
+        </div>
+
+        <div class="skill-row" *ngFor="let sk of skills">
+          <div class="skill-top">
+            <span class="skill-name">{{ sk.name }}</span>
+            <span class="skill-pct" [style.color]="sk.color">{{ sk.pct }}%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-fill" [style.width]="sk.pct+'%'" [style.background]="sk.color"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Checklist -->
+      <div class="dash-card">
+        <div class="card-heading" style="margin-bottom:14px">✅ Profile Checklist</div>
+
+        <div class="todo-row" *ngFor="let t of todos">
+          <a [routerLink]="t.route" class="todo-item" [class.done]="t.done">
+            <span class="todo-check">{{ t.done ? '✅' : '⭕' }}</span>
+            <span class="todo-icon">{{ t.icon }}</span>
+            <span class="todo-text">{{ t.text }}</span>
+          </a>
+        </div>
+
+        <div class="todo-progress">
+          <div class="todo-prog-top">
+            <span>Progress</span>
+            <span class="todo-prog-val">{{ doneTodos }}/{{ todos.length }}</span>
+          </div>
+          <div class="todo-bar">
+            <div class="todo-fill" [style.width]="todoProgress+'%'"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

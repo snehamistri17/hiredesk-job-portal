@@ -1,0 +1,178 @@
+<!-- candidate-details.component.html -->
+<div class="candidate-details fade-in" *ngIf="candidate">
+  <div class="back-btn" routerLink="/company/candidates">
+    <span class="material-icons">arrow_back</span> Back to Candidates
+  </div>
+
+  <div class="details-layout">
+    <!-- Left Profile -->
+    <div class="profile-card card">
+      <div class="profile-top">
+        <div class="avatar avatar-xl">{{ candidate.avatar }}</div>
+        <h2 class="cand-name">{{ candidate.name }}</h2>
+        <div class="cand-college">{{ candidate.college }}</div>
+        <div class="cand-degree">{{ candidate.degree }}</div>
+        <span class="badge" [ngClass]="getStatusBadge(candidate.status)">{{ candidate.status }}</span>
+      </div>
+
+      <div class="profile-info">
+        <div class="info-row">
+          <span class="material-icons">email</span>
+          <span>{{ candidate.email }}</span>
+        </div>
+        <div class="info-row">
+          <span class="material-icons">phone</span>
+          <span>{{ candidate.phone }}</span>
+        </div>
+        <div class="info-row">
+          <span class="material-icons">school</span>
+          <span>CGPA: <strong>{{ candidate.cgpa }}</strong></span>
+        </div>
+        <div class="info-row">
+          <span class="material-icons">work_history</span>
+          <span>{{ candidate.experience }} experience</span>
+        </div>
+        <div class="info-row">
+          <span class="material-icons">calendar_today</span>
+          <span>Applied {{ candidate.appliedDate | date:'MMM d, y' }}</span>
+        </div>
+      </div>
+
+      <div class="skills-section">
+        <div class="skills-label">Skills</div>
+        <div class="skills-list">
+          <span class="skill-tag" *ngFor="let s of candidate.skills">{{ s }}</span>
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <button class="btn-outline" style="width:100%" (click)="downloadResume()" [disabled]="!candidate.resume"
+                [title]="candidate.resume ? 'Download ' + candidate.resumeName : 'No resume uploaded'">
+          <span class="material-icons">description</span>
+          {{ candidate.resume ? 'Download Resume' : 'No Resume Uploaded' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Details -->
+    <div class="details-main">
+
+      <!-- Application Info -->
+      <div class="card">
+        <h3 class="card-section-title">
+          <span class="material-icons">work</span> Application Details
+        </h3>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <div class="detail-label">Applied For</div>
+            <div class="detail-value">{{ candidate.jobTitle }}</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Application Date</div>
+            <div class="detail-value">{{ candidate.appliedDate | date:'EEEE, MMMM d, y' }}</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Current Status</div>
+            <div class="detail-value">
+              <span class="badge" [ngClass]="getStatusBadge(candidate.status)">{{ candidate.status }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interview Info -->
+      <div class="card" *ngIf="candidate.interviewDate">
+        <h3 class="card-section-title" style="color:#a78bfa">
+          <span class="material-icons">event</span> Interview Details
+        </h3>
+        <div class="interview-info-grid">
+          <div class="int-detail-card">
+            <div class="int-detail-icon"><span class="material-icons">event</span></div>
+            <div class="int-detail-label">Date</div>
+            <div class="int-detail-val">{{ candidate.interviewDate | date:'EEE, MMM d' }}</div>
+          </div>
+          <div class="int-detail-card">
+            <div class="int-detail-icon"><span class="material-icons">schedule</span></div>
+            <div class="int-detail-label">Time</div>
+            <div class="int-detail-val">{{ candidate.interviewTime }}</div>
+          </div>
+          <div class="int-detail-card">
+            <div class="int-detail-icon"><span class="material-icons">{{ candidate.interviewMode === 'Online' ? 'videocam' : 'person' }}</span></div>
+            <div class="int-detail-label">Mode</div>
+            <div class="int-detail-val">{{ candidate.interviewMode }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Update Status -->
+      <div class="card">
+        <h3 class="card-section-title">
+          <span class="material-icons">update</span> Update Application Status
+        </h3>
+        <div class="status-actions">
+          <button class="status-btn shortlist" (click)="updateStatus('Shortlisted')"
+                  [class.current]="candidate.status==='Shortlisted'">
+            <span class="material-icons">star</span> Shortlist
+          </button>
+          <button class="status-btn interview" (click)="scheduleInterview()"
+                  [class.current]="candidate.status==='Interview Scheduled'">
+            <span class="material-icons">event</span> Schedule Interview
+          </button>
+          <button class="status-btn select" (click)="updateStatus('Selected')"
+                  [class.current]="candidate.status==='Selected'">
+            <span class="material-icons">check_circle</span> Select Candidate
+          </button>
+          <button class="status-btn reject" (click)="updateStatus('Rejected')"
+                  [class.current]="candidate.status==='Rejected'">
+            <span class="material-icons">cancel</span> Reject
+          </button>
+        </div>
+
+        <!-- Schedule Interview mini form -->
+        <div class="schedule-form" *ngIf="showScheduleForm">
+          <div class="form-grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
+            <div class="form-group">
+              <label class="form-label">Interview Date</label>
+              <input class="form-input" type="date" [(ngModel)]="interviewForm.date">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Time</label>
+              <input class="form-input" type="time" [(ngModel)]="interviewForm.time">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Mode</label>
+              <select class="form-input" [(ngModel)]="interviewForm.mode">
+                <option>Online</option>
+                <option>In-Person</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn-primary btn-sm" (click)="confirmSchedule()">
+              <span class="material-icons">check</span> Confirm Schedule
+            </button>
+            <button class="btn-outline btn-sm" (click)="showScheduleForm=false">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <!-- <div class="card">
+        <h3 class="card-section-title">
+          <span class="material-icons">notes</span> Recruiter Notes
+        </h3>
+        <textarea class="form-input" rows="4" placeholder="Add notes about this candidate..." [(ngModel)]="notes"></textarea>
+        <button class="btn-outline btn-sm" style="margin-top:10px">
+          <span class="material-icons">save</span> Save Notes
+        </button>
+      </div> -->
+
+    </div>
+  </div>
+</div>
+
+<div class="empty-state" *ngIf="!candidate">
+  <div class="icon">👤</div>
+  <h3>Candidate not found</h3>
+  <button class="btn-primary" routerLink="/company/candidates">Back to Candidates</button>
+</div>

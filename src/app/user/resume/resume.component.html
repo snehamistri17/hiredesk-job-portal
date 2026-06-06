@@ -1,0 +1,130 @@
+<div class="fade-in">
+  <div class="section-header">
+    <div class="section-title">📄 Resume Upload</div>
+    <div class="section-subtitle">Upload your resume to apply for placement opportunities</div>
+  </div>
+
+  <div class="resume-grid fade-in-1">
+
+    <!-- Left: Upload Area + Tips -->
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px">📤 Upload Resume</div>
+
+        <!-- Error -->
+        <div *ngIf="error"
+             style="background:#fff0f3;border:1px solid rgba(255,77,109,0.3);border-radius:8px;
+                    padding:10px 14px;font-size:13px;color:#dc2626;margin-bottom:14px">
+          ⚠️ {{ error }}
+        </div>
+
+        <!-- Uploading indicator -->
+        <div *ngIf="uploading"
+             style="text-align:center;padding:20px;color:#2d4de0;font-size:14px;font-weight:600">
+          ⏳ Uploading your resume...
+        </div>
+
+        <!-- Already Uploaded -->
+        <div *ngIf="uploaded && !uploading" class="uploaded-card">
+          <div class="uc-icon">📄</div>
+          <div style="flex:1">
+            <div class="uc-name">{{ uploadedFile.name }}</div>
+            <div class="uc-meta">
+              {{ uploadedFile.size ? uploadedFile.size + ' • ' : '' }}
+              Uploaded {{ uploadedFile.date }}
+            </div>
+            <div class="uc-views" style="color:#22c55e;font-weight:600;margin-top:4px">
+              ✅ Resume active — recruiters can view it
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn btn-sm btn-danger" (click)="removeFile()">🗑️ Remove</button>
+          </div>
+        </div>
+
+        <!-- Upload Zone — shown when not uploaded -->
+        <div *ngIf="!uploaded && !uploading"
+             class="upload-zone"
+             [class.drag-over]="dragOver"
+             (dragover)="onDragOver($event)"
+             (dragleave)="onDragLeave()"
+             (drop)="onDrop($event)"
+             (click)="selectFile(fileInput)">
+          <input type="file" #fileInput accept=".pdf"
+                 style="display:none" (change)="onFileSelected($event)" />
+          <div class="upload-icon">☁️</div>
+          <div class="up-title">Drag &amp; Drop your Resume here</div>
+          <div class="up-sub">or <strong style="color:#2d4de0">browse to upload</strong></div>
+          <div class="up-hint">PDF format only • Max 5MB</div>
+        </div>
+
+        <!-- Update button when already uploaded -->
+        <div *ngIf="uploaded && !uploading" style="margin-top:14px">
+          <button class="btn btn-outline" (click)="removeFile()">
+            🔄 Upload Different Resume
+          </button>
+        </div>
+      </div>
+
+      <!-- Resume Tips -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px">💡 Resume Tips</div>
+        <div class="tips-list">
+          <div class="tip-item" *ngFor="let g of guidelines; let i = index">
+            <div class="tip-num">{{ i + 1 }}</div>
+            <span>{{ g }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Status Panel -->
+    <div style="display:flex;flex-direction:column;gap:20px">
+
+      <!-- Resume Status -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px">📊 Resume Status</div>
+
+        <!-- Not uploaded yet -->
+        <div *ngIf="!uploaded"
+             style="text-align:center;padding:24px;color:#8891b0">
+          <div style="font-size:40px;margin-bottom:10px">📄</div>
+          <div style="font-size:14px;font-weight:600;color:#4a5080">No resume uploaded yet</div>
+          <div style="font-size:13px;margin-top:6px">Upload your resume to get started</div>
+        </div>
+
+        <!-- Uploaded status -->
+        <div *ngIf="uploaded">
+          <div class="status-item">
+            <div class="si-dot green"></div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:#1a1e3a">Resume Uploaded</div>
+              <div style="font-size:12px;color:#8891b0">{{ uploadedFile.date }}</div>
+            </div>
+            <span class="badge badge-success" style="margin-left:auto">✅ Active</span>
+          </div>
+          <div class="status-item" style="border:none;margin-top:8px">
+            <div class="si-dot blue"></div>
+            <div>
+              <div style="font-size:14px;font-weight:600;color:#1a1e3a">File Name</div>
+              <div style="font-size:12px;color:#8891b0">{{ uploadedFile.name }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recruiter Views — only show if uploaded -->
+      <div class="card" *ngIf="uploaded">
+        <div class="card-title" style="margin-bottom:16px">👀 Recruiter Views</div>
+        <div style="text-align:center;padding:24px;color:#8891b0">
+          <div style="font-size:36px;font-weight:800;font-family:'Outfit',sans-serif;color:#2d4de0;margin-bottom:6px">0</div>
+          <div style="font-size:13px">Total Views</div>
+          <div style="font-size:12px;margin-top:8px;color:#aab0cc">
+            Recruiter views will appear here once your resume is reviewed
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

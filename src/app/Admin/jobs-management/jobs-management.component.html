@@ -1,0 +1,409 @@
+<!-- jobs-management.component.html -->
+<div class="pg">
+
+  <!-- LOADING STATE -->
+  <div *ngIf="loading" style="text-align:center;padding:60px;color:var(--text-secondary)">
+    <div style="font-size:32px;margin-bottom:12px">⏳</div>
+    <p>Loading jobs from database...</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+
+    <!-- STATS -->
+    <div class="drives-stats">
+      <div class="dstat" *ngFor="let s of dStats">
+        <span class="dstat-icon">{{ s.icon }}</span>
+        <div class="dstat-val">{{ s.val }}</div>
+        <div class="dstat-lbl">{{ s.label }}</div>
+      </div>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="card filter-bar">
+      <div class="filter-left">
+        <div class="fg">
+          <label>Status</label>
+          <select [(ngModel)]="fStatus" (change)="filter()">
+            <option value="">All</option>
+            <option>Active</option><option>Draft</option><option>Closed</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Type</label>
+          <select [(ngModel)]="fType" (change)="filter()">
+            <option value="">All Types</option>
+            <option>Full-Time</option><option>Part-Time</option>
+            <option>Internship</option><option>Contract</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Department</label>
+          <select [(ngModel)]="fDept" (change)="filter()">
+            <option value="">All Depts</option>
+            <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+          </select>
+        </div>
+        <div class="search-wrap">
+          <span>🔍</span>
+          <input type="text" placeholder="Search job, company..." [(ngModel)]="q" (input)="filter()" />
+        </div>
+      </div>
+      <div class="filter-right">
+        <span class="count-chip">{{ filtered.length }} jobs</span>
+      </div>
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div *ngIf="filtered.length === 0" style="text-align:center;padding:60px;color:var(--text-secondary)">
+      <div style="font-size:48px;margin-bottom:12px">💼</div>
+      <h3 style="margin:0 0 8px">No jobs found</h3>
+      <p>Jobs posted by companies will appear here. No jobs in the database yet.</p>
+    </div>
+
+    <!-- DRIVES LIST -->
+    <div class="drives-list">
+      <div class="drive-row" *ngFor="let d of filtered">
+        <div class="date-box" [ngClass]="boxClass(d.status)">
+          <div class="date-day">{{ getDay(d.deadline || d.postedDate) }}</div>
+          <div class="date-mon">{{ getMon(d.deadline || d.postedDate) }}</div>
+        </div>
+        <div class="drive-body">
+          <div class="drive-toprow">
+            <div class="drive-title">{{ d.jobtitle }}</div>
+            <div class="drive-badges">
+              <span class="sbadge" [ngClass]="statusBadge(d.status)">{{ d.status }}</span>
+              <span class="type-badge">{{ d.type }}</span>
+            </div>
+          </div>
+          <div class="drive-co">🏢 {{ d.company }}</div>
+          <div class="drive-meta">
+            <span>📍 {{ d.location }}</span>
+            <span>🏢 {{ d.department }}</span>
+            <span>👥 {{ d.positions }} positions</span>
+            <span>💰 {{ d.salary }}</span>
+            <span *ngIf="d.deadline">📅 Deadline: {{ d.deadline }}</span>
+            <span>📋 {{ d.applicants || 0 }} applicants</span>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px" *ngIf="d.skills?.length">
+            <span class="skill-chip" *ngFor="let s of d.skills.slice(0,4)">{{ s }}</span>
+          </div>
+        </div>
+        <div class="drive-actions">
+          <button class="act-btn view" title="View"   (click)="openViewModal(d)">👁</button>
+          <button class="act-btn del"  title="Delete" (click)="del(d._id)">🗑</button>
+        </div>
+      </div>
+    </div>
+
+  </ng-container>
+</div>
+
+<!-- ══════════════════════════════════════
+     CREATE JOB MODAL
+══════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="modal-box modal-box-lg" (click)="$event.stopPropagation()">
+    <div class="modal-header modal-header-blue">
+      <div class="modal-header-icon">💼</div>
+      <div class="modal-header-text">
+        <h2 class="modal-title">Add New Job</h2>
+        <p class="modal-subtitle">Post a job — saved directly to MongoDB jobs collection</p>
+      </div>
+      <button class="modal-x" (click)="closeModal()">✕</button>
+    </div>
+
+    <div class="modal-form">
+      <div class="modal-section-title">Basic Information</div>
+      <div class="form-grid-2">
+
+        <div class="form-field form-field-full">
+          <label class="field-label">Job Title <span class="req-star">*</span></label>
+          <input class="field-input" type="text" [(ngModel)]="nd.jobtitle"
+            placeholder="e.g. Senior Frontend Developer" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Company <span class="req-star">*</span></label>
+          <input class="field-input" type="text" [(ngModel)]="nd.company"
+            placeholder="Company name" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Department</label>
+          <select class="field-input" [(ngModel)]="nd.department">
+            <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Job Type</label>
+          <select class="field-input" [(ngModel)]="nd.type">
+            <option>Full-Time</option><option>Part-Time</option>
+            <option>Internship</option><option>Contract</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Location <span class="req-star">*</span></label>
+          <input class="field-input" type="text" [(ngModel)]="nd.location"
+            placeholder="e.g. Mumbai, Remote" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Salary / Package <span class="req-star">*</span></label>
+          <input class="field-input" type="text" [(ngModel)]="nd.salary"
+            placeholder="e.g. ₹8-12 LPA" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Positions</label>
+          <input class="field-input" type="number" [(ngModel)]="nd.positions" min="1" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Application Deadline</label>
+          <input class="field-input" type="date" [(ngModel)]="nd.deadline" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Status</label>
+          <select class="field-input" [(ngModel)]="nd.status">
+            <option>Active</option><option>Draft</option><option>Closed</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Min Eligibility (CGPA)</label>
+          <input class="field-input" type="text" [(ngModel)]="nd.eligibility"
+            placeholder="e.g. 7.5 CGPA" />
+        </div>
+
+        <div class="form-field form-field-full">
+          <label class="field-label">Description</label>
+          <textarea class="field-input" rows="3" [(ngModel)]="nd.description"
+            placeholder="Describe the role, responsibilities..."></textarea>
+        </div>
+
+        <!-- Skills -->
+        <div class="form-field form-field-full">
+          <label class="field-label">Required Skills</label>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;min-height:28px">
+            <span class="skill-chip skill-removable" *ngFor="let s of nd.skills; let i = index">
+              {{ s }} <button type="button" class="skill-rm" (click)="removeNdSkill(i)">×</button>
+            </span>
+          </div>
+          <div style="display:flex;gap:8px">
+            <input class="field-input" type="text" style="flex:1" [(ngModel)]="ndSkillInput"
+              placeholder="Type skill and press Add..." (keyup.enter)="addNdSkill()" />
+            <button type="button" class="btn-ghost" style="padding:8px 16px" (click)="addNdSkill()">Add</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" (click)="closeModal()" [disabled]="saving">Cancel</button>
+        <button type="button" class="btn-primary-modal" (click)="create()" [disabled]="saving">
+          <span *ngIf="!saving">💾 Save to MongoDB</span>
+          <span *ngIf="saving">Saving...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     VIEW JOB MODAL
+══════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showViewModal && viewDrive" (click)="closeViewModal()">
+  <div class="modal-box modal-box-lg" (click)="$event.stopPropagation()">
+    <div class="modal-header modal-header-purple">
+      <div class="modal-header-icon">📋</div>
+      <div class="modal-header-text">
+        <h2 class="modal-title">Job Details</h2>
+        <p class="modal-subtitle">{{ viewDrive!.company }} — {{ viewDrive!.jobtitle }}</p>
+      </div>
+      <button class="modal-x" (click)="closeViewModal()">✕</button>
+    </div>
+
+    <div class="modal-form">
+      <div class="view-profile-card">
+        <div class="date-box-xl" [ngClass]="boxClass(viewDrive!.status)">
+          <div class="date-day" style="font-size:22px;font-weight:900">{{ getDay(viewDrive!.deadline) }}</div>
+          <div class="date-mon">{{ getMon(viewDrive!.deadline) }}</div>
+        </div>
+        <div class="view-profile-info">
+          <div class="view-full-name">{{ viewDrive!.jobtitle }}</div>
+          <div class="view-full-email">🏢 {{ viewDrive!.company }} &nbsp;·&nbsp; {{ viewDrive!.department }}</div>
+          <div style="display:flex;gap:6px;margin-top:6px">
+            <span class="sbadge" [ngClass]="statusBadge(viewDrive!.status)">{{ viewDrive!.status }}</span>
+            <span class="type-badge">{{ viewDrive!.type }}</span>
+          </div>
+        </div>
+        <div class="view-pkg-box">
+          <div class="view-pkg-val">{{ viewDrive!.salary }}</div>
+          <div class="view-cgpa-label">Salary</div>
+        </div>
+      </div>
+
+      <div class="view-stats-strip">
+        <div class="vss-item">
+          <div class="vss-val">{{ viewDrive!.location }}</div>
+          <div class="vss-lbl">📍 Location</div>
+        </div>
+        <div class="vss-item">
+          <div class="vss-val">{{ viewDrive!.positions }}</div>
+          <div class="vss-lbl">👥 Positions</div>
+        </div>
+        <div class="vss-item">
+          <div class="vss-val">{{ viewDrive!.applicants || 0 }}</div>
+          <div class="vss-lbl">📋 Applicants</div>
+        </div>
+        <div class="vss-item">
+          <div class="vss-val">{{ viewDrive!.deadline || '—' }}</div>
+          <div class="vss-lbl">📅 Deadline</div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div *ngIf="viewDrive!.description" style="margin:16px 0">
+        <div class="modal-section-title">📝 Description</div>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.6">{{ viewDrive!.description }}</p>
+      </div>
+
+      <!-- Skills -->
+      <div *ngIf="viewDrive!.skills?.length" style="margin:12px 0">
+        <div class="modal-section-title">🛠 Required Skills</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+          <span class="skill-chip" *ngFor="let s of viewDrive!.skills">{{ s }}</span>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" (click)="closeViewModal()">Close</button>
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     EDIT JOB MODAL
+══════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showEditModal && editDrive" (click)="closeEditModal()">
+  <div class="modal-box modal-box-lg" (click)="$event.stopPropagation()">
+    <div class="modal-header modal-header-orange">
+      <div class="modal-header-icon">✏️</div>
+      <div class="modal-header-text">
+        <h2 class="modal-title">Edit Job</h2>
+        <p class="modal-subtitle">Updating: {{ editDrive!.jobtitle }}</p>
+      </div>
+      <button class="modal-x" (click)="closeEditModal()">✕</button>
+    </div>
+
+    <div class="modal-form">
+      <div class="modal-section-title">Job Details</div>
+      <div class="form-grid-2">
+
+        <div class="form-field form-field-full">
+          <label class="field-label">Job Title <span class="req-star">*</span></label>
+          <input class="field-input" type="text" [(ngModel)]="editDrive!.jobtitle" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Company</label>
+          <input class="field-input" type="text" [(ngModel)]="editDrive!.company" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Department</label>
+          <select class="field-input" [(ngModel)]="editDrive!.department">
+            <option *ngFor="let d of departments" [value]="d">{{ d }}</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Job Type</label>
+          <select class="field-input" [(ngModel)]="editDrive!.type">
+            <option>Full-Time</option><option>Part-Time</option>
+            <option>Internship</option><option>Contract</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Location</label>
+          <input class="field-input" type="text" [(ngModel)]="editDrive!.location" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Salary / Package</label>
+          <input class="field-input" type="text" [(ngModel)]="editDrive!.salary"
+            placeholder="e.g. ₹8-12 LPA" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Positions</label>
+          <input class="field-input" type="number" [(ngModel)]="editDrive!.positions" min="1" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Deadline</label>
+          <input class="field-input" type="date" [(ngModel)]="editDrive!.deadline" />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label">Status</label>
+          <select class="field-input" [(ngModel)]="editDrive!.status">
+            <option>Active</option><option>Draft</option><option>Closed</option>
+          </select>
+        </div>
+
+        <div class="form-field form-field-full">
+          <label class="field-label">Description</label>
+          <textarea class="field-input" rows="3" [(ngModel)]="editDrive!.description"></textarea>
+        </div>
+
+        <!-- Skills editor -->
+        <div class="form-field form-field-full">
+          <label class="field-label">Skills</label>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;min-height:28px">
+            <span class="skill-chip skill-removable" *ngFor="let s of editDrive!.skills; let i = index">
+              {{ s }} <button type="button" class="skill-rm" (click)="removeEditSkill(i)">×</button>
+            </span>
+          </div>
+          <div style="display:flex;gap:8px">
+            <input class="field-input" type="text" style="flex:1" [(ngModel)]="editSkillInput"
+              placeholder="Add skill..." (keyup.enter)="addEditSkill()" />
+            <button type="button" class="btn-ghost" style="padding:8px 16px" (click)="addEditSkill()">Add</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-ghost" (click)="closeEditModal()" [disabled]="saving">Cancel</button>
+        <button type="button" class="btn-primary-modal" (click)="saveEdit()" [disabled]="saving">
+          <span *ngIf="!saving">💾 Save Changes</span>
+          <span *ngIf="saving">Saving...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- skill chip styles (inline so no CSS file change needed) -->
+<style>
+  .skill-chip {
+    background: var(--brand-light, #ede9fe);
+    color: var(--brand-primary, #3b5bdb);
+    font-size: 12px; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .skill-rm {
+    background: none; border: none; color: inherit;
+    cursor: pointer; font-size: 14px; padding: 0 2px; opacity: 0.6;
+    line-height: 1;
+  }
+  .skill-rm:hover { opacity: 1; color: #ef4444; }
+</style>

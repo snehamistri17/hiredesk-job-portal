@@ -1,0 +1,44 @@
+<!-- navbar.component.html -->
+<header class="navbar">
+  <div class="navbar-left">
+    <div class="page-title">{{ pageTitle }}</div>
+    <div class="breadcrumb">
+      <span>Admin</span>
+      <span class="sep">></span>
+      <span class="cur">{{ pageTitle }}</span>
+    </div>
+  </div>
+  <div class="navbar-right">
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" placeholder="Search..." />
+    </div>
+    <div class="notif-btn" (click)="toggleNotif()">
+      <span>🔔</span>
+      <span class="notif-count">{{ unreadCount }}</span>
+      <div class="notif-drop" *ngIf="showNotif" (click)="$event.stopPropagation()">
+        <div class="nd-hdr">
+          <span>Notifications</span>
+          <span class="nd-new">{{ unreadCount }} new</span>
+        </div>
+        <div class="nd-item" *ngFor="let n of quickNotifs" [class.unread]="!n.read"
+             (click)="n.read = true">
+          <div class="nd-dot" *ngIf="!n.read"></div>
+          <div>
+            <div class="nd-msg">{{ n.msg }}</div>
+            <div class="nd-time">{{ n.time }}</div>
+          </div>
+        </div>
+        <div class="nd-footer">View All</div>
+      </div>
+    </div>
+    <!-- ✅ Dynamic logged-in user name -->
+    <div class="profile-chip">
+      <div class="profile-av">{{ loggedInInitials }}</div>
+      <div>
+        <div class="pname">{{ loggedInName }}</div>
+        <div class="prole">{{ loggedInRole }}</div>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,144 @@
+<!-- company-layout.component.html -->
+<div class="company-layout" [class.sidebar-collapsed]="sidebarCollapsed">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="brand" *ngIf="!sidebarCollapsed">
+         <img src="assets/hiredesklogo.png" alt="HireDesk"
+       style="height:36px;width:auto;cursor:pointer;" />
+        <span class="brand-hire">HireDesk</span>
+      </div>
+      <div class="brand" *ngIf="sidebarCollapsed" style="width:36px;height:36px;background:linear-gradient(135deg,#f97316,#f59e0b);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;color:white;font-weight:900">H</div>
+      <button class="collapse-btn" (click)="toggleSidebar()">
+        <span class="material-icons">{{ sidebarCollapsed ? 'menu' : 'menu_open' }}</span>
+      </button>
+    </div>
+
+    <div class="company-info-mini" *ngIf="!sidebarCollapsed">
+      <div class="avatar avatar-lg company-avatar">{{ companyInitial }}</div>
+      <div>
+        <div class="company-name">{{ companyService.companyProfile.name }}</div>
+        <div class="company-badge">
+          <span class="dot"></span> {{ companyService.companyProfile.status }}
+        </div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label" *ngIf="!sidebarCollapsed">OVERVIEW</div>
+      <a class="nav-item" routerLink="/company/dashboard" routerLinkActive="active">
+        <span class="material-icons nav-icon">dashboard</span>
+        <span class="nav-text" *ngIf="!sidebarCollapsed">Dashboard</span>
+      </a>
+      <a class="nav-item" routerLink="/company/profile" routerLinkActive="active">
+        <span class="material-icons nav-icon">business</span>
+        <span class="nav-text" *ngIf="!sidebarCollapsed">Company Profile</span>
+      </a>
+
+      <div class="nav-section-label" *ngIf="!sidebarCollapsed">RECRUITMENT</div>
+      <a class="nav-item" routerLink="/company/post-job" routerLinkActive="active">
+        <span class="material-icons nav-icon">add_circle_outline</span>
+        <span class="nav-text" *ngIf="!sidebarCollapsed">Post a Job</span>
+      </a>
+      <a class="nav-item" routerLink="/company/manage-jobs" routerLinkActive="active">
+        <span class="material-icons nav-icon">work_outline</span>
+        <span class="nav-text" *ngIf="!sidebarCollapsed">Manage Jobs</span>
+        <!-- <span class="nav-badge" *ngIf="!sidebarCollapsed">{{ activeJobsCount }}</span> -->
+      </a>
+      <a class="nav-item" routerLink="/company/applications" routerLinkActive="active">
+        <span class="material-icons nav-icon">inbox</span>
+        <span class="nav-text" *ngIf="!sidebarCollapsed">Applications</span>
+        <!-- <span class="nav-badge new" *ngIf="!sidebarCollapsed">{{ newAppsCount }}</span> -->
+      </a>
+      <a class="nav-item" routerLink="/company/candidates" routerLinkActive="active">
+        <span class="material-icons nav-icon">people_outline</span>
+        <span class="nav-text" *ngIf="!sidebarCollapsed">Candidates</span>
+      </a>
+      <!-- <a class="nav-item" routerLink="/company/interview-status" routerLinkActive="active">
+        <span class="material-icons nav-icon">event_note</span>
+        <span class="nav-text" *ngIf="!sidebarCollapsed">Interview Status</span>
+      </a>
+      <a class="nav-item" routerLink="/company/hiring-history" routerLinkActive="active">
+        <span class="material-icons nav-icon">history</span>
+        <span class="nav-text" *ngIf="!sidebarCollapsed">Hiring History</span>
+      </a> -->
+
+      <div class="nav-section-label" *ngIf="!sidebarCollapsed">ACCOUNT</div>
+      <a class="nav-item" routerLink="/company/change--password" routerLinkActive="active">
+        <span class="material-icons nav-icon">lock_outline</span>
+        <span class="nav-text" *ngIf="!sidebarCollapsed">Change Password</span>
+      </a>
+      <!-- <a class="nav-item" routerLink="/company/notifications" routerLinkActive="active">
+        <span class="material-icons nav-icon">lock_outline</span>
+        <span class="nav-text" *ngIf="!sidebarCollapsed">Notifications</span>
+      </a> -->
+      <a class="nav-item logout" (click)="logout()">
+        <span class="material-icons nav-icon">logout</span>
+        <span class="nav-text" *ngIf="!sidebarCollapsed">Logout</span>
+      </a>
+    </nav>
+
+   
+  </aside>
+
+  <!-- Main content -->
+  <div class="main-wrapper">
+
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="header-left">
+        <div class="breadcrumb">
+          <span class="material-icons" style="font-size:16px;color:var(--text-muted)">home</span>
+          <span class="sep">/</span>
+          <span>Company</span>
+          <span class="sep">/</span>
+          <span class="current-page">{{ currentPage }}</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="header-search">
+          <span class="material-icons">search</span>
+          <input type="text" placeholder="Quick search..." />
+        </div>
+        <button class="notif-btn" (click)="toggleNotifications()">
+          <span class="material-icons">notifications_none</span>
+          <span class="notif-count" *ngIf="unreadNotifs > 0">{{ unreadNotifs }}</span>
+        </button>
+
+        <!-- Notifications dropdown -->
+        <div class="notif-dropdown" *ngIf="showNotifications">
+          <div class="notif-header">
+            <span>Notifications</span>
+            <button class="mark-all">Mark all read</button>
+          </div>
+          <div class="notif-list">
+            <div class="notif-item" *ngFor="let n of companyService.notifications" [class.unread]="!n.read">
+              <div class="notif-icon" [ngClass]="'notif-' + n.type">
+                <span class="material-icons">{{ getNotifIcon(n.type) }}</span>
+              </div>
+              <div class="notif-content">
+                <p>{{ n.message }}</p>
+                <span>{{ n.time }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="user-menu">
+          <div class="avatar">{{ companyInitial }}</div>
+          <div class="user-info">
+            <span class="user-name">{{ companyService.companyProfile.name }}</span>
+            <span class="user-role">Recruiter</span>
+          </div>
+          <span class="material-icons" style="color:var(--text-muted);font-size:18px">expand_more</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page content -->
+    <main class="page-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

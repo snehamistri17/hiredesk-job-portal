@@ -1,0 +1,70 @@
+<footer class="footer">
+    <div class="footer-main">
+      <div class="footer-grid">
+        <!-- Contact Section -->
+        <div class="footer-section footer-contact">
+          <div class="contact-item phone">
+            <i class="icon">📞</i>
+            <a href="tel:{{ footerContact.phone }}">{{ footerContact.phone }}</a>
+          </div>
+          <div class="contact-item email">
+            <i class="icon">✉️</i>
+            <a href="mailto:{{ footerContact.email }}">{{ footerContact.email }}</a>
+          </div>
+        </div>
+
+        <!-- Solutions -->
+        <div class="footer-section">
+          <h3>Solutions</h3>
+          <ul class="footer-links">
+            <li *ngFor="let link of footerLinks.solutions">
+              <a [href]="link.link">{{ link.name }}</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Company -->
+        <div class="footer-section">
+          <h3>Company</h3>
+          <ul class="footer-links">
+            <li *ngFor="let link of footerLinks.company">
+              <a [href]="link.link">{{ link.name }}</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Resources -->
+        <div class="footer-section">
+          <h3>Resources</h3>
+          <ul class="footer-links">
+            <li *ngFor="let link of footerLinks.resources">
+              <a [href]="link.link">{{ link.name }}</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Social Media -->
+        <div class="footer-section footer-social">
+          <div class="social-icons">
+            <a *ngFor="let social of socialMedia" [href]="social.link" [title]="social.name" target="_blank"
+              class="social-icon">
+              <i [class]="social.icon"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+      <div class="footer-bottom-content">
+        <div class="footer-logo-bottom">
+          <div class="briefcase-icon-footer"></div>
+          <span>Powered by HireDesk</span>
+        </div>
+        <div class="footer-partner">
+          <span>Host With HireDesk</span>
+        </div>
+      </div>
+    </div>
+  </footer>

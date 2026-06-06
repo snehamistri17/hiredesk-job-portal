@@ -1,0 +1,56 @@
+
+<div class="page-wrapper">
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">Notifications</h1>
+      <nav class="breadcrumb">
+        <span>Admin</span>
+        <span class="sep">›</span>
+        <span class="active">Notifications</span>
+      </nav>
+    </div>
+    <div class="header-actions">
+      <button class="btn-mark-all" (click)="markAllRead()" *ngIf="unreadCount > 0">
+        ✓ Mark all read
+      </button>
+      <span class="unread-badge" *ngIf="unreadCount > 0">{{ unreadCount }} new</span>
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    <button *ngFor="let tab of tabs" class="tab-btn" [class.active]="activeTab === tab.key" (click)="setTab(tab.key)">
+      {{ tab.icon }} {{ tab.label }}
+      <span class="tab-count" *ngIf="tab.count > 0">{{ tab.count }}</span>
+    </button>
+  </div>
+
+  <!-- Notifications List -->
+  <div class="notif-container card">
+    <div *ngIf="filteredNotifications.length === 0" class="empty-state">
+      <span class="empty-icon">🔔</span>
+      <p>No notifications found</p>
+    </div>
+
+    <div *ngFor="let notif of filteredNotifications; let i = index"
+         class="notif-item"
+         [class.unread]="!notif.read"
+         [class.fadeIn]="true"
+         (click)="markRead(notif)">
+      <div class="notif-icon-wrapper" [ngClass]="notif.type">
+        <span class="notif-icon">{{ notif.icon }}</span>
+      </div>
+      <div class="notif-content">
+        <div class="notif-top">
+          <span class="notif-title">{{ notif.title }}</span>
+          <span class="notif-time">{{ notif.time }}</span>
+        </div>
+        <p class="notif-body">{{ notif.message }}</p>
+        <span class="notif-tag" [ngClass]="notif.type">{{ notif.tag }}</span>
+      </div>
+      <div class="notif-actions">
+        <button class="btn-delete" (click)="deleteNotif($event, notif)">✕</button>
+      </div>
+    </div>
+  </div>
+</div>

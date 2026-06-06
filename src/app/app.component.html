@@ -1,0 +1,32 @@
+<!-- PUBLIC LAYOUT (home, login, register) -->
+<ng-container *ngIf="!isAdmin">
+  <router-outlet></router-outlet>
+</ng-container>
+
+<!-- ADMIN LAYOUT -->
+<ng-container *ngIf="isAdmin">
+  <div class="admin-wrapper">
+    <div class="admin-layout">
+
+      <!-- SIDEBAR -->
+      <div class="admin-sidebar">
+        <app-sidebar></app-sidebar>
+      </div>
+
+      <!-- RIGHT SIDE -->
+      <div class="admin-right">
+
+        <!-- NAVBAR -->
+        <div class="admin-navbar">
+          <app-navbar></app-navbar>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="admin-main-content">
+          <router-outlet></router-outlet>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</ng-container>

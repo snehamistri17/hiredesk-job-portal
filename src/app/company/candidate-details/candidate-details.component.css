@@ -1,0 +1,273 @@
+/* candidate-details.component.css */
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    transition: color 0.2s;
+    font-weight: 500;
+}
+
+.back-btn:hover {
+    color: var(--brand-primary);
+}
+
+.details-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+.profile-card {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    position: sticky;
+    top: 20px;
+}
+
+.profile-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+}
+
+.cand-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.cand-college {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.cand-degree {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.info-row .material-icons {
+    font-size: 17px;
+    color: var(--brand-primary);
+    flex-shrink: 0;
+}
+
+.info-row strong {
+    color: var(--text-primary);
+}
+
+.skills-section {
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+}
+
+.skills-label {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.profile-actions {}
+
+.details-main {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.card-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+}
+
+.card-section-title .material-icons {
+    color: var(--brand-primary);
+    font-size: 18px;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.detail-item {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+}
+
+.detail-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.detail-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.interview-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.int-detail-card {
+    background: var(--brand-light);
+    border: 1px solid var(--brand-border);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-align: center;
+}
+
+.int-detail-icon {
+    margin-bottom: 6px;
+    color: var(--brand-primary);
+}
+
+.int-detail-icon .material-icons {
+    font-size: 22px;
+}
+
+.int-detail-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+.int-detail-val {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-primary);
+    margin-top: 4px;
+}
+
+.status-actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.status-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    border: 1px solid;
+    transition: all 0.2s;
+}
+
+.status-btn.shortlist {
+    background: var(--yellow-light);
+    color: #d97706;
+    border-color: rgba(245, 158, 11, 0.3);
+}
+
+.status-btn.shortlist.current {
+    background: rgba(245, 158, 11, 0.25);
+}
+
+.status-btn.interview {
+    background: var(--brand-light);
+    color: var(--brand-primary);
+    border-color: var(--brand-border);
+}
+
+.status-btn.interview.current {
+    background: rgba(249, 115, 22, 0.25);
+}
+
+.status-btn.select {
+    background: var(--green-light);
+    color: var(--green);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+.status-btn.select.current {
+    background: rgba(16, 185, 129, 0.25);
+}
+
+.status-btn.reject {
+    background: var(--red-light);
+    color: var(--red);
+    border-color: rgba(239, 68, 68, 0.3);
+}
+
+.status-btn.reject.current {
+    background: rgba(239, 68, 68, 0.25);
+}
+
+.status-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.status-btn .material-icons {
+    font-size: 17px;
+}
+
+@media (max-width: 900px) {
+    .details-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-card {
+        position: static;
+    }
+}

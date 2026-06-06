@@ -1,0 +1,94 @@
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" [class.open]="sidebarOpen">
+
+    <div class="sidebar-logo">
+      <img  src="assets/hiredesklogo.png" alt="HireDesk"
+       style="height:36px;width:auto;cursor:pointer;" />
+      <span class="lo2" style="color: white;">HireDesk</span>
+    </div>
+
+    <!-- Real user — no hardcoded RS or Rahul -->
+    <div class="sidebar-user" (click)="goTo('/student/profile')" style="cursor:pointer">
+      <div class="sidebar-avatar">{{ userInitials }}</div>
+      <div class="sidebar-user-info">
+        <div class="sname">{{ userName }}</div>
+        <div class="srole">{{ userEmail }}</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-title">Main Menu</div>
+      <a *ngFor="let item of navItems"
+         [routerLink]="item.route"
+         routerLinkActive="active"
+         class="nav-item"
+         (click)="closeSidebar()">
+        <span class="nav-icon">{{ item.icon }}</span>
+        <span>{{ item.label }}</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" (click)="logout()">🚪 <span>Logout</span></button>
+    </div>
+
+  </aside>
+
+  <!-- TOPBAR -->
+  <header class="topbar" [class.shifted]="sidebarOpen">
+    <div class="topbar-left">
+      <button class="menu-toggle" (click)="toggleSidebar()">☰</button>
+      <div>
+        <div class="page-title">{{ currentTitle }}</div>
+        <div class="breadcrumb-text">Home / {{ currentTitle }}</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+
+      <!-- Bell -->
+      <a routerLink="/student/notifications" class="topbar-icon-btn" title="Notifications">
+        🔔
+        <span class="notif-dot"></span>
+      </a>
+
+      <!-- Profile button — opens dropdown -->
+      <div class="user-menu-wrap" style="position:relative">
+        <div class="topbar-profile" (click)="toggleUserMenu()" style="cursor:pointer">
+          <div class="topbar-avatar">{{ userInitials }}</div>
+          <div>
+            <div class="tname">{{ userName }}</div>
+            <div class="trole">Student</div>
+          </div>
+          <span style="color:#8891b0;font-size:12px;margin-left:4px;">▼</span>
+        </div>
+
+        <!-- Dropdown -->
+        <div class="profile-dropdown" *ngIf="showUserMenu">
+          <div class="pd-header">
+            <div class="pd-avatar">{{ userInitials }}</div>
+            <div>
+              <div class="pd-name">{{ userName }}</div>
+              <div class="pd-email">{{ userEmail }}</div>
+            </div>
+          </div>
+          <div class="pd-divider"></div>
+          <button class="pd-item" (click)="goTo('/student/profile')">👤 My Profile</button>
+          <button class="pd-item" (click)="goTo('/student/academic')">🎓 Academic Details</button>
+          <button class="pd-item" (click)="goTo('/student/skills')">⚡ Skills</button>
+          <button class="pd-item" (click)="goTo('/student/change-password')">🔐 Change Password</button>
+          <div class="pd-divider"></div>
+          <button class="pd-item pd-logout" (click)="logout()">🚪 Sign Out</button>
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content" [class.shifted]="sidebarOpen">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>

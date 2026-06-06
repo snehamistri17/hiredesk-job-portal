@@ -1,0 +1,188 @@
+<div class="fade-in">
+  <div class="toast toast-success" *ngIf="saved">✅ Profile saved successfully!</div>
+
+  <div *ngIf="loading" style="text-align:center;padding:60px;color:#8891b0">
+    Loading your profile...
+  </div>
+
+  <div *ngIf="!loading">
+
+    <!-- Cover + Avatar -->
+    <div class="card profile-top-card fade-in-1">
+      <div class="cover-bg"></div>
+      <div class="profile-info-row">
+
+        <!-- Avatar with real initials -->
+        <div class="profile-avatar-wrap">
+          <div class="p-avatar">{{ initials }}</div>
+          <div class="avatar-cam">📷</div>
+        </div>
+
+        <div class="profile-details">
+          <!-- Real name -->
+          <h2>{{ profile.name || 'Your Name' }}</h2>
+
+          <!-- Real degree + department (from form, not hardcoded) -->
+          <p *ngIf="profile.branch || profile.department">
+            {{ profile.branch }} {{ profile.department }}
+          </p>
+          <p *ngIf="!profile.branch && !profile.department" style="color:#aab0cc;font-style:italic">
+            Add your degree and department
+          </p>
+
+          <!-- Real college name (student fills in profile form) -->
+          <p class="pcollege" *ngIf="profile.college">
+            🏛️ {{ profile.college }}
+            <span *ngIf="profile.admissionYear && profile.passoutYear">
+              • {{ profile.admissionYear }}–{{ profile.passoutYear }}
+            </span>
+          </p>
+          <p class="pcollege" *ngIf="!profile.college" style="color:#aab0cc;font-style:italic">
+            🏛️ Add your college name
+          </p>
+
+          <!-- Badges with real data -->
+          <div class="badge-row">
+            <span class="badge badge-success" *ngIf="profile.placementStatus === 'Eligible'">✅ Eligible for Placement</span>
+            <span class="badge badge-primary"  *ngIf="profile.passoutYear">🎓 {{ profile.passoutYear }} Batch</span>
+            <span class="badge badge-accent"   *ngIf="profile.cgpa">⭐ CGPA {{ profile.cgpa }}</span>
+          </div>
+        </div>
+
+        <button class="btn btn-primary"
+                style="margin-left:auto;height:fit-content"
+                (click)="editing ? save() : editing = true">
+          {{ editing ? '💾 Save' : '✏️ Edit Profile' }}
+        </button>
+      </div>
+
+      <!-- Profile completion bar with real % -->
+      <div class="completion-section">
+        <div class="completion-header">
+          <span>Profile Completion</span>
+          <span class="completion-pct">{{ profile.profileCompletion || 0 }}%</span>
+        </div>
+        <div class="progress-bar" style="height:10px;">
+          <div class="progress-fill pf-blue"
+               [style.width]="(profile.profileCompletion || 0) + '%'"></div>
+        </div>
+        <p style="font-size:12px;color:#8891b0;margin-top:6px">
+          Upload resume &amp; add more skills to reach 100%
+        </p>
+      </div>
+    </div>
+
+    <!-- Personal Info + Address + Social -->
+    <div class="profile-grid fade-in-2">
+
+      <!-- Personal Info -->
+      <div class="card">
+        <div class="card-header">
+          <div><div class="card-title">👤 Personal Information</div></div>
+          <button *ngIf="editing" class="btn btn-sm btn-primary" (click)="save()">💾 Save</button>
+        </div>
+        <div class="form-2col">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input class="form-control" [(ngModel)]="profile.name" [disabled]="!editing" />
+          </div>
+          <div class="form-group">
+            <label>Date of Birth</label>
+            <input class="form-control" type="date" [(ngModel)]="profile.dob" [disabled]="!editing" />
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <select class="form-control" [(ngModel)]="profile.gender" [disabled]="!editing">
+              <option value="">Select</option>
+              <option>Male</option><option>Female</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Mobile</label>
+            <input class="form-control" [(ngModel)]="profile.phone" [disabled]="!editing" />
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label>Email Address</label>
+            <input class="form-control" type="email" [(ngModel)]="profile.email" [disabled]="!editing" />
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label>College / University Name</label>
+            <input class="form-control" [(ngModel)]="profile.college"
+                   [disabled]="!editing" placeholder="e.g. ABC Engineering College" />
+          </div>
+          <div class="form-group">
+            <label>Degree</label>
+            <input class="form-control" [(ngModel)]="profile.branch"
+                   [disabled]="!editing" placeholder="e.g. B.Tech" />
+          </div>
+          <div class="form-group">
+            <label>Department</label>
+            <input class="form-control" [(ngModel)]="profile.department"
+                   [disabled]="!editing" placeholder="e.g. Computer Science" />
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label>Bio / About Me</label>
+            <textarea class="form-control" [(ngModel)]="profile.bio"
+                      [disabled]="!editing" rows="3"
+                      placeholder="Write something about yourself..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:20px">
+        <!-- Address -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">📍 Address</div></div>
+          <div class="form-group">
+            <label>Street Address</label>
+            <input class="form-control" [(ngModel)]="profile.address" [disabled]="!editing" />
+          </div>
+          <div class="form-2col">
+            <div class="form-group">
+              <label>City</label>
+              <input class="form-control" [(ngModel)]="profile.city" [disabled]="!editing" />
+            </div>
+            <div class="form-group">
+              <label>State</label>
+              <input class="form-control" [(ngModel)]="profile.state" [disabled]="!editing" />
+            </div>
+            <div class="form-group">
+              <label>PIN Code</label>
+              <input class="form-control" [(ngModel)]="profile.pincode" [disabled]="!editing" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Links -->
+        <div class="card">
+          <div class="card-header"><div class="card-title">🔗 Social Links</div></div>
+          <div class="form-group">
+            <label>LinkedIn</label>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:18px">🔵</span>
+              <input class="form-control" [(ngModel)]="profile.linkedin"
+                     [disabled]="!editing" placeholder="linkedin.com/in/yourname" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>GitHub</label>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:18px">🐙</span>
+              <input class="form-control" [(ngModel)]="profile.github"
+                     [disabled]="!editing" placeholder="github.com/yourname" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Portfolio</label>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:18px">🌐</span>
+              <input class="form-control" [(ngModel)]="profile.portfolio"
+                     [disabled]="!editing" placeholder="yourportfolio.com" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

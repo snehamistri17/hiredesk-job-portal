@@ -1,0 +1,125 @@
+<div class="fade-in">
+  <div class="section-header">
+    <div class="section-title">💼 Eligible Jobs</div>
+    <div class="section-subtitle">
+      <span *ngIf="!loading">{{ filteredJobs.length }} opportunities available</span>
+      <span *ngIf="loading">Loading jobs...</span>
+    </div>
+  </div>
+
+  <!-- Success toast -->
+  <div *ngIf="successMsg"
+       style="background:#dcfce7;border:1px solid #86efac;border-radius:10px;
+              padding:12px 18px;font-size:14px;font-weight:600;color:#166534;
+              margin-bottom:16px">
+    {{ successMsg }}
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error"
+       style="background:#fff0f3;border:1px solid rgba(255,77,109,0.3);border-radius:10px;
+              padding:12px 18px;font-size:14px;color:#dc2626;margin-bottom:16px">
+    ⚠️ {{ error }}
+  </div>
+
+  <!-- Search + Filters -->
+  <div class="filters-row fade-in-1">
+    <div class="search-wrap">
+      <span class="s-icon">🔍</span>
+      <input class="form-control"
+             [(ngModel)]="search"
+             placeholder="Search jobs or companies..."
+             style="padding-left:38px" />
+    </div>
+    <div class="filter-tabs">
+      <button *ngFor="let t of jobTypes"
+              class="filter-tab"
+              [class.active]="filterType===t"
+              (click)="filterType=t">
+        {{ t }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" style="text-align:center;padding:60px;color:#8891b0">
+    <div style="font-size:40px;margin-bottom:12px">⏳</div>
+    <div style="font-size:16px;font-weight:600">Loading jobs...</div>
+  </div>
+
+  <!-- No jobs at all (not loading, no jobs in DB) -->
+  <div *ngIf="!loading && allJobs.length === 0" class="empty-box">
+    <div style="font-size:48px;margin-bottom:12px">💼</div>
+    <div style="font-size:18px;font-weight:700;color:#4a5080;font-family:'Outfit',sans-serif">
+      No jobs posted yet
+    </div>
+    <div style="font-size:14px;color:#8891b0;margin-top:6px">
+      Jobs will appear here once the admin posts them
+    </div>
+  </div>
+
+  <!-- Jobs found but search returns empty -->
+  <div *ngIf="!loading && allJobs.length > 0 && filteredJobs.length === 0" class="empty-box">
+    <div style="font-size:48px;margin-bottom:12px">🔍</div>
+    <div style="font-size:18px;font-weight:700;color:#4a5080;font-family:'Outfit',sans-serif">
+      No jobs match your search
+    </div>
+    <div style="font-size:14px;color:#8891b0;margin-top:4px">
+      Try different keywords or clear the filter
+    </div>
+  </div>
+
+  <!-- Job Cards -->
+  <div class="jobs-grid fade-in-2" *ngIf="!loading && filteredJobs.length > 0">
+    <div class="job-card" *ngFor="let job of filteredJobs">
+
+      <!-- Header -->
+      <div class="jc-header">
+        <div class="jc-logo" [style.background]="job.color || '#e0f5ff'">
+          {{ job.logo || '🏢' }}
+        </div>
+        <div style="flex:1">
+          <div class="jc-role">{{ job.jobtitle }}</div>
+          <div class="jc-company">{{ job.company }}</div>
+        </div>
+        <div class="match-badge" *ngIf="job.match"
+             [class.high]="job.match >= 85"
+             [class.mid]="job.match >= 70 && job.match < 85">
+          {{ job.match }}% Match
+        </div>
+      </div>
+
+      <!-- Meta -->
+      <div class="jc-meta">
+        <span>📍 {{ job.location }}</span>
+        <span>💰 {{ job.salary }}</span>
+        <span *ngIf="job.cgpaRequired">🎓 CGPA {{ job.cgpaRequired }}</span>
+        <span class="badge badge-info">{{ job.type }}</span>
+      </div>
+
+      <!-- Skills -->
+      <div class="jc-skills" *ngIf="job.skills?.length > 0">
+        <span class="skill-chip" *ngFor="let sk of job.skills">{{ sk }}</span>
+      </div>
+
+      <!-- Footer -->
+      <div class="jc-footer">
+        <span style="font-size:12px;color:#8891b0">
+          ⏰ Deadline: {{ job.deadline || 'Open' }}
+        </span>
+        <button class="btn btn-sm"
+                [class.btn-primary]="!isApplied(job._id)"
+                [class.btn-secondary]="isApplied(job._id)"
+                [disabled]="isApplied(job._id) || applyingId === job._id?.toString()"
+                (click)="applyJob(job)">
+          <span *ngIf="applyingId === job._id?.toString()">⏳ Applying...</span>
+          <span *ngIf="isApplied(job._id)">✅ Applied</span>
+          <span *ngIf="!isApplied(job._id) && applyingId !== job._id?.toString()">
+            📨 Apply Now
+          </span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

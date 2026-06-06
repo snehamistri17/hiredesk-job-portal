@@ -1,0 +1,140 @@
+<app-navbar></app-navbar>
+
+<div class="page-layout">
+  <div class="main-content">
+    <div class="page-content fade-in">
+
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1>📄 Resume Upload</h1>
+         
+        </div>
+        <div class="header-stats">
+          <div class="stat-pill green">
+            <span>✅</span> {{ uploadedCount }} Uploaded
+          </div>
+          <div class="stat-pill orange" *ngIf="pendingCount > 0">
+            <span>⏳</span> {{ pendingCount }} Pending
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading -->
+      <div *ngIf="loading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading your applications...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!loading && appliedJobs.length === 0" class="empty-state">
+        <div class="empty-icon">📋</div>
+        <h3>No Applications Yet</h3>
+        <p>Apply to jobs from the Eligible Jobs page first, then upload job-specific resumes here.</p>
+      </div>
+
+      <!-- Info Banner
+      <div *ngIf="!loading && appliedJobs.length > 0" class="info-banner">
+        <span class="info-icon">💡</span>
+        <span>Upload a <strong>different resume</strong> for each job to improve your chances. Tailored resumes get more attention!</span>
+      </div> -->
+
+      <!-- Tips Row
+      <div class="tips-row fade-in-1" *ngIf="!loading && appliedJobs.length > 0">
+        <div class="tip-item" *ngFor="let tip of resumeTips; let i = index">
+          <span class="tip-num">{{ i + 1 }}</span>
+          <span>{{ tip }}</span>
+        </div>
+      </div> -->
+
+      <!-- Job Cards -->
+      <div class="jobs-list fade-in-2" *ngIf="!loading && appliedJobs.length > 0">
+
+        <div class="job-resume-card" *ngFor="let job of appliedJobs">
+
+          <!-- Card Header -->
+          <div class="jrc-header">
+            <div class="jrc-logo" [style.background]="job.color">{{ job.logo }}</div>
+            <div class="jrc-info">
+              <div class="jrc-title">{{ job.jobTitle }}</div>
+              <div class="jrc-company">{{ job.company }} • {{ job.pkg }}</div>
+            </div>
+            <div class="jrc-status-badge"
+                 [style.background]="statusColor(job.status)"
+                 [style.color]="statusTextColor(job.status)">
+              {{ job.status }}
+            </div>
+          </div>
+
+          <!-- Messages -->
+          <div *ngIf="successMsg[job.appId]" class="alert alert-success">{{ successMsg[job.appId] }}</div>
+          <div *ngIf="errorMsg[job.appId]"   class="alert alert-error">{{ errorMsg[job.appId] }}</div>
+
+          <!-- Resume Section -->
+          <div class="jrc-body">
+
+            <!-- NO RESUME: Upload zone -->
+            <div *ngIf="!hasResume(job)" class="upload-zone"
+                 [class.dragover]="isDragOver[job.appId]"
+                 (dragover)="$event.preventDefault(); isDragOver[job.appId]=true"
+                 (dragleave)="isDragOver[job.appId]=false"
+                 (drop)="onDrop($event, job)">
+              <div class="uz-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="12" y1="18" x2="12" y2="12"/>
+                  <polyline points="9 15 12 12 15 15"/>
+                </svg>
+              </div>
+              <div class="uz-text">
+                <span class="uz-main">Drag & drop your resume here</span>
+                <span class="uz-sub">PDF only · Max 5MB · Specific to this job</span>
+              </div>
+              <label class="btn-upload" [class.uploading]="uploading[job.appId]">
+                <span *ngIf="!uploading[job.appId]">📤 Upload Resume</span>
+                <span *ngIf="uploading[job.appId]" class="spin-text">⏳ Uploading...</span>
+                <input type="file" accept=".pdf" style="display:none"
+                       (change)="onFileChange($event, job)"
+                       [disabled]="uploading[job.appId]">
+              </label>
+            </div>
+
+            <!-- HAS RESUME: Show file info -->
+            <div *ngIf="hasResume(job)" class="resume-exists">
+              <div class="re-file">
+                <div class="re-pdf-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                </div>
+                <div class="re-details">
+                  <div class="re-name">{{ job.resumeName }}</div>
+                  <div class="re-date" *ngIf="uploadDateDisplay(job)">Uploaded {{ uploadDateDisplay(job) }}</div>
+                  <div class="re-active">✅ Resume attached to this application</div>
+                </div>
+              </div>
+              <div class="re-actions">
+                <label class="btn-reupload" [class.uploading]="uploading[job.appId]">
+                  <span *ngIf="!uploading[job.appId]">🔄 Replace</span>
+                  <span *ngIf="uploading[job.appId]">⏳...</span>
+                  <input type="file" accept=".pdf" style="display:none"
+                         (change)="onFileChange($event, job)"
+                         [disabled]="uploading[job.appId]">
+                </label>
+                <button class="btn-remove" (click)="removeResume(job)" [disabled]="removing[job.appId]">
+                  {{ removing[job.appId] ? '⏳ Removing...' : '🗑 Remove' }}
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+      <!-- End jobs-list -->
+
+    </div>
+  </div>
+</div>

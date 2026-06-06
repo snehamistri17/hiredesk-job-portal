@@ -1,0 +1,95 @@
+<div class="fade-in">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Hiring History</h1>
+      <p class="page-subtitle">Track all past hires and placements</p>
+    </div>
+    <!-- <button class="btn-outline">
+      <span class="material-icons">download</span> Export CSV
+    </button> -->
+  </div>
+
+  <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:24px">
+    <div class="stat-card stat-orange">
+      <div class="stat-icon" style="background:var(--brand-light)">
+        <span class="material-icons" style="color:var(--brand-primary)">history</span>
+      </div>
+      <div class="stat-value">{{cs.hiringHistory.length}}</div>
+      <div class="stat-label">Total Hires</div>
+    </div>
+    <div class="stat-card stat-green">
+      <div class="stat-icon" style="background:var(--green-light)">
+        <span class="material-icons" style="color:var(--green)">check_circle</span>
+      </div>
+      <div class="stat-value">{{activeHires}}</div>
+      <div class="stat-label">Currently Active</div>
+    </div>
+    <div class="stat-card stat-blue">
+      <div class="stat-icon" style="background:var(--blue-light)">
+        <span class="material-icons" style="color:var(--blue)">trending_up</span>
+      </div>
+      <div class="stat-value">{{cs.candidates.length}}</div>
+      <div class="stat-label">Total Applicants</div>
+    </div>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="table-header">
+      <h3 class="table-title">
+        <span class="material-icons">list_alt</span> Hire Records
+      </h3>
+      <div class="search-input-wrap" style="width:280px">
+        <span class="material-icons icon" style="font-size:16px">search</span>
+        <input class="form-input" type="text" placeholder="Search hires..." [(ngModel)]="q" (input)="filter()">
+      </div>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Job Title</th>
+          <th>Department</th>
+          <th>Hired Date</th>
+          <th>Salary</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let h of filtered; let i=index">
+          <td class="row-num">{{i + 1}}</td>
+          <td>
+            <div class="candidate-cell">
+              <div class="avatar">{{h.name[0]}}{{h.name.split(' ')[1] ? h.name.split(' ')[1][0] : ''}}</div>
+              <span class="cand-name">{{h.name}}</span>
+            </div>
+          </td>
+          <td class="text-primary-cell">{{h.jobTitle}}</td>
+          <td>
+            <span class="dept-tag">{{h.department}}</span>
+          </td>
+          <td class="text-secondary-cell">
+            <div style="display:flex;align-items:center;gap:5px">
+              <span class="material-icons" style="font-size:13px;color:var(--text-muted)">event</span>
+              {{h.hiredDate | date:'MMM d, y'}}
+            </div>
+          </td>
+          <td>
+            <span class="salary-value">{{h.salary}}</span>
+          </td>
+          <td>
+            <span class="badge" [ngClass]="h.status === 'Active' ? 'badge-active' : 'badge-closed'">
+              <span class="material-icons" style="font-size:10px">{{h.status === 'Active' ? 'check_circle' : 'cancel'}}</span>
+              {{h.status}}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="empty-state" *ngIf="filtered.length === 0">
+      <div class="icon">📋</div>
+      <h3>No records found</h3>
+      <p>No hiring records match your search.</p>
+    </div>
+  </div>
+</div>

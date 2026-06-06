@@ -1,0 +1,71 @@
+<div class="fade-in">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Candidate List</h1>
+      <p class="page-subtitle">All candidates who applied to your jobs</p>
+    </div>
+    <span class="total-badge">{{filtered.length}} Candidates</span>
+  </div>
+
+  <div class="search-bar">
+    <div class="search-input-wrap">
+      <span class="material-icons icon" style="font-size:18px">search</span>
+      <input class="form-input" type="text" placeholder="Search candidates by name or college..." [(ngModel)]="q" (input)="filter()">
+    </div>
+    <select class="form-input" style="width:180px" [(ngModel)]="statusF" (change)="filter()">
+      <option value="">All Status</option>
+      <option>Applied</option>
+      <option>Shortlisted</option>
+      <option>Interview Scheduled</option>
+      <option>Selected</option>
+      <option>Rejected</option>
+    </select>
+  </div>
+
+  <div class="candidates-grid">
+    <div class="cand-card card" *ngFor="let c of filtered" (click)="viewCandidate(c._id)">
+      <div class="cand-top">
+        <div class="avatar avatar-lg">{{c.avatar}}</div>
+        <div style="flex:1;min-width:0">
+          <div class="cand-name">{{c.name}}</div>
+          <div class="cand-college">
+            <span class="material-icons" style="font-size:12px">school</span>
+            {{c.college}}
+          </div>
+        </div>
+        <span class="badge" [ngClass]="getBadge(c.status)">{{c.status}}</span>
+      </div>
+
+      <div class="cand-skills">
+        <span class="skill-tag" *ngFor="let s of c.skills.slice(0,3)">{{s}}</span>
+        <span class="skill-tag skill-more" *ngIf="c.skills.length > 3">+{{c.skills.length - 3}}</span>
+      </div>
+
+      <div class="cand-meta">
+        <div class="meta-item">
+          <span class="material-icons" style="font-size:13px;color:var(--text-muted)">school</span>
+          <span>{{c.degree}}</span>
+        </div>
+        <div class="cgpa-chip" [ngClass]="cgpaC(c.cgpa)">
+          <span class="material-icons" style="font-size:12px">star</span> {{c.cgpa}}
+        </div>
+      </div>
+
+      <div class="cand-footer">
+        <div class="meta-item" style="font-size:12px;color:var(--text-muted)">
+          <span class="material-icons" style="font-size:13px">work_outline</span>
+          {{c.jobTitle}}
+        </div>
+        <button class="btn-outline btn-sm" (click)="$event.stopPropagation();viewCandidate(c._id)">
+          <span class="material-icons" style="font-size:14px">visibility</span> View
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="filtered.length === 0">
+    <div class="icon">🔍</div>
+    <h3>No candidates found</h3>
+    <p>Try adjusting your search or filter criteria.</p>
+  </div>
+</div>

@@ -1,0 +1,214 @@
+/* PAGE BACKGROUND */
+.auth-page{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#eaf0ff,#ffffff);
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+/* LOGIN CARD */
+.auth-card{
+  width:420px;
+  background:white;
+  border-radius:12px;
+  box-shadow:0 12px 30px rgba(0,0,0,0.08);
+  padding:30px;
+}
+
+/* HEADER */
+.auth-header{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.auth-logo{
+  font-size:26px;
+  font-weight:700;
+  color:#0b2a6f;
+}
+
+.auth-logo span{
+  color:#2d4de0;
+}
+
+.auth-header p{
+  color:#666;
+  font-size:14px;
+}
+
+/* TITLE */
+.auth-title{
+  text-align:center;
+  font-size:22px;
+  font-weight:600;
+  margin-bottom:6px;
+  color:#222;
+}
+
+.auth-subtitle{
+  text-align:center;
+  font-size:14px;
+  color:#777;
+  margin-bottom:16px;
+}
+
+/* ── Role Toggle ─────────────────────────────────────────────── */
+.role-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+  background: #f0f4ff;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.role-btn {
+  padding: 9px 8px;
+  border: 2px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: #607d8b;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  text-align: center;
+}
+
+.role-btn.active {
+  background: #2d4de0;
+  color: #fff;
+  border-color: #1c36b5;
+  box-shadow: 0 2px 8px rgba(45,77,224,0.3);
+}
+
+.role-btn:not(.active):hover {
+  background: #dde8fb;
+  color: #1a2f5e;
+}
+
+/* Info note */
+.info-note {
+  background: #fffbea;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  border-radius: 8px;
+  padding: 9px 13px;
+  font-size: 12.5px;
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+/* FORM GROUP */
+.form-group{
+  margin-bottom:18px;
+}
+
+.form-group label{
+  font-size:14px;
+  font-weight:500;
+  margin-bottom:6px;
+  display:block;
+}
+
+/* INPUT FIELD */
+.input-wrap{
+  display:flex;
+  align-items:center;
+  border:1px solid #ddd;
+  border-radius:8px;
+  padding:8px 10px;
+  background:#fafafa;
+}
+
+.input-wrap input{
+  border:none;
+  outline:none;
+  width:100%;
+  font-size:14px;
+  background:transparent;
+}
+
+.icon{
+  margin-right:8px;
+}
+
+/* PASSWORD BUTTON */
+.toggle-pass{
+  border:none;
+  background:none;
+  cursor:pointer;
+  font-size:16px;
+}
+
+/* ERROR ALERT */
+.error-alert{
+  background:#fff0f3;
+  border:1px solid rgba(255,77,109,0.3);
+  border-radius:8px;
+  padding:10px 14px;
+  font-size:13px;
+  color:#dc2626;
+  margin-bottom:16px;
+}
+
+/* FORGOT PASSWORD */
+.forgot-row{
+  text-align:right;
+  margin-bottom:16px;
+}
+
+.forgot-link{
+  font-size:13px;
+  color:#2d4de0;
+  font-weight:500;
+  text-decoration:none;
+}
+
+.forgot-link:hover{
+  text-decoration:underline;
+}
+
+/* LOGIN BUTTON */
+.btn-full{
+  width:100%;
+  background:#2d4de0;
+  color:white;
+  border:none;
+  padding:12px;
+  font-size:15px;
+  border-radius:8px;
+  font-weight:600;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.btn-full:hover{
+  background:#1c36b5;
+}
+
+.btn-full:disabled {
+  background:#8891b0;
+  cursor:not-allowed;
+}
+
+/* REGISTER LINK */
+.auth-link{
+  text-align:center;
+  margin-top:16px;
+  font-size:14px;
+}
+
+.auth-link a{
+  color:#2d4de0;
+  font-weight:600;
+  text-decoration:none;
+}
+
+.auth-link a:hover{
+  text-decoration:underline;
+}

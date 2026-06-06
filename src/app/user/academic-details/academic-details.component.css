@@ -1,0 +1,36 @@
+.acad-stat { text-align: center; }
+.acad-stat.blue { border-top: 4px solid #2d4de0; }
+.acad-stat.green { border-top: 4px solid #22c55e; }
+.acad-stat.orange { border-top: 4px solid #ffc542; }
+.acad-stat.teal { border-top: 4px solid #00c6a7; }
+.as-num { font-size: 30px; font-weight: 800; font-family: 'Outfit', sans-serif; color: #1a1e3a; }
+.as-label { font-size: 13px; color: #8891b0; margin-top: 4px; }
+
+.acad-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.info-field { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #dde3f5; }
+.if-label { font-size: 13px; color: #8891b0; font-weight: 500; }
+.if-val { font-size: 13px; font-weight: 600; color: #1a1e3a; text-align: right; }
+
+.school-cards-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.school-card { border-radius: 12px; padding: 18px; text-align: center; }
+.s-blue { background: linear-gradient(135deg, #eef2ff, #dde6ff); }
+.s-green { background: linear-gradient(135deg, #dcfce7, #bbf7d0); }
+.sc-label { font-size: 12px; font-weight: 600; color: #4a5080; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.sc-pct { font-size: 28px; font-weight: 800; font-family: 'Outfit', sans-serif; color: #1a1e3a; }
+.sc-info { font-size: 12px; color: #8891b0; margin-top: 4px; }
+
+.sem-table-wrap { overflow-x: auto; }
+.cgpa-edit { margin-top: 20px; padding-top: 20px; border-top: 1px solid #dde3f5; }
+
+@media (max-width: 900px) { .acad-grid { grid-template-columns: 1fr; } }
+.badge{
+  color: #1a1e3a;
+}
+/* Force all 4 stat cards in one row */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+@media (max-width: 900px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .stats-row { grid-template-columns: 1fr; } }

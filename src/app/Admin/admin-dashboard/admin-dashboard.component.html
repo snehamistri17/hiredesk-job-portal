@@ -1,0 +1,152 @@
+<!-- dashboard.component.html -->
+<div class="pg">
+
+  <!-- STAT CARDS -->
+  <div class="stats-grid">
+    <div class="stat-card" *ngFor="let s of statCards" [style.border-left-color]="s.color">
+      <div class="stat-icon" [style.background]="s.bg">{{ s.icon }}</div>
+      <div class="stat-body">
+        <div class="stat-val">{{ s.val }}</div>
+        <div class="stat-lbl">{{ s.label }}</div>
+      </div>
+      <div class="stat-trend" *ngIf="s.trend">{{ s.trend }}</div>
+    </div>
+  </div>
+
+  <div class="row2">
+
+    <!-- Monthly Placements Chart -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">📈 Monthly Placements</div>
+      </div>
+
+      <!-- Empty: no placed students in DB yet -->
+      <div *ngIf="noMonthlyData" class="dash-empty">
+        <div class="dash-empty-icon">📊</div>
+        <p>No placements recorded yet.<br>Update students' status to <strong>Placed</strong> to see data here.</p>
+      </div>
+
+      <!-- Chart when data exists -->
+      <div class="bar-chart" *ngIf="hasMonthlyData">
+        <div class="bar-col" *ngFor="let m of monthly">
+          <div class="bar-num" *ngIf="m.placed > 0">{{ m.placed }}</div>
+          <div class="bar-num" *ngIf="m.placed === 0">&nbsp;</div>
+          <div class="bar"
+               [style.height.px]="m.placed > 0 ? (m.placed / maxVal) * 130 : 4"
+               [class.bar-zero]="m.placed === 0"></div>
+          <div class="bar-lbl">{{ m.month }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Branch-wise Placement % -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom:16px">📚 Branch-wise Placement %</div>
+
+      <!-- Empty: no students with branch set -->
+      <div *ngIf="chartsReady && branchWise.length === 0" class="dash-empty">
+        <div class="dash-empty-icon">📚</div>
+        <p>No branch data yet.<br>Edit students and set their <strong>Branch</strong> to see stats here.</p>
+      </div>
+
+      <div class="branch-list" *ngIf="branchWise.length > 0">
+        <div class="branch-row" *ngFor="let b of branchWise">
+          <div class="branch-name">{{ b.branch }}</div>
+          <div class="branch-track">
+            <div class="branch-fill" [style.width.%]="b.pct"></div>
+          </div>
+          <div class="branch-pct">{{ b.pct }}%</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row3">
+
+    <!-- Recent Students -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">🎓 Recent Students</div>
+        <button class="link-btn" routerLink="/user-management">View All →</button>
+      </div>
+
+      <div *ngIf="recentStudents.length === 0" class="dash-empty" style="padding:24px">
+        <p>No students registered yet.</p>
+      </div>
+
+      <table class="mini-tbl" *ngIf="recentStudents.length > 0">
+        <thead><tr><th>Name</th><th>Branch</th><th>CGPA</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let s of recentStudents; let i = index">
+            <td>
+              <div class="nc">
+                <div class="av-sm" [ngClass]="'av'+i">{{ s.avatar }}</div>
+                {{ s.name }}
+              </div>
+            </td>
+            <td class="muted">{{ s.branch || '—' }}</td>
+            <td><strong>{{ s.cgpa }}</strong></td>
+            <td><span class="sbadge" [ngClass]="stClass(s.placementStatus)">{{ s.placementStatus }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pending Approvals -->
+    <div class="card">
+      <div class="card-hdr">
+        <div class="card-title">⏳ Pending Approvals</div>
+        <span class="pchip" *ngIf="pending.length > 0">{{ pending.length }} pending</span>
+      </div>
+      <div class="appr-list">
+        <div class="appr-row" *ngFor="let c of pending">
+          <div class="appr-av">{{ (c.avatar || c.name?.substring(0,2) || 'CO').substring(0,2).toUpperCase() }}</div>
+          <div class="appr-info">
+            <div class="appr-name">{{ c.name }}</div>
+            <div class="appr-sub">{{ c.industry }} · {{ c.headquarters || c.location || '' }}</div>
+          </div>
+          <div class="appr-btns">
+            <button class="abtn app" (click)="approve(c)">✓</button>
+            <button class="abtn rej" (click)="reject(c)">✗</button>
+          </div>
+        </div>
+        <div class="empty-appr" *ngIf="pending.length === 0">✅ All caught up!</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Upcoming Placement Drives — from real DB jobs -->
+  <div class="card">
+    <div class="card-hdr">
+      <div class="card-title">🚀 Upcoming Placement Drives</div>
+      <button class="link-btn" routerLink="/jobs-mangement">View All →</button>
+    </div>
+
+    <!-- Empty: no active jobs in DB -->
+    <div *ngIf="upcomingDrives.length === 0" class="dash-empty" style="padding:32px">
+      <div class="dash-empty-icon">🚀</div>
+      <p>No active jobs in the database yet.<br>
+         Companies need to post jobs — they will appear here automatically.</p>
+    </div>
+
+    <div class="drives-grid" *ngIf="upcomingDrives.length > 0">
+      <div class="drive-card" *ngFor="let d of upcomingDrives">
+        <div class="drive-top">
+          <span class="drive-co">{{ d.company }}</span>
+          <span class="drive-type">{{ d.type }}</span>
+        </div>
+        <div class="drive-title">{{ d.title }}</div>
+        <div class="drive-meta">
+          <span>📅 {{ d.date }}</span>
+          <span>📍 {{ d.location }}</span>
+          <span *ngIf="d.registered > 0">👥 {{ d.registered }} applicants</span>
+        </div>
+        <div class="drive-pkg">💰 {{ d.package }}</div>
+      </div>
+    </div>
+  </div>
+
+</div>

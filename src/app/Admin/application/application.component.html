@@ -1,0 +1,99 @@
+<!-- all-applications.component.html -->
+<div class="pg">
+
+  <div class="summary-row">
+    <div class="sum-card" *ngFor="let s of summary">
+      <div class="sum-icon" [style.background]="s.bg">{{ s.icon }}</div>
+      <div class="sum-val">{{ s.val }}</div>
+      <div class="sum-lbl">{{ s.label }}</div>
+    </div>
+  </div>
+
+  <div class="card filter-bar">
+    <div class="filter-left">
+      <div class="fg">
+        <label>Status</label>
+        <select [(ngModel)]="fStatus" (change)="filter()">
+          <option value="">All Status</option>
+          <option>Applied</option>
+          <option>Shortlisted</option>
+          <option>Interview Scheduled</option>
+          <option>Under Review</option>
+          <!-- ✅ Selected option added -->
+          <option>Selected</option>
+          <option>Hired</option>
+          <option>Rejected</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Company</label>
+        <select [(ngModel)]="fCompany" (change)="filter()">
+          <option value="">All Companies</option>
+          <option *ngFor="let c of companies" [value]="c">{{ c }}</option>
+        </select>
+      </div>
+      <div class="search-wrap">
+        <span>🔍</span>
+        <input type="text" placeholder="Search student or role..." [(ngModel)]="q" (input)="filter()" />
+      </div>
+    </div>
+    <span class="count-chip">{{ filtered.length }} applications</span>
+  </div>
+
+  <div class="card">
+    <div *ngIf="loading" style="text-align:center;padding:40px;color:#64748b">
+      Loading applications...
+    </div>
+    <div *ngIf="!loading && filtered.length === 0" style="text-align:center;padding:40px;color:#64748b">
+      No applications found.
+    </div>
+    <div class="table-wrap" *ngIf="!loading && filtered.length > 0">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Company</th>
+            <th>Job Role</th>
+            <th>Round</th>
+            <th>Applied</th>
+            <th>Score</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of filtered; let i = index">
+            <td>
+              <div class="nc">
+                <!-- ✅ student field now correctly mapped -->
+                <div class="avatar" [ngClass]="'av'+(i%6)">{{ a.avatar }}</div>
+                <span class="sname">{{ a.student }}</span>
+              </div>
+            </td>
+            <td class="muted">{{ a.company }}</td>
+            <!-- ✅ job field now correctly mapped -->
+            <td class="job-txt">{{ a.job }}</td>
+            <td>
+              <span class="round-chip" *ngIf="a.round && a.round !== '—'">{{ a.round }}</span>
+              <span class="muted" *ngIf="!a.round || a.round === '—'">—</span>
+            </td>
+            <td class="muted">{{ a.date }}</td>
+            <td>
+              <div class="score-row">
+                <div class="score-track">
+                  <div class="score-fill"
+                       [style.width.%]="a.score"
+                       [ngClass]="scoreClass(a.score)"></div>
+                </div>
+                <span class="score-num">{{ a.score || '—' }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="sbadge" [ngClass]="statusClass(a.status)">{{ a.status }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
