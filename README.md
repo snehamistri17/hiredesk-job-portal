@@ -98,10 +98,6 @@ JWT_SECRET=your_secret_key
 - Recruiter - can post and manage jobs after login
 - Admin - has full access to manage the entire platform
 
-## Screenshots
-
-Add your project screenshots here
-
 ## About
 
 This project was built by me as a personal project to practice and learn MEAN stack development from scratch.
